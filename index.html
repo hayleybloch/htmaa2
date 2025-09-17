@@ -1,8 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>HTMAA 2025 Hayley Bloch</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@hayleybloch.htmaa - How to Make (Almost) Anything</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #fafafa;
+            color: #262626;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #dbdbdb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 0;
+        }
+
+        .header-content {
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #262626;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            background: #efefef;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            width: 268px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .profile-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .nav-icon:hover {
+            opacity: 0.6;
+        }
+
+        .container {
+            max-width: 614px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .profile-section {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .profile-info h1 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 4px;
+        }
+
+        .profile-bio {
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .stat {
+            display: flex;
+            gap: 4px;
+        }
+
+        .stat-number {
+            font-weight: 600;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .filter-tab {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .filter-tab.active {
+            background: #0095f6;
+            color: white;
+            border-color: #0095f6;
+        }
+
+        .filter-tab:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        .filter-tab.final-project {
+            background: linear-gradient(45deg, #f09433, #e6683c);
+            color: white;
+            border: none;
+        }
+
+        .filter-tab.final-project:hover {
+            background: linear-gradient(45deg, #e6683c, #dc2743);
+        }
+
+        .post {
+            background: #fff;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .post-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .post-info {
+            flex-grow: 1;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .post-week {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .post-placeholder {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .post-actions {
+            padding: 8px 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .action-btn.liked {
+            color: #ed4956;
+        }
+
+        .post-likes {
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .post-caption {
+            padding: 0 16px 16px;
+            font-size: 14px;
+        }
+
+        .post-username-caption {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .post-timestamp {
+            padding: 0 16px 16px;
+            font-size: 12px;
+            color: #8e8e8e;
+            text-transform: uppercase;
+        }
+
+        .emoji {
+            font-size: 16px;
+            margin-right: 4px;
+        }
+
+        .hashtags {
+            color: #0095f6;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .container {
+                margin: 20px auto;
+                padding: 0 16px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .filter-tabs {
+                justify-content: center;
+            }
+        }
+
+        .week-badge {
+            background: #0095f6;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+
+        .final-badge {
+            background: linear-gradient(45deg, #f09433, #e6683c);
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slideshow-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .slideshow-nav:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .slideshow-nav.prev {
+            left: 10px;
+        }
+
+        .slideshow-nav.next {
+            right: 10px;
+        }
+
+        .slideshow-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dot.active {
+            background: white;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-Hayley Bloch's Web site
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">HTMAA</a>
+            <input type="text" class="search-bar" placeholder="Search assignments...">
+            <div class="profile-nav">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.1l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2.1z"/>
+                </svg>
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="profile-pic">HT</div>
+                <div class="profile-info">
+                    <h1>@hayleybloch.htmaa</h1>
+                    <div class="profile-bio">🛠️ Digital Fabrication Journey<br>📚 How to Make (Almost) Anything<br>🚀 Learning something new every week</div>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-number">14</span>
+                            <span>assignments</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">1</span>
+                            <span>final project</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">∞</span>
+                            <span>possibilities</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all">All Posts</div>
+            <div class="filter-tab" data-filter="electronics">Electronics</div>
+            <div class="filter-tab" data-filter="fabrication">Fabrication</div>
+            <div class="filter-tab" data-filter="programming">Programming</div>
+            <div class="filter-tab" data-filter="design">Design</div>
+            <div class="filter-tab final-project" data-filter="final">✨ Final Project</div>
+        </div>
+
+        <div class="posts-container">
+            <article class="post" data-category="final">
+                <div class="post-header">
+                    <div class="post-avatar">HT</div>
+                    <div class="post-info">
+                        <div class="post-username">hayleybloch.htmaa <span class="final-badge">FINAL PROJECT</span></div>
+                        <div class="post-week">Capstone Integration Project</div>
+                    </div>
+                </div>
+                <div class="post-image">
+                    <div class="post-placeholder">
+                        🚀 Final Project Showcase<br>
+                        <small style="opacity: 0.8; margin-top: 8px; display: block;">Coming soon...</small>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">❤️ <span>0</span></button>
+                    <button class="action-btn">💬 <span>0</span></button>
+                    <button class="action-btn">📤</button>
+                </div>
+                <div class="post-likes">Be the first to like this</div>
+                <div class="post-caption">
+                    <span class="post-username-caption">hayleybloch.htmaa</span>
+                    The moment we've all been waiting for! My final project integrates everything I've learned this semester. Stay tuned for the big reveal! 
+                    <span class="hashtags">#FinalProject #HTMAA #DigitalFabrication #Capstone</span>
+                </div>
+                <div class="post-timestamp">Coming Soon</div>
+            </article>
+
+            <article class="post" data-category="design fabrication">
+                <div class="post-header">
+                    <div class="post-avatar">HT</div>
+                    <div class="post-info">
+                        <div class="post-username">hayleybloch.htmaa <span class="week-badge">Week 2</span></div>
+                        <div class="post-week">Computer-Aided Design & Laser Cutting</div>
+                    </div>
+                </div>
+                <div class="post-image">
+                    <div class="slideshow-container" id="week2-slideshow">
+                        <div class="slide-counter">
+                            <span id="current-slide">1</span> / <span id="total-slides">9</span>
+                        </div>
+                        
+                        <img src="images/IMG_0037.JPG" class="slide active" alt="Week 2 - Laser Cutting Process">
+                        <img src="images/IMG_0038.JPG" class="slide" alt="Week 2 - CAD Design">
+                        <img src="images/IMG_0039.JPG" class="slide" alt="Week 2 - Laser Cutting Setup">
+                        <img src="images/IMG_0040.JPG" class="slide" alt="Week 2 - Material Preparation">
+                        <img src="images/IMG_0041.JPG" class="slide" alt="Week 2 - Cutting Process">
+                        <img src="images/IMG_0042.JPG" class="slide" alt="Week 2 - Finished Cut">
+                        <img src="images/IMG_0043.JPG" class="slide" alt="Week 2 - Final Assembly">
+                        <img src="images/Screenshot 2025-09-16 at 10.43.31 PM.png" class="slide" alt="Week 2 - CAD Screenshot 1">
+                        <img src="images/Screenshot 2025-09-17 at 12.14.44 AM.png" class="slide" alt="Week 2 - CAD Screenshot 2">
+                        
+                        <button class="slideshow-nav prev" onclick="changeSlide(-1)">‹</button>
+                        <button class="slideshow-nav next" onclick="changeSlide(1)">›</button>
+                        
+                        <div class="slideshow-dots">
+                            <span class="dot active" onclick="currentSlide(1)"></span>
+                            <span class="dot" onclick="currentSlide(2)"></span>
+                            <span class="dot" onclick="currentSlide(3)"></span>
+                            <span class="dot" onclick="currentSlide(4)"></span>
+                            <span class="dot" onclick="currentSlide(5)"></span>
+                            <span class="dot" onclick="currentSlide(6)"></span>
+                            <span class="dot" onclick="currentSlide(7)"></span>
+                            <span class="dot" onclick="currentSlide(8)"></span>
+                            <span class="dot" onclick="currentSlide(9)"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">❤️ <span>0</span></button>
+                    <button class="action-btn">💬 <span>0</span></button>
+                    <button class="action-btn">📤</button>
+                </div>
+                <div class="post-likes">Be the first to like this</div>
+                <div class="post-caption">
+                    <span class="post-username-caption">hayleybloch.htmaa</span>
+                    Working on laser cutting my CAD designs! Parametric modeling complete, now bringing them to life with the laser cutter. 
+                    <span class="hashtags">#Week2 #CAD #LaserCutting #Fabrication</span>
+                </div>
+                <div class="post-timestamp">In Progress</div>
+            </article>
+
+            <div style="text-align: center; padding: 40px; color: #8e8e8e;">
+                <p>📱 More posts loading as assignments are completed...</p>
+                <p style="margin-top: 8px; font-size: 12px;">Follow the journey from Week 1 to Final Project!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Slideshow functionality
+        let currentSlideIndex = 0;
+        const totalSlides = 9;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('#week2-slideshow .slide');
+            const dots = document.querySelectorAll('#week2-slideshow .dot');
+            const currentSlideSpan = document.getElementById('current-slide');
+            
+            // Remove active class from all slides and dots
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Add active class to current slide and dot
+            slides[n].classList.add('active');
+            dots[n].classList.add('active');
+            
+            // Update counter
+            currentSlideSpan.textContent = n + 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlideIndex += direction;
+            
+            // Loop around if at beginning or end
+            if (currentSlideIndex >= totalSlides) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex < 0) {
+                currentSlideIndex = totalSlides - 1;
+            }
+            
+            showSlide(currentSlideIndex);
+        }
+
+        function currentSlide(n) {
+            currentSlideIndex = n - 1;
+            showSlide(currentSlideIndex);
+        }
+
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const posts = document.querySelectorAll('.post');
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Update active tab
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+
+                    // Filter posts
+                    posts.forEach(post => {
+                        if (filter === 'all') {
+                            post.style.display = 'block';
+                        } else {
+                            const categories = post.getAttribute('data-category');
+                            if (categories && categories.includes(filter)) {
+                                post.style.display = 'block';
+                            } else {
+                                post.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Like button functionality
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                if (btn.innerHTML.includes('❤️')) {
+                    btn.addEventListener('click', function() {
+                        this.classList.toggle('liked');
+                        const likeCount = this.querySelector('span');
+                        let count = parseInt(likeCount.textContent);
+                        if (this.classList.contains('liked')) {
+                            likeCount.textContent = count + 1;
+                            this.innerHTML = this.innerHTML.replace('❤️', '❤️');
+                        } else {
+                            likeCount.textContent = Math.max(0, count - 1);
+                        }
+                    });
+                }
+            });
+
+            // Initialize slideshow
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>

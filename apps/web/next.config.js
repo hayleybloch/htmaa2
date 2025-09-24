@@ -1,21 +1,20 @@
 const { config } = require('process')
+const path = require('path')
 
 /** @type {import('next').NextConfig} */
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['rpc'],
   devIndicators: false,
-  // Static export for GitLab Pages
-  output: 'export',
-  // Ensure static hosting serves directory indexes correctly
-  trailingSlash: true,
-  // Support hosting under a subpath (e.g., /<project> on GitLab Pages)
-  basePath,
-  assetPrefix: basePath ? `${basePath}/` : undefined,
-  // If next/image is used, disable optimization for static export
+  experimental: { externalDir: true },
+  // If next/image is used and you prefer no optimization, keep unoptimized; otherwise you can remove
   images: { unoptimized: true },
   webpack: (config) => {
+    // Resolve the internal workspace package "rpc" when building in isolation (e.g., Vercel rootDir apps/web)
+    config.resolve = config.resolve || {}
+    config.resolve.alias = config.resolve.alias || {}
+    config.resolve.alias['rpc'] = path.resolve(__dirname, '../../packages/rpc')
+
     config.module.rules.push({
       test: /\.frag$/,
       // This is the asset module.

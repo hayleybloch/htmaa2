@@ -1,10 +1,20 @@
 const { config } = require('process')
 
 /** @type {import('next').NextConfig} */
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['rpc'],
   devIndicators: false,
+  // Static export for GitLab Pages
+  output: 'export',
+  // Ensure static hosting serves directory indexes correctly
+  trailingSlash: true,
+  // Support hosting under a subpath (e.g., /<project> on GitLab Pages)
+  basePath,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
+  // If next/image is used, disable optimization for static export
+  images: { unoptimized: true },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.frag$/,

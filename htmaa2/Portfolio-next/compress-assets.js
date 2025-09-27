@@ -4,147 +4,193 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Configuration
-const ASSETS_DIR = './apps/web/public/assets';
-const DESKTOP_ASSETS_DIR = './apps/desktop/public';
-const OUTPUT_DIR = './compressed-assets';
+const assetsDir = './apps/web/public/assets';
 
-// Create output directory
-if (!fs.existsSync(OUTPUT_DIR)) {
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-}
-
-console.log('🗜️  Starting asset compression...\n');
-
-// Function to compress GLB files with Draco
-function compressGLB(inputPath, outputPath) {
+// Check if sharp-cli is available
+function checkSharp() {
   try {
-    console.log(`Compressing GLB: ${path.basename(inputPath)}`);
-    execSync(`npx gltf-transform draco "${inputPath}" "${outputPath}"`, { stdio: 'inherit' });
-    
-    const originalSize = fs.statSync(inputPath).size;
-    const compressedSize = fs.statSync(outputPath).size;
-    const reduction = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
-    
-    console.log(`  ✅ Reduced by ${reduction}% (${(originalSize/1024/1024).toFixed(1)}MB → ${(compressedSize/1024/1024).toFixed(1)}MB)\n`);
+    execSync('which sharp', { stdio: 'ignore' });
     return true;
-  } catch (error) {
-    console.log(`  ❌ Failed to compress: ${error.message}\n`);
+  } catch {
     return false;
   }
 }
 
-// Function to compress images (convert to WebP)
-function compressImage(inputPath, outputPath) {
+// Check if gltf-transform is available
+function checkGltfTransform() {
   try {
-    console.log(`Compressing image: ${path.basename(inputPath)}`);
-    
-    // Use sharp if available, otherwise copy
+    execSync('which gltf-transform', { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Compress images to WebP
+async function compressImages() {
+  console.log('🖼️  Compressing images...');
+  
+  if (!checkSharp()) {
+    console.log('⚠️  sharp-cli not found. Installing...');
     try {
-      execSync(`npx sharp-cli resize 1920 1920 --format webp --quality 85 "${inputPath}" "${outputPath}"`, { stdio: 'inherit' });
-    } catch {
-      // Fallback: just copy the file
-      fs.copyFileSync(inputPath, outputPath);
+      execSync('npm install -g sharp-cli', { stdio: 'inherit' });
+    } catch (error) {
+      console.log('❌ Failed to install sharp-cli. Skipping image compression.');
+      return;
     }
+  }
+
+  const imageExtensions = ['.jpg', '.jpeg', '.png'];
+  const files = fs.readdirSync(assetsDir);
+  
+  for (const file of files) {
+    const filePath = path.join(assetsDir, file);
+    const ext = path.extname(file).toLowerCase();
     
-    const originalSize = fs.statSync(inputPath).size;
-    const compressedSize = fs.statSync(outputPath).size;
-    const reduction = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+    if (imageExtensions.includes(ext) && fs.statSync(filePath).isFile()) {
+      const nameWithoutExt = path.basename(file, ext);
+      const webpPath = path.join(assetsDir, `${nameWithoutExt}.webp`);
+      
+      try {
+        console.log(`  Converting ${file} to WebP...`);
+        execSync(`sharp -i "${filePath}" -o "${webpPath}" --quality 85`, { 
+          stdio: 'pipe',
+          cwd: assetsDir 
+        });
+        
+        const originalSize = fs.statSync(filePath).size;
+        const webpSize = fs.statSync(webpPath).size;
+        const savings = ((originalSize - webpSize) / originalSize * 100).toFixed(1);
+        
+        console.log(`    ✅ ${file}: ${(originalSize/1024/1024).toFixed(2)}MB → ${(webpSize/1024/1024).toFixed(2)}MB (${savings}% smaller)`);
+        
+        // Remove original file
+        fs.unlinkSync(filePath);
+        console.log(`    🗑️  Removed original ${file}`);
+        
+      } catch (error) {
+        console.log(`    ❌ Failed to convert ${file}: ${error.message}`);
+      }
+    }
+  }
+}
+
+// Compress GLB files with Draco
+async function compressGlbFiles() {
+  console.log('🎯 Compressing 3D models...');
+  
+  if (!checkGltfTransform()) {
+    console.log('⚠️  gltf-transform not found. Installing...');
+    try {
+      execSync('npm install -g @gltf-transform/cli', { stdio: 'inherit' });
+    } catch (error) {
+      console.log('❌ Failed to install gltf-transform. Skipping 3D model compression.');
+      return;
+    }
+  }
+
+  const files = fs.readdirSync(assetsDir);
+  
+  for (const file of files) {
+    if (file.endsWith('.glb') && fs.statSync(path.join(assetsDir, file)).isFile()) {
+      const filePath = path.join(assetsDir, file);
+      const tempPath = path.join(assetsDir, `temp_${file}`);
+      
+      try {
+        console.log(`  Compressing ${file}...`);
+        
+        const originalSize = fs.statSync(filePath).size;
+        
+        // Compress with Draco
+        execSync(`gltf-transform draco "${filePath}" "${tempPath}"`, { 
+          stdio: 'pipe',
+          cwd: assetsDir 
+        });
+        
+        const compressedSize = fs.statSync(tempPath).size;
+        const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+        
+        console.log(`    ✅ ${file}: ${(originalSize/1024/1024).toFixed(2)}MB → ${(compressedSize/1024/1024).toFixed(2)}MB (${savings}% smaller)`);
+        
+        // Replace original with compressed version
+        fs.renameSync(tempPath, filePath);
+        
+      } catch (error) {
+        console.log(`    ❌ Failed to compress ${file}: ${error.message}`);
+        // Clean up temp file if it exists
+        if (fs.existsSync(tempPath)) {
+          fs.unlinkSync(tempPath);
+        }
+      }
+    }
+  }
+}
+
+// Update code to use WebP files
+async function updateCodeReferences() {
+  console.log('📝 Updating code references...');
+  
+  const webpFiles = fs.readdirSync(assetsDir).filter(f => f.endsWith('.webp'));
+  
+  for (const webpFile of webpFiles) {
+    const originalName = webpFile.replace('.webp', '');
     
-    console.log(`  ✅ Reduced by ${reduction}% (${(originalSize/1024/1024).toFixed(1)}MB → ${(compressedSize/1024/1024).toFixed(1)}MB)\n`);
-    return true;
+    // Find files that might reference the original image
+    const searchDirs = [
+      './apps/web/components',
+      './apps/web/scene-loader',
+      './apps/web/renderer'
+    ];
+    
+    for (const dir of searchDirs) {
+      if (fs.existsSync(dir)) {
+        try {
+          execSync(`find "${dir}" -type f \\( -name "*.ts" -o -name "*.tsx" \\) -exec sed -i '' "s/${originalName}\\.jpg/${originalName}.webp/g" {} \\;`, { stdio: 'pipe' });
+          execSync(`find "${dir}" -type f \\( -name "*.ts" -o -name "*.tsx" \\) -exec sed -i '' "s/${originalName}\\.png/${originalName}.webp/g" {} \\;`, { stdio: 'pipe' });
+        } catch (error) {
+          // Ignore errors (files might not exist or no matches)
+        }
+      }
+    }
+  }
+  
+  console.log('  ✅ Updated code references to use WebP files');
+}
+
+// Main compression function
+async function main() {
+  console.log('🚀 Starting asset compression...');
+  console.log(`📁 Working directory: ${assetsDir}`);
+  
+  const startSize = fs.readdirSync(assetsDir)
+    .reduce((total, file) => {
+      const filePath = path.join(assetsDir, file);
+      return total + fs.statSync(filePath).size;
+    }, 0);
+  
+  console.log(`📊 Original size: ${(startSize/1024/1024).toFixed(2)}MB`);
+  
+  try {
+    await compressImages();
+    await compressGlbFiles();
+    await updateCodeReferences();
+    
+    const endSize = fs.readdirSync(assetsDir)
+      .reduce((total, file) => {
+        const filePath = path.join(assetsDir, file);
+        return total + fs.statSync(filePath).size;
+      }, 0);
+    
+    const totalSavings = ((startSize - endSize) / startSize * 100).toFixed(1);
+    
+    console.log('\n🎉 Compression complete!');
+    console.log(`📊 Final size: ${(endSize/1024/1024).toFixed(2)}MB`);
+    console.log(`💾 Total savings: ${((startSize - endSize)/1024/1024).toFixed(2)}MB (${totalSavings}%)`);
+    
   } catch (error) {
-    console.log(`  ❌ Failed to compress: ${error.message}\n`);
-    return false;
+    console.error('❌ Compression failed:', error.message);
+    process.exit(1);
   }
 }
 
-// Process web assets
-console.log('📁 Processing web assets...');
-const webAssetsDir = path.join(OUTPUT_DIR, 'web-assets');
-if (!fs.existsSync(webAssetsDir)) {
-  fs.mkdirSync(webAssetsDir, { recursive: true });
-}
-
-// Compress GLB files
-const glbFiles = fs.readdirSync(ASSETS_DIR).filter(file => file.endsWith('.glb'));
-glbFiles.forEach(file => {
-  const inputPath = path.join(ASSETS_DIR, file);
-  const outputPath = path.join(webAssetsDir, file);
-  compressGLB(inputPath, outputPath);
-});
-
-// Compress images
-const imageFiles = fs.readdirSync(ASSETS_DIR).filter(file => 
-  file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.JPG')
-);
-imageFiles.forEach(file => {
-  const inputPath = path.join(ASSETS_DIR, file);
-  const outputPath = path.join(webAssetsDir, file.replace(/\.(jpg|png|JPG)$/, '.webp'));
-  compressImage(inputPath, outputPath);
-});
-
-// Copy other files
-const otherFiles = fs.readdirSync(ASSETS_DIR).filter(file => 
-  !file.endsWith('.glb') && !file.endsWith('.jpg') && !file.endsWith('.png') && !file.endsWith('.JPG')
-);
-otherFiles.forEach(file => {
-  const inputPath = path.join(ASSETS_DIR, file);
-  const outputPath = path.join(webAssetsDir, file);
-  fs.copyFileSync(inputPath, outputPath);
-  console.log(`Copied: ${file}`);
-});
-
-// Process desktop assets
-console.log('\n📁 Processing desktop assets...');
-const desktopAssetsDir = path.join(OUTPUT_DIR, 'desktop-assets');
-if (!fs.existsSync(desktopAssetsDir)) {
-  fs.mkdirSync(desktopAssetsDir, { recursive: true });
-}
-
-// Copy desktop assets (emulators, games, etc.)
-const desktopDirs = ['emulators', 'games', 'images', 'emulators-ui'];
-desktopDirs.forEach(dir => {
-  const sourceDir = path.join(DESKTOP_ASSETS_DIR, dir);
-  const targetDir = path.join(desktopAssetsDir, dir);
-  
-  if (fs.existsSync(sourceDir)) {
-    execSync(`cp -r "${sourceDir}" "${targetDir}"`, { stdio: 'inherit' });
-    console.log(`Copied desktop directory: ${dir}`);
-  }
-});
-
-// Calculate total sizes
-console.log('\n📊 Compression Results:');
-const originalSize = getDirectorySize('./apps');
-const compressedSize = getDirectorySize(OUTPUT_DIR);
-const totalReduction = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
-
-console.log(`Original size: ${(originalSize / 1024 / 1024).toFixed(1)}MB`);
-console.log(`Compressed size: ${(compressedSize / 1024 / 1024).toFixed(1)}MB`);
-console.log(`Total reduction: ${totalReduction}%`);
-
-if (compressedSize < 25 * 1024 * 1024) {
-  console.log('🎉 SUCCESS! Compressed assets are under 25MB and can fit in GitHub!');
-} else {
-  console.log('⚠️  Still over 25MB. Consider more aggressive compression or external hosting.');
-}
-
-function getDirectorySize(dirPath) {
-  let totalSize = 0;
-  
-  function calculateSize(itemPath) {
-    const stats = fs.statSync(itemPath);
-    if (stats.isDirectory()) {
-      const files = fs.readdirSync(itemPath);
-      files.forEach(file => {
-        calculateSize(path.join(itemPath, file));
-      });
-    } else {
-      totalSize += stats.size;
-    }
-  }
-  
-  calculateSize(dirPath);
-  return totalSize;
-}
+main();

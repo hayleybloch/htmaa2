@@ -57,7 +57,7 @@ function transformWebUrlToDesktop(webUrl: string): string {
 }
 
 function getDesktopTargetUrl(): string {
-  // Use configurable desktop URL instead of hardcoded Vercel URL
+  // Use configurable desktop URL
   const desktopUrl = process.env.NEXT_PUBLIC_DESKTOP_URL;
   
   if (desktopUrl) {

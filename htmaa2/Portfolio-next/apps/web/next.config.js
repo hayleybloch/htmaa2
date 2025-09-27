@@ -5,9 +5,9 @@ const nextConfig = {
   devIndicators: false,
   output: 'export',
   trailingSlash: true,
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/htmaa2' : '',
+  assetPrefix: '',
   env: {
-    NEXT_PUBLIC_BASE_PATH: process.env.NODE_ENV === 'production' ? '/htmaa2' : '',
+    NEXT_PUBLIC_BASE_PATH: '',
   },
   webpack: (config) => {
     config.module.rules.push({

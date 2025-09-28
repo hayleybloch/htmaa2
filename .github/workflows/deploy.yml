@@ -36,6 +36,7 @@ jobs:
         working-directory: apps/web
         run: |
           cp out/index.html out/404.html
+          touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

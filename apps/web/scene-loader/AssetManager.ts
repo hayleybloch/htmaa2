@@ -100,7 +100,8 @@ export class AssetManager {
     
     // Setup DRACO loader for compressed GLB files
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    // Use a more reliable CDN path for DRACO decoder
+    dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.178.0/examples/jsm/libs/draco/');
     gltfLoader.setDRACOLoader(dracoLoader);
     
     const renderer = new WebGLRenderer();

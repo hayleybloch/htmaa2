@@ -26,11 +26,17 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Build only the web app with GitHub Pages configuration
-      - name: Build
+      # Build web app with GitHub Pages configuration
+      - name: Build web app
         run: |
           cd apps/web
           BUILD_FOR_GITHUB=true npm run build
+
+      # Build desktop app with GitHub Pages configuration
+      - name: Build desktop app
+        run: |
+          cd apps/desktop
+          npm run build
 
       # Export the web app and create SPA fallback
       - name: Export web
@@ -38,6 +44,12 @@ jobs:
         run: |
           cp out/index.html out/404.html
           touch out/.nojekyll
+
+      # Copy desktop app to web app's out directory
+      - name: Copy desktop app
+        run: |
+          mkdir -p apps/web/out/desktop
+          cp -r apps/desktop/out/* apps/web/out/desktop/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

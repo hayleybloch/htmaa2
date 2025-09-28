@@ -73,9 +73,9 @@ function getDesktopTargetUrl(): string {
     return desktopUrl;
   }
   
-  // Use production URL for GitHub Pages deployment
+  // Use production URL for GitHub Pages deployment - point to desktop subdirectory
   const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'https://hayleybloch.github.io/htmaa2/'
-  return target;
+  return `${target}desktop/`;
 }
 
 function getDesktopTarget(debug: boolean): string {

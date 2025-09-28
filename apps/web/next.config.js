@@ -15,7 +15,7 @@ const nextConfig = {
   transpilePackages: ["rpc"],
   devIndicators: false,
   env: {
-    NEXT_PUBLIC_BASE_PATH: isProd ? "" : ""
+    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ""
   },
   webpack: (config) => {
     config.module.rules.push({ test: /\.frag$/, type: "asset/source" });

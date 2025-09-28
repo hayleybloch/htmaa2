@@ -9,9 +9,9 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Helper function to get the correct asset path
 function getAssetPath(path: string): string {
-  // Next.js with basePath and assetPrefix will automatically handle the base path
-  // Just return the path as-is, Next.js will prefix it correctly
-  return path;
+  // Use environment variable for dynamic base path
+  const prefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  return `${prefix}${path}`;
 }
 
 export const DisplayParentName = "DisplayParent";

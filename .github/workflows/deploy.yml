@@ -30,10 +30,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Create SPA style fallback for deep links on Pages
-      - name: Setup 404 fallback
+      # Export the web app and create SPA fallback
+      - name: Export web
         working-directory: apps/web
-        run: cp out/index.html out/404.html
+        run: |
+          npm run build
+          cp out/index.html out/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

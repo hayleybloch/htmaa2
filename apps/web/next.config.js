@@ -1,30 +1,24 @@
 /** @type {import('next').NextConfig} */
 const repo = "htmaa2";
+const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig = {
-  output: "export",                 // enables static export
-  basePath: `/${repo}`,             // prefix routes
-  assetPrefix: `/${repo}/`,         // prefix static assets
-  images: { unoptimized: true },    // needed when exporting if using next/image
-  trailingSlash: true,               // safer for GitHub Pages
+  output: "export",
+  basePath: isProd ? `/${repo}` : "",
+  assetPrefix: isProd ? `/${repo}/` : "",
+  images: { unoptimized: true },
+  trailingSlash: true,
   reactStrictMode: true,
-  transpilePackages: ['rpc'],
+  transpilePackages: ["rpc"],
   devIndicators: false,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ""
+  },
   webpack: (config) => {
-    config.module.rules.push({
-      test: /\.frag$/,
-      // This is the asset module.
-      type: 'asset/source',
-    });
-
-    config.module.rules.push({
-      test: /\.vert$/,
-      // This is the asset module.
-      type: 'asset/source',
-    });
-
+    config.module.rules.push({ test: /\.frag$/, type: "asset/source" });
+    config.module.rules.push({ test: /\.vert$/, type: "asset/source" });
     return config;
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

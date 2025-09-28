@@ -26,15 +26,15 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Build the whole monorepo, your Turborepo will handle dependencies
+      # Build the whole monorepo with GitHub Pages configuration
       - name: Build
-        run: npm run build
+        run: |
+          BUILD_FOR_GITHUB=true npm run build
 
       # Export the web app and create SPA fallback
       - name: Export web
         working-directory: apps/web
         run: |
-          BUILD_FOR_GITHUB=true npm run build
           cp out/index.html out/404.html
 
       - name: Upload artifact

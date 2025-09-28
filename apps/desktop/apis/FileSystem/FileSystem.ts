@@ -265,12 +265,12 @@ export function getIconFromNode(node: FileSystemNode): ApplicationIcon {
     case 'hyperlink': return node.icon;
     case "directory": {
       if (node.icon) { return node.icon; }
-      return { src: '/icons/folder-icon.png', alt: 'Directory icon' };
+      return { src: '/htmaa2/desktop/icons/folder-icon.png', alt: 'Directory icon' };
     }
-    case "hyperlink": return { src: '/icons/folder-icon.png', alt: 'Hyperlink icon' };
-    case "textfile": return { src: '/icons/file-icon.png', alt: 'File icon' }
-    case "image": return { src: '/icons/file-icon.png', alt: 'Image icon' }
-    case "program":  return { src: '/icons/file-icon.png', alt: 'Program icon' }
+    case "hyperlink": return { src: '/htmaa2/desktop/icons/folder-icon.png', alt: 'Hyperlink icon' };
+    case "textfile": return { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'File icon' }
+    case "image": return { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'Image icon' }
+    case "program":  return { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'Program icon' }
   }
 }
 
@@ -281,8 +281,8 @@ export function createBaseFileSystem(): FileSystem {
   if (!rootEntry.ok) { return fileSystem; }
   const root = rootEntry.value;
 
-  const applicationFolderIcon = { src: '/icons/icon-applications-folder.png', alt: 'Application folder' };
-  const documentsFolderIcon =  { src: '/icons/icon-documents-folder.png', alt: 'Documents folder' };
+  const applicationFolderIcon = { src: '/htmaa2/desktop/icons/icon-applications-folder.png', alt: 'Application folder' };
+  const documentsFolderIcon =  { src: '/htmaa2/desktop/icons/icon-documents-folder.png', alt: 'Documents folder' };
 
   // Create base file tree
   const applications = fileSystem.addDirectory(root, 'Applications', false, false, applicationFolderIcon);
@@ -304,7 +304,7 @@ export function createBaseFileSystem(): FileSystem {
 
   const desktop = fileSystem.addDirectory(hayley, 'Desktop', false, true);
   const documents = fileSystem.addDirectory(hayley, 'Documents', false, true, documentsFolderIcon);
-  const trashCanIcon = { src: '/icons/trash-icon.png', alt: 'Trash can icon' };
+  const trashCanIcon = { src: '/htmaa2/desktop/icons/trash-icon.png', alt: 'Trash can icon' };
   const trash = fileSystem.addDirectory(hayley, 'Trash', false, true, trashCanIcon);
 
   fileSystem.addHyperLink(desktop, applications, 'Applications', applicationFolderIcon, true);

@@ -13,7 +13,7 @@ export class ContactConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Contact.app';
-  public readonly appIcon = { src: '/icons/contact-app.png', alt: 'Contact application' };
+  public readonly appIcon = { src: '/htmaa2/desktop/icons/contact-app.png', alt: 'Contact application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

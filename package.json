@@ -12,7 +12,9 @@
     "start": "turbo run start",
     "start-clean": "turbo run build && turbo run start",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "build:web": "npm run build --workspace=apps/web",
+    "preview:web": "npm run preview:static --workspace=apps/web"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.17",

@@ -1,19 +1,14 @@
-name: Deploy to GitHub Pages
+name: Deploy htmaa2 to GitHub Pages
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -22,33 +17,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
-      - name: Install dependencies
+      - name: Install
         run: npm ci
 
-      - name: Build web app for GitHub Pages
-        run: npm run build:github --workspace=apps/web
+      # Build the whole monorepo, your Turborepo will handle dependencies
+      - name: Build
+        run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      # Create SPA style fallback for deep links on Pages
+      - name: Setup 404 fallback
+        working-directory: apps/web
+        run: cp out/index.html out/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./apps/web/out
+          path: apps/web/out
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - name: Deploy to Pages
         uses: actions/deploy-pages@v4

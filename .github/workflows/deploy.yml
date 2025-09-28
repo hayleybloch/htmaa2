@@ -29,17 +29,18 @@ jobs:
       run: npm install
 
     - name: Build
-      run: cd Portfolio-next/apps/web && npm run build
+      run: NODE_ENV=production npm run build --workspace=apps/web
+
+    - name: Add .nojekyll file
+      run: touch apps/web/out/.nojekyll
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
-      with:
-        enablement: true
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./Portfolio-next/apps/web/out
+        path: ./apps/web/out
 
     - name: Deploy to GitHub Pages
       id: deployment

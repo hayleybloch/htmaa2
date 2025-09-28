@@ -73,8 +73,8 @@ function getDesktopTargetUrl(): string {
     return desktopUrl;
   }
   
-  // Local development fallback - use relative path for GitHub Pages
-  const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'http://127.0.0.1:3001/'
+  // Use production URL for GitHub Pages deployment
+  const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'https://hayleybloch.github.io/htmaa2/'
   return target;
 }
 

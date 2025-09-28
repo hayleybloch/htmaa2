@@ -3,12 +3,15 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['rpc'],
   devIndicators: false,
-  output: 'export',
-  trailingSlash: true,
-  assetPrefix: '',
-  env: {
-    NEXT_PUBLIC_BASE_PATH: '',
-  },
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    trailingSlash: true,
+    basePath: '/htmaa2',
+    assetPrefix: '/htmaa2/',
+    env: {
+      NEXT_PUBLIC_BASE_PATH: '/htmaa2',
+    },
+  }),
   webpack: (config) => {
     config.module.rules.push({
       test: /\.frag$/,

@@ -48,7 +48,6 @@ export function NoScriptWarning() {
       <h3>ERROR: No JS detected</h3>
 
       <p>Javascript is required for this website to work.</p>
-      <p>If you&apos;re interested in my resume, you can download my CV from <a href="/assets/cv/Hayley_Bloch_resume.pdf" target="_blank">here</a>.</p>
     </noscript>
   );
 }

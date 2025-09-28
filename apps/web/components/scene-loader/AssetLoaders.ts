@@ -25,6 +25,7 @@ const NamePlateName = "NamePlate";
 const FloorName = "Floor";
 
 async function loadTexture(context: AssetManagerContext, asset: string): Promise<Texture> {
+  console.log(`loadTexture called with: ${asset}`);
   const texture = await context.textureLoader.loadAsync(asset);
 
   texture.flipY = false;
@@ -33,6 +34,7 @@ async function loadTexture(context: AssetManagerContext, asset: string): Promise
 }
 
 async function loadModel(context: AssetManagerContext, asset: string): Promise<GLTF> {
+  console.log(`loadModel called with: ${asset}`);
   return await context.gltfLoader.loadAsync(asset);
 }
 

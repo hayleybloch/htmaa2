@@ -12,7 +12,7 @@ function getAssetPath(path: string): string {
   // Use environment variable for dynamic base path
   const prefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const fullPath = `${prefix}${path}`;
-  console.log(`getAssetPath: ${path} -> ${fullPath} (prefix: "${prefix}")`);
+  console.log(`getAssetPath (components): ${path} -> ${fullPath} (prefix: "${prefix}")`);
   return fullPath;
 }
 

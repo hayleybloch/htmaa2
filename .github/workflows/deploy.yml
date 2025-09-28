@@ -26,9 +26,10 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Build the whole monorepo with GitHub Pages configuration
+      # Build only the web app with GitHub Pages configuration
       - name: Build
         run: |
+          cd apps/web
           BUILD_FOR_GITHUB=true npm run build
 
       # Export the web app and create SPA fallback

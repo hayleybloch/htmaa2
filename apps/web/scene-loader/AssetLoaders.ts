@@ -9,10 +9,9 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Helper function to get the correct asset path
 function getAssetPath(path: string): string {
-  // For GitHub Pages, we need to use relative paths instead of absolute paths
-  // Remove leading slash to make paths relative
-  const relativePath = path.startsWith('/') ? path.substring(1) : path;
-  return `./${relativePath}`;
+  // Next.js with basePath and assetPrefix will automatically handle the base path
+  // Just return the path as-is, Next.js will prefix it correctly
+  return path;
 }
 
 export const DisplayParentName = "DisplayParent";

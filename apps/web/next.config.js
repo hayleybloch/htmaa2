@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const repo = "htmaa2";
-const isProd = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GITHUB === "true";
+const isGitHub = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GITHUB === "true";
+const isGitLab = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GITLAB === "true";
+const isProd = isGitHub || isGitLab;
 
 const nextConfig = {
   output: "export",

@@ -17,8 +17,8 @@ import { parseRequestFromChild, sendMessageToChild } from "../lib/rpc";
 import { RendererUI } from './RendererUI';
 import { SoundService } from './sound/SoundService';
 import { BackgroundSounds } from './BackgroundSounds';
-import { UpdateAction } from '../scene-loader/AssetManager';
-import { getBrowserDimensions, isDebug } from '../scene-loader/util';
+import { UpdateAction } from '../components/scene-loader/AssetManager';
+import { getBrowserDimensions, isDebug } from '../components/scene-loader/util';
 import Stats from "three/examples/jsm/libs/stats.module";
 import { setInitialCameraPosition } from './camera/states/CinematicCameraState';
 

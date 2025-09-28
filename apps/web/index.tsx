@@ -1,2 +1,2 @@
-export * from "./scene-loader/SceneLoader";
+export * from "./components/scene-loader/SceneLoader";
 export * from "./renderer/Renderer";

@@ -6,7 +6,10 @@ const nextConfig = {
   output: "export",
   basePath: isProd ? `/${repo}` : "",
   assetPrefix: isProd ? `/${repo}/` : "",
-  images: { unoptimized: true },
+  images: { 
+    unoptimized: true,
+    qualities: [25, 50, 75, 100]
+  },
   trailingSlash: true,
   reactStrictMode: true,
   transpilePackages: ["rpc"],

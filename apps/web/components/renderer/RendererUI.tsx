@@ -55,7 +55,7 @@ type SubViewProps = {
 function SoundManagementButton(props: { sound: SubViewSound }) {
   const { isSoundEnabled, toggleSound } = props.sound;
 
-  const icon = isSoundEnabled ? "/icons/mute-icon.svg" : "/icons/unmute-icon.svg"
+  const icon = isSoundEnabled ? "/htmaa2/icons/mute-icon.svg" : "/htmaa2/icons/unmute-icon.svg"
 
   return (
     <button className={styles['mute-button']} onClick={() => toggleSound()}>
@@ -65,7 +65,7 @@ function SoundManagementButton(props: { sound: SubViewSound }) {
 }
 
 function ChangeSceneButton(props: { targetState: CameraHandlerState, cameraHandler: RefObject<CameraHandler | null> }) {
-  const icon = "/icons/camera.svg";
+  const icon = "/htmaa2/icons/camera.svg";
 
   const { targetState, cameraHandler } = props;
 

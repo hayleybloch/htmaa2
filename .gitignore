@@ -6,7 +6,7 @@ yarn-error.log*
 
 # Build outputs
 .next/
-out/
+# out/ - commented out to allow GitHub Pages deployment
 dist/
 build/
 

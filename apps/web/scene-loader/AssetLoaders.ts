@@ -9,7 +9,8 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Helper function to get the correct asset path
 function getAssetPath(path: string): string {
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  // For GitHub Pages, we need to ensure the base path is always applied
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/htmaa2';
   return `${basePath}${path}`;
 }
 

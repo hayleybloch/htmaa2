@@ -1,4 +1,4 @@
-import { MessageFromParent, sendMessageToChild } from "rpc";
+import { MessageFromParent, sendMessageToChild } from "../../lib/rpc";
 
 export const calculateAspectRatio = (width: number, height: number): number => {
   return width / height;

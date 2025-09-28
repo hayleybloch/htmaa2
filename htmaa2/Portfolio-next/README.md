@@ -70,3 +70,4 @@ For questions about my work or this portfolio, feel free to reach out!
 
 *Built with ❤️ by Hayley Bloch*
 # Updated Sat Sep 27 20:25:33 EDT 2025
+# Force rebuild Sat Sep 27 20:30:44 EDT 2025

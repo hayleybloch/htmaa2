@@ -29,6 +29,9 @@ jobs:
     - name: Build
       run: cd apps/web && npm run build
 
+    - name: Add .nojekyll file
+      run: touch apps/web/out/.nojekyll
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 

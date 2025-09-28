@@ -1,13 +1,25 @@
-# Joey de Ruiter's portfolio
-This is my personal portfolio, outlining my experience and skills.
-If you find a bug. Please report it in the issue tracker and enjoy the website! <3
+# Hayley Bloch - HTMAA Portfolio
 
-You can see the production version [here](https://joeyderuiter.me/)!
+This repository contains my HTMAA (How to Make (Almost) Anything) portfolio project.
 
-## Installing dependencies
-To install all the dependencies, run the following command:
+## Live Portfolio
+Visit my portfolio at: [https://hayleybloch.github.io/htmaa2/](https://hayleybloch.github.io/htmaa2/)
+
+## Project Structure
+- `htmaa2/Portfolio-next/` - Main portfolio application
+- `htmaa2/Portfolio-next/apps/web/` - 3D web environment
+- `htmaa2/Portfolio-next/apps/desktop/` - Desktop OS interface
+
+## Development
+To work on the portfolio, navigate to the Portfolio-next directory:
+```bash
+cd htmaa2/Portfolio-next
+npm install
+npm run dev
 ```
-npm i
+
+## About
+This is my creative portfolio showcasing my work as an HTMAA student at MIT, featuring digital fabrication projects, electronics, and creative engineering.
 ```
 
 ## Build

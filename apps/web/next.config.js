@@ -4,8 +4,8 @@ const isProd = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GI
 
 const nextConfig = {
   output: "export",
-  basePath: isProd ? "" : "",
-  assetPrefix: isProd ? "" : "",
+  basePath: isProd ? `/${repo}` : "",
+  assetPrefix: isProd ? `/${repo}/` : "",
   images: { 
     unoptimized: true,
     qualities: [25, 50, 75, 100]

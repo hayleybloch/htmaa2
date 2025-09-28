@@ -3,6 +3,9 @@ const nextConfig = {
   output: "export",
   basePath: "/htmaa2/desktop",
   assetPrefix: "/htmaa2/desktop/",
+  images: {
+    unoptimized: true
+  },
   devIndicators: false,
   webpack: (webpackConfig, { webpack }) => {
     webpackConfig.plugins.push(

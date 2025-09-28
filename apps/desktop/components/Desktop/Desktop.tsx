@@ -8,7 +8,9 @@ import { DirectoryEntry, FileSystemNode } from '@/apis/FileSystem/FileSystem';
 import { ApplicationManager } from '@/applications/ApplicationManager';
 import { constructPath } from '@/apis/FileSystem/util';
 
-const FolderView = dynamic(() => import('../Folder/FolderView'));
+const FolderView = dynamic(() => import('../Folder/FolderView'), {
+  ssr: false
+}) as React.ComponentType<any>;
 const WindowContainer = dynamic(() => import('../WindowManagement/WindowContainer'), {
   ssr: false
 }) as React.ComponentType<{ window: Window, WindowApp: WindowApplication, windowCompositor: WindowCompositor, parent: HTMLDivElement | null }>;

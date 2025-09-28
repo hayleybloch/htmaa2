@@ -1,47 +1,6 @@
-# Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build outputs
 .next/
-# out/ - commented out to allow GitHub Pages deployment
-dist/
-build/
-
-# Cache directories
-.cache/
+out/
 .turbo/
-
-# Large media files
-*.mp4
-*.mov
-*.avi
-*.mkv
-*.bin
-*.wasm
-*.jsdos
-
-# Specific large files
-**/Bust.bin
-**/wdosbox*.wasm
-**/doom.jsdos
-**/demonstration_video.mp4
-**/screen-recording*.mp4
-
-# Development files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
+*.log
 .DS_Store
-Thumbs.db

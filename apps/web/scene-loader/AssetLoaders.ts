@@ -9,11 +9,10 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Helper function to get the correct asset path
 function getAssetPath(path: string): string {
-  // For GitHub Pages, we need to ensure the base path is always applied
-  // Check if we're in production and on GitHub Pages
-  const isProduction = process.env.NODE_ENV === 'production';
-  const basePath = isProduction ? '/htmaa2' : '';
-  return `${basePath}${path}`;
+  // For GitHub Pages, we need to use relative paths instead of absolute paths
+  // Remove leading slash to make paths relative
+  const relativePath = path.startsWith('/') ? path.substring(1) : path;
+  return `./${relativePath}`;
 }
 
 export const DisplayParentName = "DisplayParent";

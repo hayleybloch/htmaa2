@@ -4,8 +4,8 @@ const isProd = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GI
 
 const nextConfig = {
   output: "export",
-  basePath: isProd ? `/${repo}` : "",
-  assetPrefix: isProd ? `/${repo}/` : "",
+  basePath: isProd ? "" : "",
+  assetPrefix: isProd ? "" : "",
   images: { 
     unoptimized: true,
     qualities: [25, 50, 75, 100]
@@ -15,7 +15,7 @@ const nextConfig = {
   transpilePackages: ["rpc"],
   devIndicators: false,
   env: {
-    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ""
+    NEXT_PUBLIC_BASE_PATH: isProd ? "" : ""
   },
   webpack: (config) => {
     config.module.rules.push({ test: /\.frag$/, type: "asset/source" });

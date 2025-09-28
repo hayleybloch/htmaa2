@@ -7,6 +7,13 @@ import { CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
 import { degToRad } from "three/src/math/MathUtils";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
+// Helper function to get the correct asset path
+function getAssetPath(path: string): string {
+  // Use environment variable for dynamic base path
+  const prefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  return `${prefix}${path}`;
+}
+
 export const DisplayParentName = "DisplayParent";
 export const DisplayName = "Display";
 const MonitorName = "Monitor";
@@ -127,8 +134,8 @@ export function FloorLoader(): AssetLoader {
   let texture: Texture | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const textureLoader = async () => { texture = await loadTexture(context, '/assets/SmoothFloor.jpg'); }
-    const assetLoader   = async () => { asset = await loadModel(context, '/assets/SmoothFloor.glb'); }
+    const textureLoader = async () => { texture = await loadTexture(context, getAssetPath('/assets/SmoothFloor.jpg')); }
+    const assetLoader   = async () => { asset = await loadModel(context, getAssetPath('/assets/SmoothFloor.glb')); }
 
     await Promise.all([textureLoader(), assetLoader()]);
   }
@@ -166,8 +173,8 @@ export function DeskLoader(): AssetLoader {
   let texture: Texture | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const textureLoader = async () => { texture = await loadTexture(context, '/assets/Desk.jpg'); }
-    const assetLoader   = async () => { asset = await loadModel(context, '/assets/Desk.glb'); }
+    const textureLoader = async () => { texture = await loadTexture(context, getAssetPath('/assets/Desk.jpg')); }
+    const assetLoader   = async () => { asset = await loadModel(context, getAssetPath('/assets/Desk.glb')); }
 
     await Promise.all([textureLoader(), assetLoader()]);
   }
@@ -215,10 +222,10 @@ export function MonitorLoader(): AssetLoader {
   let asset: GLTF | null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const monitorLoader   = async () => { monitorTexture = await loadTexture(context, '/assets/Monitor.jpg'); }
-    const computerLoader  = async () => { computerTexture = await loadTexture(context, '/assets/Computer.jpg'); }
-    const namePlateLoader = async () => { namePlateTexture = await loadTexture(context, '/assets/NamePlate.jpg'); }
-    const assetLoader     = async () => { asset = await loadModel(context, '/assets/Monitor.glb'); }
+    const monitorLoader   = async () => { monitorTexture = await loadTexture(context, getAssetPath('/assets/Monitor.jpg')); }
+    const computerLoader  = async () => { computerTexture = await loadTexture(context, getAssetPath('/assets/Computer.jpg')); }
+    const namePlateLoader = async () => { namePlateTexture = await loadTexture(context, getAssetPath('/assets/NamePlate.jpg')); }
+    const assetLoader     = async () => { asset = await loadModel(context, getAssetPath('/assets/Monitor.glb')); }
 
     await Promise.all([monitorLoader(), computerLoader(), namePlateLoader(), assetLoader()]);
   }
@@ -334,10 +341,10 @@ export function KeyboardLoader(): AssetLoader {
   let asset: GLTF | null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const caseTextureLoader   = async () => { caseTexture = await loadTexture(context, '/assets/KeyboardCase.jpg'); }
-    const keyCapTextureLoader = async () => { keyCapTexture = await loadTexture(context, '/assets/KeyboardKeyCaps.jpg'); }
+    const caseTextureLoader   = async () => { caseTexture = await loadTexture(context, getAssetPath('/assets/KeyboardCase.jpg')); }
+    const keyCapTextureLoader = async () => { keyCapTexture = await loadTexture(context, getAssetPath('/assets/KeyboardKeyCaps.jpg')); }
 
-    const assetLoader = async () => { asset = await loadModel(context, '/assets/Keyboard.glb'); }
+    const assetLoader = async () => { asset = await loadModel(context, getAssetPath('/assets/Keyboard.glb')); }
 
     await Promise.all([
       caseTextureLoader(),
@@ -382,8 +389,8 @@ export function MouseLoader(): AssetLoader {
   let asset: GLTF | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const textureLoader = async () => { texture = await loadTexture(context, '/assets/Mouse.jpg'); }
-    const assetLoader = async () => { asset = await loadModel(context, '/assets/Mouse.glb'); }
+    const textureLoader = async () => { texture = await loadTexture(context, getAssetPath('/assets/Mouse.jpg')); }
+    const assetLoader = async () => { asset = await loadModel(context, getAssetPath('/assets/Mouse.glb')); }
 
     await Promise.all([textureLoader(), assetLoader()]);
   }
@@ -416,7 +423,7 @@ export function CablesLoader(): AssetLoader {
   let asset: GLTF | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    asset = await loadModel(context, '/assets/Cables.gltf');
+    asset = await loadModel(context, getAssetPath('/assets/Cables.gltf'));
   }
 
   function builder(context: AssetManagerContext): OptionalUpdateAction {
@@ -448,8 +455,8 @@ export function BustLoader(): AssetLoader {
   let texture: Texture | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const assetLoader = async () => { asset = await loadModel(context, '/assets/Bust.glb'); }
-    const textureLoader = async () => { texture = await loadTexture(context, '/assets/Bust.jpg'); }
+    const assetLoader = async () => { asset = await loadModel(context, getAssetPath('/assets/Bust.glb')); }
+    const textureLoader = async () => { texture = await loadTexture(context, getAssetPath('/assets/Bust.jpg')); }
 
     await Promise.all([assetLoader(), textureLoader()]);
   }
@@ -492,8 +499,8 @@ export function PlantLoader(): AssetLoader {
   let texture: Texture | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const assetLoader = async () => { asset = await loadModel(context, '/assets/Plant.glb'); }
-    const textureLoader = async () => { texture = await loadTexture(context, '/assets/Plant.jpg'); }
+    const assetLoader = async () => { asset = await loadModel(context, getAssetPath('/assets/Plant.glb')); }
+    const textureLoader = async () => { texture = await loadTexture(context, getAssetPath('/assets/Plant.jpg')); }
 
     await Promise.all([assetLoader(), textureLoader()]);
   }
@@ -525,7 +532,7 @@ export function IrisLoader(): AssetLoader {
   let asset: GLTF | null = null;
 
   async function downloader(context: AssetManagerContext): Promise<void> {
-    const assetLoader = async () => { asset = await loadModel(context, '/assets/Iris.glb'); }
+    const assetLoader = async () => { asset = await loadModel(context, getAssetPath('/assets/Iris.glb')); }
 
     await Promise.all([assetLoader()]);
   }

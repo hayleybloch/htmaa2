@@ -1,0 +1,629 @@
+# HTMAA2 Repository Documentation
+# Complete file-by-file breakdown of the repository structure and purpose
+
+## ROOT LEVEL FILES
+=====================================
+
+agreement.md
+- Purpose: Project agreement or contract document
+- Content: Likely contains project terms, requirements, or specifications
+
+DEPLOYMENT.md
+- Purpose: Documentation for GitHub Pages deployment process
+- Content: Instructions for deploying web app to GitHub Pages, build configuration, troubleshooting
+
+MIT_DEPLOYMENT.md
+- Purpose: MIT-specific deployment documentation
+- Content: Deployment instructions for MIT GitLab, CI/CD configuration for MIT environment
+
+README.md
+- Purpose: Main project documentation
+- Content: Project overview, setup instructions, usage guide
+
+create-mit-repo.sh
+- Purpose: Shell script to create MIT repository
+- Content: Automated script for setting up repository on MIT GitLab
+
+optimize-assets.sh
+- Purpose: Asset optimization script
+- Content: Script to compress/optimize images, models, and other assets
+
+simple-optimize.sh
+- Purpose: Simplified asset optimization
+- Content: Basic asset optimization script
+
+package.json
+- Purpose: Root package.json for monorepo
+- Content: Workspace configuration, shared dependencies, build scripts
+
+package-lock.json
+- Purpose: Lock file for root dependencies
+- Content: Exact dependency versions for reproducible builds
+
+turbo.json
+- Purpose: Turbo build system configuration
+- Content: Build pipeline configuration, caching, task dependencies
+
+## APPS DIRECTORY
+=====================================
+
+### apps/desktop/ - Desktop Application (Next.js)
+The desktop app simulates a macOS-like interface with applications and window management.
+
+#### Core Application Files
+apps/desktop/pages/_app.tsx
+- Purpose: Next.js app wrapper component
+- Content: Global app configuration, providers, layout wrapper
+
+apps/desktop/pages/_document.tsx
+- Purpose: Next.js document customization
+- Content: HTML document structure, meta tags, font loading
+
+apps/desktop/pages/index.tsx
+- Purpose: Main desktop interface entry point
+- Content: Desktop component, window compositor setup
+
+apps/desktop/next.config.js
+- Purpose: Next.js configuration
+- Content: Build settings, asset paths, GitHub Pages configuration
+
+apps/desktop/next-i18next.config.js
+- Purpose: Internationalization configuration
+- Content: Language settings, translation file paths
+
+apps/desktop/tsconfig.json
+- Purpose: TypeScript configuration for desktop app
+- Content: Compiler options, path mappings, include/exclude patterns
+
+apps/desktop/package.json
+- Purpose: Desktop app dependencies and scripts
+- Content: Next.js dependencies, development scripts
+
+#### API Layer (apps/desktop/apis/)
+apps/desktop/apis/DragAndDrop/DragAndDrop.ts
+- Purpose: Drag and drop functionality
+- Content: Drag and drop event handling, element tracking
+
+apps/desktop/apis/FileSystem/FileSystem.ts
+- Purpose: File system simulation
+- Content: Virtual file system, directory structure, file operations
+
+apps/desktop/apis/FileSystem/CommandEncoding.ts
+- Purpose: Command encoding utilities
+- Content: Command serialization/deserialization
+
+apps/desktop/apis/FileSystem/util.ts
+- Purpose: File system utility functions
+- Content: Helper functions for file operations
+
+apps/desktop/apis/Screen/ScreenService.ts
+- Purpose: Screen management service
+- Content: Screen resolution handling, display management
+
+apps/desktop/apis/Sound/Sound.ts
+- Purpose: Audio system
+- Content: Sound effects, audio management
+
+apps/desktop/apis/System/System.ts
+- Purpose: System-level operations
+- Content: System information, environment detection
+
+#### Applications (apps/desktop/applications/)
+apps/desktop/applications/About/AboutView.tsx
+- Purpose: About application main view
+- Content: Navigation, sub-view management, layout
+
+apps/desktop/applications/About/AboutView.module.css
+- Purpose: About app styling
+- Content: CSS modules for About application
+
+apps/desktop/applications/About/Projects.tsx
+- Purpose: Project documentation components
+- Content: Week 1-4 project documentation, image components
+
+apps/desktop/applications/AlgorithmVisualizer/AlgorithmVisualizer.ts
+- Purpose: Algorithm visualizer application logic
+- Content: Algorithm implementations, state management
+
+apps/desktop/applications/AlgorithmVisualizer/AlgorithmVisualizerView.tsx
+- Purpose: Algorithm visualizer UI
+- Content: Visualization components, controls, animations
+
+apps/desktop/applications/AlgorithmVisualizer/AlgorithmVisualizerView.module.css
+- Purpose: Algorithm visualizer styling
+- Content: CSS for visualization components
+
+apps/desktop/applications/Contract/Contact.ts
+- Purpose: Contact application logic
+- Content: Contact form handling, email functionality
+
+apps/desktop/applications/Contract/ContactView.tsx
+- Purpose: Contact form UI
+- Content: Contact form components, validation
+
+apps/desktop/applications/Contract/ContactView.module.css
+- Purpose: Contact form styling
+- Content: CSS for contact form
+
+apps/desktop/applications/Debug/DebugApplication.tsx
+- Purpose: Debug application
+- Content: Debug tools, system information display
+
+apps/desktop/applications/Debug/DebugApplicationView.tsx
+- Purpose: Debug application UI
+- Content: Debug interface components
+
+apps/desktop/applications/Finder/Finder.ts
+- Purpose: File manager application
+- Content: File browsing logic, directory navigation
+
+apps/desktop/applications/Finder/FinderView.tsx
+- Purpose: File manager UI
+- Content: File browser interface, file operations
+
+apps/desktop/applications/Finder/FinderView.module.css
+- Purpose: File manager styling
+- Content: CSS for file browser
+
+apps/desktop/applications/Imageviewer/ImageViewer.ts
+- Purpose: Image viewer application
+- Content: Image display logic, zoom/pan functionality
+
+apps/desktop/applications/Imageviewer/ImageviewerView.tsx
+- Purpose: Image viewer UI
+- Content: Image display components, controls
+
+apps/desktop/applications/Imageviewer/ImageviewerView.module.css
+- Purpose: Image viewer styling
+- Content: CSS for image viewer
+
+apps/desktop/applications/Notes/Notes.ts
+- Purpose: Notes application logic
+- Content: Text editing, file operations
+
+apps/desktop/applications/Notes/NotesView.tsx
+- Purpose: Notes application UI
+- Content: Text editor interface, file management
+
+apps/desktop/applications/Notes/NotesView.module.css
+- Purpose: Notes application styling
+- Content: CSS for text editor
+
+apps/desktop/applications/Skills/Skills.ts
+- Purpose: Skills application logic
+- Content: Skills data management
+
+apps/desktop/applications/Skills/SkillsView.tsx
+- Purpose: Skills display UI
+- Content: Skills visualization components
+
+apps/desktop/applications/Skills/SkillsView.module.css
+- Purpose: Skills application styling
+- Content: CSS for skills display
+
+apps/desktop/applications/Terminal/Terminal.ts
+- Purpose: Terminal application logic
+- Content: Command processing, shell simulation
+
+apps/desktop/applications/Terminal/TerminalView.tsx
+- Purpose: Terminal UI
+- Content: Terminal interface, command input/output
+
+apps/desktop/applications/Terminal/TerminalView.module.css
+- Purpose: Terminal styling
+- Content: CSS for terminal interface
+
+#### Application Management
+apps/desktop/applications/ApplicationEvents.ts
+- Purpose: Application event system
+- Content: Event types, event handling
+
+apps/desktop/applications/ApplicationManager.ts
+- Purpose: Application lifecycle management
+- Content: App launching, closing, state management
+
+apps/desktop/applications/LocalApplicationManager.ts
+- Purpose: Local application management
+- Content: Local app registration, management
+
+apps/desktop/applications/math.ts
+- Purpose: Mathematical utilities
+- Content: Math helper functions
+
+#### Components (apps/desktop/components/)
+apps/desktop/components/Desktop/Desktop.tsx
+- Purpose: Main desktop interface
+- Content: Desktop background, application management
+
+apps/desktop/components/Desktop/Desktop.module.css
+- Purpose: Desktop styling
+- Content: CSS for desktop interface
+
+apps/desktop/components/Dock/
+- Purpose: Application dock
+- Content: Dock component with app icons
+
+apps/desktop/components/DragAndDropView.tsx
+- Purpose: Drag and drop visual feedback
+- Content: Drag and drop overlay components
+
+apps/desktop/components/Folder/
+- Purpose: Folder/file icons
+- Content: Folder display components
+
+apps/desktop/components/GraphViewer/
+- Purpose: Graph visualization
+- Content: Graph rendering components
+
+apps/desktop/components/Icons/
+- Purpose: Icon components
+- Content: Reusable icon components
+
+apps/desktop/components/MenuBar.tsx
+- Purpose: Menu bar component
+- Content: Top menu bar interface
+
+apps/desktop/components/MenuBar.module.css
+- Purpose: Menu bar styling
+- Content: CSS for menu bar
+
+apps/desktop/components/OperatingSystem.tsx
+- Purpose: OS-level interface
+- Content: System-level UI components
+
+apps/desktop/components/OperatingSystem.module.css
+- Purpose: OS interface styling
+- Content: CSS for system interface
+
+apps/desktop/components/PeripheralSounds/
+- Purpose: Sound effects for interactions
+- Content: Audio feedback components
+
+apps/desktop/components/WindowManagement/
+- Purpose: Window system
+- Content: Window creation, management, positioning
+
+apps/desktop/components/util.ts
+- Purpose: Component utilities
+- Content: Helper functions for components
+
+#### Data Structures (apps/desktop/data/)
+apps/desktop/data/BoundingBox.ts
+- Purpose: Bounding box data structure
+- Content: Rectangle/cuboid calculations
+
+apps/desktop/data/Camera.ts
+- Purpose: Camera data structure
+- Content: Camera position, view calculations
+
+apps/desktop/data/Chain.ts
+- Purpose: Chain data structure
+- Content: Linked list implementation
+
+apps/desktop/data/Observer.ts
+- Purpose: Observer pattern implementation
+- Content: Event subscription/notification system
+
+apps/desktop/data/PRNG.ts
+- Purpose: Pseudo-random number generator
+- Content: Random number generation utilities
+
+apps/desktop/data/Queue.ts
+- Purpose: Queue data structure
+- Content: FIFO queue implementation
+
+apps/desktop/data/TouchData.ts
+- Purpose: Touch input data structure
+- Content: Touch event handling
+
+#### Terminal Programs (apps/desktop/programs/)
+apps/desktop/programs/ChangeDirectory/
+- Purpose: cd command implementation
+- Content: Directory navigation logic
+
+apps/desktop/programs/Concatenation/
+- Purpose: cat command implementation
+- Content: File concatenation/display
+
+apps/desktop/programs/Help/
+- Purpose: help command
+- Content: Command help system
+
+apps/desktop/programs/ListFiles/
+- Purpose: ls command implementation
+- Content: Directory listing logic
+
+apps/desktop/programs/MakeDirectory/
+- Purpose: mkdir command implementation
+- Content: Directory creation logic
+
+apps/desktop/programs/MessageOfTheDay/
+- Purpose: motd command
+- Content: Welcome message display
+
+apps/desktop/programs/Move/
+- Purpose: mv command implementation
+- Content: File/directory moving logic
+
+apps/desktop/programs/Neofetch/
+- Purpose: neofetch command
+- Content: System information display
+
+apps/desktop/programs/Open/
+- Purpose: open command implementation
+- Content: File opening logic
+
+apps/desktop/programs/PrintWorkingDirectory/
+- Purpose: pwd command implementation
+- Content: Current directory display
+
+apps/desktop/programs/Programs.ts
+- Purpose: Program registry
+- Content: Available programs list, command mapping
+
+apps/desktop/programs/Remove/
+- Purpose: rm command implementation
+- Content: File/directory deletion logic
+
+apps/desktop/programs/Touch/
+- Purpose: touch command implementation
+- Content: File creation/update logic
+
+apps/desktop/programs/Uwufier/
+- Purpose: uwufier command
+- Content: Text transformation utility
+
+#### Public Assets (apps/desktop/public/)
+apps/desktop/public/favicon.ico
+- Purpose: Website favicon
+- Content: Desktop app icon
+
+apps/desktop/public/fonts/
+- Purpose: Custom fonts
+- Content: Font files for desktop interface
+
+apps/desktop/public/icons/
+- Purpose: Application and system icons
+- Content: PNG/SVG icons for apps and UI elements
+
+apps/desktop/public/images/
+- Purpose: Project images
+- Content: Project documentation images, photos
+
+apps/desktop/public/locales/en/common.json
+- Purpose: English translations
+- Content: UI text translations
+
+apps/desktop/public/sounds/
+- Purpose: Sound effects
+- Content: Audio files for UI interactions
+
+apps/desktop/public/xterm/
+- Purpose: Terminal styling
+- Content: CSS for terminal appearance
+
+#### Styles (apps/desktop/styles/)
+apps/desktop/styles/globals.css
+- Purpose: Global styles
+- Content: CSS reset, global styles
+
+apps/desktop/styles/Home.module.css
+- Purpose: Home page styling
+- Content: CSS for home interface
+
+apps/desktop/styles/WindowContainer.module.css
+- Purpose: Window styling
+- Content: CSS for window components
+
+### apps/web/ - Web Application (3D Portfolio)
+The web app is a 3D portfolio using Three.js for interactive scene rendering.
+
+#### Core Files
+apps/web/index.tsx
+- Purpose: Web app entry point
+- Content: Main 3D scene setup, component mounting
+
+apps/web/next.config.js
+- Purpose: Next.js configuration for web app
+- Content: Build settings, static export configuration
+
+apps/web/next-i18next.config.js
+- Purpose: Internationalization for web app
+- Content: Language configuration
+
+apps/web/package.json
+- Purpose: Web app dependencies
+- Content: Three.js, React, Next.js dependencies
+
+apps/web/tsconfig.json
+- Purpose: TypeScript configuration for web app
+- Content: Compiler settings, path mappings
+
+apps/web/turbo.json
+- Purpose: Turbo configuration for web app
+- Content: Build pipeline settings
+
+apps/web/typings.d.ts
+- Purpose: TypeScript type definitions
+- Content: Custom type declarations
+
+#### Components (apps/web/components/)
+apps/web/components/index.tsx
+- Purpose: Component exports
+- Content: Main component exports
+
+apps/web/components/noscript/
+- Purpose: No-script fallback
+- Content: Fallback for users without JavaScript
+
+apps/web/components/renderer/
+- Purpose: 3D rendering components
+- Content: Three.js scene components, renderer setup
+
+apps/web/components/scene-loader/
+- Purpose: Scene loading components
+- Content: 3D model loading, asset management
+
+#### Data & Events
+apps/web/data/BoundingBox.ts
+- Purpose: 3D bounding box calculations
+- Content: 3D geometry calculations
+
+apps/web/EventBus.ts
+- Purpose: Event system
+- Content: Global event handling
+
+apps/web/events/
+- Purpose: Event definitions
+- Content: Event types, user interaction events
+
+apps/web/UserInteractionEvents.ts
+- Purpose: User interaction event handling
+- Content: Mouse, touch, keyboard events
+
+#### Rendering System
+apps/web/renderer/
+- Purpose: 3D rendering system
+- Content: Three.js setup, scene management, shaders
+
+apps/web/renderer/BackgroundSounds.tsx
+- Purpose: Background audio
+- Content: Ambient sound management
+
+apps/web/renderer/Renderer.tsx
+- Purpose: Main renderer component
+- Content: Three.js scene setup, rendering loop
+
+apps/web/renderer/RendererTouchUserInterface.tsx
+- Purpose: Touch interface
+- Content: Mobile touch controls
+
+apps/web/renderer/RendererUI.tsx
+- Purpose: Renderer UI overlay
+- Content: UI elements over 3D scene
+
+apps/web/renderer/RendererUI.module.css
+- Purpose: Renderer UI styling
+- Content: CSS for 3D scene UI
+
+apps/web/renderer/Renderer.module.css
+- Purpose: Renderer styling
+- Content: CSS for 3D renderer
+
+apps/web/renderer/camera/
+- Purpose: Camera system
+- Content: Camera controls, movement, positioning
+
+apps/web/renderer/shaders/
+- Purpose: WebGL shaders
+- Content: Vertex and fragment shaders
+
+apps/web/renderer/sound/
+- Purpose: Audio system
+- Content: Sound management for 3D scene
+
+apps/web/renderer/util.ts
+- Purpose: Renderer utilities
+- Content: 3D math, helper functions
+
+#### Scene Management
+apps/web/scene-loader/
+- Purpose: 3D scene loading
+- Content: Asset loading, scene initialization
+
+apps/web/scene-loader/AssetKeys.ts
+- Purpose: Asset key definitions
+- Content: Asset identifiers, paths
+
+apps/web/scene-loader/AssetLoaders.ts
+- Purpose: Asset loading logic
+- Content: Model, texture, audio loading
+
+apps/web/scene-loader/AssetManager.ts
+- Purpose: Asset management
+- Content: Asset caching, loading coordination
+
+apps/web/scene-loader/util.ts
+- Purpose: Scene loading utilities
+- Content: Helper functions for asset loading
+
+#### Public Assets (apps/web/public/)
+apps/web/public/assets/
+- Purpose: 3D assets
+- Content: GLB models, textures, compressed assets
+
+apps/web/public/favicon.ico
+- Purpose: Web app favicon
+- Content: Portfolio icon
+
+apps/web/public/fonts/
+- Purpose: Web fonts
+- Content: Custom fonts for web interface
+
+apps/web/public/icons/
+- Purpose: Web app icons
+- Content: UI icons, social media icons
+
+#### Styles & Configuration
+apps/web/styles/globals.css
+- Purpose: Global web styles
+- Content: CSS reset, global styles for web app
+
+apps/web/globals.css
+- Purpose: Alternative global styles
+- Content: Additional global CSS
+
+apps/web/lib/rpc.ts
+- Purpose: Remote procedure call utilities
+- Content: Communication between components
+
+apps/web/noscript/NoScript.tsx
+- Purpose: No-script page
+- Content: Fallback page for users without JavaScript
+
+## PACKAGES DIRECTORY
+=====================================
+
+### packages/eslint-config-custom/
+- Purpose: Shared ESLint configuration
+- Content: Linting rules for the monorepo
+
+### packages/result/
+- Purpose: Result type utilities
+- Content: Type-safe error handling utilities
+
+### packages/rpc/
+- Purpose: RPC communication package
+- Content: Client-server communication utilities
+
+### packages/tsconfig/
+- Purpose: Shared TypeScript configurations
+- Content: Base TypeScript configs for different project types
+
+## DEPLOYMENT & WORKFLOW
+=====================================
+
+.github/workflows/deploy.yml
+- Purpose: GitHub Actions deployment workflow
+- Content: Automated deployment to GitHub Pages, builds both apps
+
+## SUMMARY
+=====================================
+
+This repository contains two main applications:
+
+1. **Desktop App (apps/desktop/)**: A macOS-like desktop simulation built with Next.js, featuring:
+   - Window management system
+   - Multiple applications (About, Finder, Terminal, etc.)
+   - File system simulation
+   - Sound effects and interactions
+   - Your HTMAA project documentation (Week 1-4)
+
+2. **Web App (apps/web/)**: A 3D portfolio built with Three.js, featuring:
+   - Interactive 3D scenes
+   - Asset loading and management
+   - Touch and mouse controls
+   - Background audio
+   - Modern web portfolio interface
+
+The project uses a monorepo structure with Turbo for build management and includes comprehensive deployment automation for GitHub Pages.

@@ -66,6 +66,9 @@ export function joinStyles(styles: (string | null)[]) {
 }
 
 export function sendMessageToIframe(message: MessageFromParent) {
-  const iframe = document.getElementById('operating-system-iframe') as HTMLIFrameElement;
+  const iframe = document.getElementById('operating-system-iframe') as HTMLIFrameElement | null;
+  if (!iframe || !iframe.contentWindow) {
+    return;
+  }
   sendMessageToChild(iframe.contentWindow, message);
 }

@@ -33,6 +33,8 @@ function processFile(file) {
     {from: /(["'\(])\/(?:_next)\//g, to: `$1${base}/_next/`},
     {from: /(["'\(])\/(?:icons)\//g, to: `$1${base}/icons/`},
     {from: /(["'\(])\/(?:fonts)\//g, to: `$1${base}/fonts/`},
+    {from: /(["'\(])\/(?:sounds)\//g, to: `$1${base}/sounds/`},
+    {from: /(["'\(])\/(?:images)\//g, to: `$1${base}/images/`},
     {from: /(["'\(])\/(?:assets)\//g, to: `$1${base}/assets/`},
     {from: /(["'\(])\/(?:desktop)\//g, to: `$1${base}/desktop/`},
   ];
@@ -50,6 +52,28 @@ function processFile(file) {
     const isDesktopFile = file.includes(path.join(path.sep, 'desktop', path.sep)) || file.endsWith(path.join('desktop', 'index.html'));
     const replacement = isDesktopFile ? `$1${base}/desktop` : `$1${base}`;
     const newS = s.replace(publicPathRegex, replacement);
+    if (newS !== s) { changed = true; s = newS; }
+  }
+
+  // Normalize accidental double prefixes or duplicate slashes that could have been introduced.
+  // Avoid touching protocol-relative or http(s):// URLs.
+  // Replace occurrences like /htmaa2//_next -> /htmaa2/_next and /htmaa2/htmaa2 -> /htmaa2
+  const dupNext = new RegExp(base.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\/\\{2,}_next', 'g');
+  if (dupNext.test(s)) {
+    const newS = s.replace(dupNext, `${base}/_next`);
+    if (newS !== s) { changed = true; s = newS; }
+  }
+
+  // Collapse multiple slashes into one for non-protocol occurrences (safe normalization)
+  const collapsed = s.replace(/(^|[^:])\/{2,}/g, '$1/');
+  if (collapsed !== s) { changed = true; s = collapsed; }
+
+  // Ensure --public-path variable is exactly the desired value (avoid accidental duplication)
+  const publicPathFinalRegex = /(--public-path\s*:\s*)([^;]+);/g;
+  if (publicPathFinalRegex.test(s)) {
+    const isDesktopFile = file.includes(path.join(path.sep, 'desktop', path.sep)) || file.endsWith(path.join('desktop', 'index.html'));
+    const desired = isDesktopFile ? `${base}/desktop` : base;
+    const newS = s.replace(publicPathFinalRegex, `$1${desired};`);
     if (newS !== s) { changed = true; s = newS; }
   }
 

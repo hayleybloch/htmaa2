@@ -17,6 +17,7 @@
     "preview:web": "npm run preview:static --workspace=apps/web"
   },
   "devDependencies": {
+    "@types/node": "^24.7.0",
     "@types/nodemailer": "^6.4.17",
     "eslint-config-custom": "*",
     "prettier": "latest",

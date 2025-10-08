@@ -58,7 +58,7 @@ function processFile(file) {
   // Normalize accidental double prefixes or duplicate slashes that could have been introduced.
   // Avoid touching protocol-relative or http(s):// URLs.
   // Replace occurrences like /htmaa2//_next -> /htmaa2/_next and /htmaa2/htmaa2 -> /htmaa2
-  const dupNext = new RegExp(base.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\/\\{2,}_next', 'g');
+  const dupNext = new RegExp(base.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\/{2,}_next', 'g');
   if (dupNext.test(s)) {
     const newS = s.replace(dupNext, `${base}/_next`);
     if (newS !== s) { changed = true; s = newS; }
@@ -76,7 +76,6 @@ function processFile(file) {
     const newS = s.replace(publicPathFinalRegex, `$1${desired};`);
     if (newS !== s) { changed = true; s = newS; }
   }
-
   if (changed) {
     fs.writeFileSync(file, s, 'utf8');
     console.log('Updated', file);

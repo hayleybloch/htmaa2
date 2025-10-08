@@ -5,6 +5,7 @@ import { BaseApplicationManager } from '../ApplicationManager';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { ProjectWeek1, ProjectWeek2, ProjectWeek3, ProjectWeek4, ProjectWeek5 } from './Projects';
+import getPublicPath from '@/lib/getPublicPath';
 import { ScreenResolution } from '@/apis/Screen/ScreenService';
 
 type SubView = (
@@ -97,7 +98,7 @@ function AboutSubView(params: SubViewParams) {
 
     return (<>
       <div className={styles['image-container']}>
-        <img draggable={false} src="/images/photo-of-me-min.jpg" alt="Image of myself" />
+        <img draggable={false} src={getPublicPath('/images/photo-of-me-min.jpg')} alt="Image of myself" />
         <span>{text}</span>
       </div>
     </>);
@@ -223,7 +224,7 @@ function ProjectsSubView(params: SubViewParams) {
     return (<>
       <button className={styles['project-button']} onClick={() => params.changeParent(target) }>
         <div>
-          <img src={imageUrl} alt={`${target} thumbnail`} width={25} height={25} />
+          <img src={getPublicPath(imageUrl)} alt={`${target} thumbnail`} width={25} height={25} />
         </div>
         <span>{name}</span>
       </button>

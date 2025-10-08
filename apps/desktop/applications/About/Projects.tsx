@@ -1,15 +1,19 @@
 import { SubViewNavigation, SubViewParams } from "./AboutView";
 import styles from './AboutView.module.css';
 import Image from 'next/image';
+import getPublicPath from '@/lib/getPublicPath';
 
 
 function ProjectImage(props: { src: string, alt: string, label?: string, labelNumber?: number }) {
   const { src, alt, label, labelNumber } = props;
+  // Resolve at build-time to ensure exported static files point to the
+  // correct GitHub Pages location (e.g. /htmaa2/desktop/images/...)
+  const resolvedSrc = getPublicPath(src);
 
   return (<>
       <div className={styles['project-image-container']}>
         <Image
-          src={src}
+          src={resolvedSrc}
           alt={alt}
           fill
           quality={90}
@@ -194,8 +198,10 @@ export function ProjectWeek1(params: SubViewParams) {
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
                   <ProjectImage src="/images/Week-1/2w1-min.jpg" alt="AI sketch-to-render example" label="AI render example (2w1)" labelNumber={2} />
+                  <ProjectImage src="/images/Week-1/2w1-min.jpg" alt="AI sketch-to-render example" label="AI render example (2w1)" labelNumber={2} />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
+                  <ProjectImage src="/images/Week-1/3w1-min.jpg" alt="Blender import / initial STL example" label="AI-to-STL / Blender import (3w1)" labelNumber={3} />
                   <ProjectImage src="/images/Week-1/3w1-min.jpg" alt="Blender import / initial STL example" label="AI-to-STL / Blender import (3w1)" labelNumber={3} />
                 </div>
               </div>
@@ -214,6 +220,7 @@ export function ProjectWeek1(params: SubViewParams) {
               <li>Mouth geometry was stretched and broken.</li>
             </ul>
             <ProjectImage src="/images/Week-1/maker world.png" alt="MakerWorld / Image-to-3D rough output with distorted facial features" label="MakerWorld rough STL" labelNumber={3} />
+            <ProjectImage src="/images/Week-1/maker world.png" alt="MakerWorld / Image-to-3D rough output with distorted facial features" label="MakerWorld rough STL" labelNumber={3} />
           </li>
 
           <li>
@@ -230,6 +237,7 @@ export function ProjectWeek1(params: SubViewParams) {
               <li>Jaw & neck: corrected proportions and reinforced weak areas.</li>
             </ul>
             <ProjectImage src="/images/Week-1/vertex clean.png" alt="Vertex clean showing topology fixes in Blender" label="Vertex cleanup / remesh" labelNumber={4} />
+            <ProjectImage src="/images/Week-1/vertex clean.png" alt="Vertex clean showing topology fixes in Blender" label="Vertex cleanup / remesh" labelNumber={4} />
           </li>
 
           <li>
@@ -239,6 +247,8 @@ export function ProjectWeek1(params: SubViewParams) {
               model for future mechanical integration and possible 3D printing.
             </p>
             <ProjectImage src="/images/Week-1/blender clean up.png" alt="Blender cleanup showing repaired and remeshed geometry" label="Blender cleanup / final cleaned model" labelNumber={5} />
+            <ProjectImage src="/images/Week-1/blender clean up.png" alt="Blender cleanup showing repaired and remeshed geometry" label="Blender cleanup / final cleaned model" labelNumber={5} />
+            <ProjectImage src="/images/Week-1/1w1-min.jpg" alt="Initial concept sketch of humanoid bust" label="Initial concept sketch of humanoid bust" labelNumber={1} />
           </li>
         </ol>
 
@@ -328,13 +338,16 @@ export function ProjectWeek2(params: SubViewParams) {
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <ProjectImage src="/images/Week-2/parametrics.png" alt="Parametric table from Fusion" label="Parametric table" labelNumber={1} />
+                  <ProjectImage src="/images/Week-2/parametrics.png" alt="Parametric table from Fusion" label="Parametric table" labelNumber={1} />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
+                  <ProjectImage src="/images/Week-2/fusion assembled box picture.png" alt="Fusion assembled box" label="Fusion assembled box" />
                   <ProjectImage src="/images/Week-2/fusion assembled box picture.png" alt="Fusion assembled box" label="Fusion assembled box" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                     <source src="/images/Week-2/fusion simulation.mp4" type="video/mp4" />
+                    <source src={getPublicPath('/images/Week-2/fusion simulation.mp4')} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Fusion simulation</div>
@@ -342,6 +355,7 @@ export function ProjectWeek2(params: SubViewParams) {
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                     <source src="/images/Week-2/fusion assembly.mp4" type="video/mp4" />
+                    <source src={getPublicPath('/images/Week-2/fusion assembly.mp4')} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Fusion assembly</div>
@@ -377,6 +391,7 @@ export function ProjectWeek2(params: SubViewParams) {
             </p>
             <div style={{marginTop: 8}}>
               <ProjectImage src="/images/Week-2/drawing file.png" alt="Vinyl overlay drawing / cut file" label="Vinyl overlay drawing / cut file" />
+                <ProjectImage src="/images/Week-2/drawing file.png" alt="Vinyl overlay drawing / cut file" label="Vinyl overlay drawing / cut file" />
             </div>
           </li>
 
@@ -400,6 +415,7 @@ export function ProjectWeek2(params: SubViewParams) {
         <div style={{marginTop: 8}}>
           <div style={{maxWidth: 480}}>
             <ProjectImage src="/images/Week-2/kerf test.JPG" alt="Kerf test square with caliper measurement" label="Kerf test" />
+            <ProjectImage src="/images/Week-2/kerf test.JPG" alt="Kerf test square with caliper measurement" label="Kerf test" />
           </div>
         </div>
           </li>
@@ -415,14 +431,18 @@ export function ProjectWeek2(params: SubViewParams) {
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
                   <ProjectImage src="/images/Week-2/cardboard laser cut.JPG" alt="Cardboard laser cut" label="Cardboard laser cut" />
+                  <ProjectImage src="/images/Week-2/cardboard laser cut.JPG" alt="Cardboard laser cut" label="Cardboard laser cut" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
+                  <ProjectImage src="/images/Week-2/engraved cardboard.JPG" alt="Engraved cardboard" label="Engraved cardboard" />
                   <ProjectImage src="/images/Week-2/engraved cardboard.JPG" alt="Engraved cardboard" label="Engraved cardboard" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
                   <ProjectImage src="/images/Week-2/IMG_0163-min.JPG" alt="Assembly / cardboard photo" label="Assembly / cardboard photo" />
+                  <ProjectImage src="/images/Week-2/IMG_0163-min.JPG" alt="Assembly / cardboard photo" label="Assembly / cardboard photo" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
+                  <ProjectImage src="/images/Week-2/top view engraved cardboard.JPG" alt="Top view engraved cardboard" label="Top view (cardboard)" />
                   <ProjectImage src="/images/Week-2/top view engraved cardboard.JPG" alt="Top view engraved cardboard" label="Top view (cardboard)" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
@@ -470,6 +490,11 @@ export function ProjectWeek2(params: SubViewParams) {
               <div style={{flex: '1 1 100%', minWidth: 220}}>
                 <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                   <source src="/images/Week-2/demonstration_video.mp4" type="video/mp4" />
+                  <source src={getPublicPath('/images/Week-2/demonstration_video.mp4')} type="video/mp4" />
+            <ProjectImage src="/images/Week-2/preset laser settings.JPG" alt="Preset laser settings" label="Laser preset settings" />
+            <ProjectImage src="/images/Week-2/laser wood cut.JPG" alt="Laser cutting wood" label="Laser cutting (wood)" />
+            <ProjectImage src="/images/Week-2/inside of wooden box.JPG" alt="Inside of wooden box" label="Inside (wooden box)" />
+            <ProjectImage src="/images/Week-2/final built box.JPG" alt="Finished cut pieces / final built box" label="Final built box" />
                   Your browser does not support the video tag.
                 </video>
                 <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Demonstration: iris opening/closing</div>
@@ -623,6 +648,11 @@ export function ProjectWeek3(params: SubViewParams) {
             <div style={{marginTop: 8}}>
               <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                 <source src="/images/Week-3/my program.mp4" type="video/mp4" />
+                <source src={getPublicPath('/images/Week-3/my program.mp4')} type="video/mp4" />
+                <ProjectImage src="/images/Week-3/QPAD21.JPG" alt="QPAD21 board" label="QPAD21 board" />
+                <ProjectImage src="/images/Week-3/soldering.JPG" alt="Soldering process" label="Soldering" />
+                <ProjectImage src="/images/Week-3/QPAD XAIO.JPG" alt="QPAD XIAO board" label="QPAD-XIAO board" />
+                <ProjectImage src="/images/Week-3/programmer.JPG" alt="Programmer setup" label="Programmer / development" />
                 Your browser does not support the video tag.
               </video>
               <div style={{fontSize: 12, color: '#666', marginTop: 6}}>End-to-end test: Python → OLED</div>
@@ -719,9 +749,11 @@ export function ProjectWeek4(params: SubViewParams) {
         <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
           <div style={{flex: '1 1 48%', minWidth: 160}}>
             <ProjectImage src="/images/Week-4/bust stl.png" alt="Week 1 bust STL / render" label="Week 1 bust STL" />
+                <ProjectImage src="/images/Week-4/bust stl.png" alt="Week 1 bust STL / render" label="Week 1 bust STL" />
           </div>
           <div style={{flex: '1 1 48%', minWidth: 160}}>
             <ProjectImage src="/images/Week-4/bust and head.JPG" alt="Bust and head render" label="Bust and head" />
+                <ProjectImage src="/images/Week-4/bust and head.JPG" alt="Bust and head render" label="Bust and head" />
           </div>
         </div>
 

@@ -33,7 +33,7 @@ function processFile(file) {
   // Only rewrite occurrences that start with a leading slash and not already prefixed with base
   const pats = [
     {from: /(["'\(])\/(?:_next)\//g, to: `$1${base}/_next/`},
-    {from: /(["'\(])\/(?:icons)\//g, to: `$1${base}/icons/`},
+  {from: /(["'\(])\/(?:icons)\//g, to: `$1${base}/desktop/icons/`},
     {from: /(["'\(])\/(?:fonts)\//g, to: `$1${base}/fonts/`},
     {from: /(["'\(])\/(?:sounds)\//g, to: `$1${base}/sounds/`},
     {from: /(["'\(])\/(?:images)\//g, to: `$1${base}/images/`},
@@ -44,6 +44,19 @@ function processFile(file) {
   let changed = false;
   for (const p of pats) {
     const newS = s.replace(p.from, p.to);
+    if (newS !== s) { changed = true; s = newS; }
+  }
+
+  // Also rewrite cases where the files already contain the base path + /icons
+  // (e.g. `/htmaa2/icons/...`) to the desktop location (`/htmaa2/desktop/icons/...`).
+  // This covers Next.js-generated HTML that was rendered with NEXT_PUBLIC_BASE_PATH.
+  function escapeForRegex(str) {
+    return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+  const baseEsc = escapeForRegex(base);
+  const baseIconsRegex = new RegExp(`(["'\\(])${baseEsc}\/(?:icons)\/`, 'g');
+  if (baseIconsRegex.test(s)) {
+    const newS = s.replace(baseIconsRegex, `$1${base}/desktop/icons/`);
     if (newS !== s) { changed = true; s = newS; }
   }
 

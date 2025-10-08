@@ -13,7 +13,9 @@ let base = process.argv[3];
 if (!base.startsWith('/')) base = '/' + base;
 if (base.endsWith('/')) base = base.slice(0, -1);
 
-const exts = ['.html', '.htm', '.js', '.css'];
+// Only process HTML and CSS files. Avoid rewriting JS bundles to prevent
+// accidental corruption of regex literals or other code inside .js files.
+const exts = ['.html', '.htm', '.css'];
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });

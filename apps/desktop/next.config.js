@@ -12,7 +12,12 @@ const nextConfig = {
   // Expose the repository base (without the /desktop suffix) to runtime code
   // so code that uses NEXT_PUBLIC_BASE_PATH (and _document.tsx) can build correct URLs.
   env: {
-    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ''
+    // Generic repo base (used by some runtime code)
+    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : '',
+    // Desktop-specific published base so build-time code can emit
+    // '/htmaa2/desktop/...' directly when building the desktop app for
+    // GitHub Pages. This is picked up by `getPublicPath()`.
+    NEXT_PUBLIC_DESKTOP_BASE: isProd ? `/${repo}/desktop` : ''
   },
   images: { unoptimized: true },
   devIndicators: false,

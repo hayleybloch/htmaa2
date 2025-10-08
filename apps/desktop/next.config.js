@@ -4,7 +4,8 @@ const isGitHub = process.env.NODE_ENV === 'production' && process.env.BUILD_FOR_
 const isProd = isGitHub;
 
 const nextConfig = {
-  output: 'export',
+  // Only use static export output for production GitHub Pages builds.
+  output: isProd ? 'export' : undefined,
   // Only apply basePath/assetPrefix in production builds for GitHub Pages
   basePath: isProd ? `/${repo}/desktop` : '',
   assetPrefix: isProd ? `/${repo}/desktop/` : '',

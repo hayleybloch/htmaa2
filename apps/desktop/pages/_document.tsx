@@ -10,6 +10,15 @@ export default function Document() {
             __html: `:root{--public-path:${process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH + '/' : '/'}; --font-century: url(${process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH + '/desktop/fonts/century_schoolbook.ttf' : '/desktop/fonts/century_schoolbook.ttf'}); --font-noto: url(${process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH + '/desktop/fonts/noto_serif_toto.ttf' : '/desktop/fonts/noto_serif_toto.ttf'}); --icon-spritesheet: url(${process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH + '/desktop/icons/icon-spritesheet.png' : '/desktop/icons/icon-spritesheet.png'}); }`,
           }}
         />
+
+        {/* DEV HELP: remove Next's FOUC hide style early during development so the desktop doesn't remain white before hydration */}
+        {process.env.NODE_ENV === 'development' && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `try{(function(){var s=document.querySelector('style[data-next-hide-fouc]');if(s){s.parentNode.removeChild(s);}if(document && document.body){document.body.style.display='block';}else{document.addEventListener('DOMContentLoaded',function(){document.body&&(document.body.style.display='block');});}})();}catch(e){console.error('fouc-fix',e)}`,
+            }}
+          />
+        )}
       </Head>
       <body>
         <Main />

@@ -36,7 +36,7 @@ jobs:
       - name: Build desktop app
         run: |
           cd apps/desktop
-          npm run build
+          BUILD_FOR_GITHUB=true npm run build
 
       # Export the web app and create SPA fallback
       - name: Export web
@@ -50,6 +50,18 @@ jobs:
         run: |
           mkdir -p apps/web/out/desktop
           cp -r apps/desktop/out/* apps/web/out/desktop/
+
+      # Ensure SPA fallback for the desktop export so deep links under /desktop/... resolve
+      - name: Add desktop 404 fallback
+        run: |
+          if [ -f apps/web/out/desktop/index.html ]; then
+            cp apps/web/out/desktop/index.html apps/web/out/desktop/404.html || true
+          fi
+
+      # Fix absolute asset paths in the copied desktop export so they include the GitHub Pages base path
+      - name: Fix asset paths for GitHub Pages
+        run: |
+          node scripts/fix_export_paths.js apps/web/out/desktop /htmaa2
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -26,9 +26,21 @@ const contactSchema = z.object({
 });
 
 async function sendEmailToMe(request: SendEmailRequestData): Promise<void> {
+  // If mail server is not configured, assume we're in local/dev and
+  // simply log the message instead of attempting to send. This avoids
+  // 500 Internal Server Errors when env vars are not present.
+  if (!process.env.MAIL_SERVER) {
+    const subject = `${request.name} <${request.email}> ${request.company ? `from ${request.company}` : ''}`;
+    console.log('[contact] MAIL_SERVER not set — skipping sendMail (dev mode)');
+    console.log('Subject:', subject);
+    console.log('Message:', request.message);
+    return;
+  }
+
+  const port = Number(process.env.MAIL_PORT ?? 587);
   const transporter = nodemailer.createTransport({
     host: process.env.MAIL_SERVER,
-    port: parseInt(process.env.MAIL_PORT ?? ""),
+    port: Number.isNaN(port) ? 587 : port,
     auth: {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS

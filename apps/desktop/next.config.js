@@ -34,8 +34,12 @@ const nextConfig = {
     return [
       // Map requests like /htmaa2/desktop/icons/... -> /desktop/icons/...
       {
+        // When running in dev, requests that include the GitHub Pages base path
+        // (e.g. /htmaa2/desktop/icons/...) should be rewritten to the real
+        // asset locations (e.g. /icons/...). Previously this rewrote to
+        // /desktop/:path* which doesn't match files in `public/`.
         source: `/${repo}/desktop/:path*`,
-        destination: `/desktop/:path*`
+        destination: `/:path*`
       },
       // Also map /htmaa2/assets/... -> /assets/... if needed
       {

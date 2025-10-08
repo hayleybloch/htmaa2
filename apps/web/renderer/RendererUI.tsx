@@ -55,7 +55,11 @@ type SubViewProps = {
 function SoundManagementButton(props: { sound: SubViewSound }) {
   const { isSoundEnabled, toggleSound } = props.sound;
 
-  const icon = isSoundEnabled ? "/htmaa2/icons/mute-icon.svg" : "/htmaa2/icons/unmute-icon.svg"
+  // Respect NEXT_PUBLIC_BASE_PATH so asset URLs work both in prod (GitHub Pages)
+  // and in local dev. When NEXT_PUBLIC_BASE_PATH is empty this becomes
+  // '/icons/...' which maps to files in `public/icons`.
+  const buildPrefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const icon = isSoundEnabled ? `${buildPrefix}/icons/mute-icon.svg` : `${buildPrefix}/icons/unmute-icon.svg`;
 
   return (
     <button className={styles['mute-button']} onClick={() => toggleSound()}>
@@ -65,7 +69,8 @@ function SoundManagementButton(props: { sound: SubViewSound }) {
 }
 
 function ChangeSceneButton(props: { targetState: CameraHandlerState, cameraHandler: RefObject<CameraHandler | null> }) {
-  const icon = "/htmaa2/icons/camera.svg";
+  const buildPrefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const icon = `${buildPrefix}/icons/camera.svg`;
 
   const { targetState, cameraHandler } = props;
 

@@ -30,13 +30,15 @@ jobs:
       - name: Build web app
         run: |
           cd apps/web
-          BUILD_FOR_GITHUB=true npm run build
+          # Ensure Next runs in production mode and that the export/output path is created
+          NODE_ENV=production BUILD_FOR_GITHUB=true npm run build
 
       # Build desktop app with GitHub Pages configuration
       - name: Build desktop app
         run: |
           cd apps/desktop
-          BUILD_FOR_GITHUB=true npm run build
+          # Ensure Next runs in production mode and that the export/output path is created
+          NODE_ENV=production BUILD_FOR_GITHUB=true npm run build
 
       # Export the web app and create SPA fallback
       - name: Export web

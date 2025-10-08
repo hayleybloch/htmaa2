@@ -9,6 +9,11 @@ const nextConfig = {
   // Only apply basePath/assetPrefix in production builds for GitHub Pages
   basePath: isProd ? `/${repo}/desktop` : '',
   assetPrefix: isProd ? `/${repo}/desktop/` : '',
+  // Expose the repository base (without the /desktop suffix) to runtime code
+  // so code that uses NEXT_PUBLIC_BASE_PATH (and _document.tsx) can build correct URLs.
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ''
+  },
   images: { unoptimized: true },
   devIndicators: false,
   webpack: (webpackConfig, { webpack }) => {

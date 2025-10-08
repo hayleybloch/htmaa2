@@ -32,12 +32,14 @@ function processFile(file) {
   // Patterns to rewrite: leading /_next, /icons/, /fonts/, /assets/, /desktop/
   // Only rewrite occurrences that start with a leading slash and not already prefixed with base
   const pats = [
-    {from: /(["'\(])\/(?:_next)\//g, to: `$1${base}/_next/`},
-  {from: /(["'\(])\/(?:icons)\//g, to: `$1${base}/desktop/icons/`},
-    {from: /(["'\(])\/(?:fonts)\//g, to: `$1${base}/fonts/`},
-    {from: /(["'\(])\/(?:sounds)\//g, to: `$1${base}/sounds/`},
-    {from: /(["'\(])\/(?:images)\//g, to: `$1${base}/images/`},
-    {from: /(["'\(])\/(?:assets)\//g, to: `$1${base}/assets/`},
+    // Map top-level asset paths to the GitHub Pages base + /desktop so
+    // exported desktop files reference the files where they're copied.
+    {from: /(["'\(])\/(?:_next)\//g, to: `$1${base}/desktop/_next/`},
+    {from: /(["'\(])\/(?:icons)\//g, to: `$1${base}/desktop/icons/`},
+    {from: /(["'\(])\/(?:fonts)\//g, to: `$1${base}/desktop/fonts/`},
+    {from: /(["'\(])\/(?:sounds)\//g, to: `$1${base}/desktop/sounds/`},
+    {from: /(["'\(])\/(?:images)\//g, to: `$1${base}/desktop/images/`},
+    {from: /(["'\(])\/(?:assets)\//g, to: `$1${base}/desktop/assets/`},
     {from: /(["'\(])\/(?:desktop)\//g, to: `$1${base}/desktop/`},
   ];
 
@@ -47,17 +49,20 @@ function processFile(file) {
     if (newS !== s) { changed = true; s = newS; }
   }
 
-  // Also rewrite cases where the files already contain the base path + /icons
+  // Also rewrite cases where the files already contain the base path + /<asset>
   // (e.g. `/htmaa2/icons/...`) to the desktop location (`/htmaa2/desktop/icons/...`).
   // This covers Next.js-generated HTML that was rendered with NEXT_PUBLIC_BASE_PATH.
   function escapeForRegex(str) {
     return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
   }
   const baseEsc = escapeForRegex(base);
-  const baseIconsRegex = new RegExp(`(["'\\(])${baseEsc}\/(?:icons)\/`, 'g');
-  if (baseIconsRegex.test(s)) {
-    const newS = s.replace(baseIconsRegex, `$1${base}/desktop/icons/`);
-    if (newS !== s) { changed = true; s = newS; }
+  const assetTypes = ['icons', 'fonts', 'sounds', 'images', 'assets', '_next'];
+  for (const t of assetTypes) {
+    const re = new RegExp(`(["'\\(])${baseEsc}\\/(?:${t})\\/`, 'g');
+    if (re.test(s)) {
+      const newS = s.replace(re, `$1${base}/desktop/${t}/`);
+      if (newS !== s) { changed = true; s = newS; }
+    }
   }
 
   // Fix CSS variable --public-path: /; (used by runtime loaders) so it includes the base path.

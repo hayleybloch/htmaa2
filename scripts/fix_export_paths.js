@@ -43,6 +43,16 @@ function processFile(file) {
     if (newS !== s) { changed = true; s = newS; }
   }
 
+  // Fix CSS variable --public-path: /; (used by runtime loaders) so it includes the base path.
+  // If the file is part of the desktop export, prefer base + '/desktop'
+  const publicPathRegex = /(--public-path\s*:\s*)\//g;
+  if (publicPathRegex.test(s)) {
+    const isDesktopFile = file.includes(path.join(path.sep, 'desktop', path.sep)) || file.endsWith(path.join('desktop', 'index.html'));
+    const replacement = isDesktopFile ? `$1${base}/desktop` : `$1${base}`;
+    const newS = s.replace(publicPathRegex, replacement);
+    if (newS !== s) { changed = true; s = newS; }
+  }
+
   if (changed) {
     fs.writeFileSync(file, s, 'utf8');
     console.log('Updated', file);

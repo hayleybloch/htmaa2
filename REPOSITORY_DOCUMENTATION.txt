@@ -12,17 +12,11 @@ DEPLOYMENT.md
 - Purpose: Documentation for GitHub Pages deployment process
 - Content: Instructions for deploying web app to GitHub Pages, build configuration, troubleshooting
 
-MIT_DEPLOYMENT.md
-- Purpose: MIT-specific deployment documentation
-- Content: Deployment instructions for MIT GitLab, CI/CD configuration for MIT environment
 
 README.md
 - Purpose: Main project documentation
 - Content: Project overview, setup instructions, usage guide
 
-create-mit-repo.sh
-- Purpose: Shell script to create MIT repository
-- Content: Automated script for setting up repository on MIT GitLab
 
 optimize-assets.sh
 - Purpose: Asset optimization script

@@ -4,6 +4,7 @@ import { ApplicationEvent } from "../ApplicationEvents";
 import { Application, ApplicationConfig, MenuEntry } from "../ApplicationManager";
 import { LocalApplicationManager } from "../LocalApplicationManager";
 import dynamic from 'next/dynamic';
+import getPublicPath from '@/lib/getPublicPath';
 import { SystemAPIs } from "@/components/OperatingSystem";
 
 const View = dynamic(() => import('./TerminalApplicationView'));
@@ -13,7 +14,7 @@ export class TerminalConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Terminal.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/terminal-icon.png', alt: 'Terminal' };
+  public readonly appIcon = { src: getPublicPath('/icons/terminal-icon.png'), alt: 'Terminal' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

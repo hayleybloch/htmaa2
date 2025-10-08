@@ -5,6 +5,7 @@ import { Application, ApplicationConfig, MenuEntry } from "../ApplicationManager
 import { LocalApplicationManager } from "../LocalApplicationManager";
 import dynamic from 'next/dynamic';
 import { SystemAPIs } from "@/components/OperatingSystem";
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./DebugApplicationView'));
 
@@ -13,7 +14,7 @@ export class DebugConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Debug.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/folder-icon.png', alt: 'Debug application' };
+  public readonly appIcon = { src: getPublicPath('/icons/folder-icon.png'), alt: 'Debug application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

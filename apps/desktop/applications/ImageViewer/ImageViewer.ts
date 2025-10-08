@@ -6,6 +6,7 @@ import { LocalApplicationManager } from "../LocalApplicationManager";
 import { WindowContext } from "@/components/WindowManagement/WindowCompositor";
 import { ApplicationEvent } from "../ApplicationEvents";
 import dynamic from 'next/dynamic';
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./ImageViewerView'));
 
@@ -14,7 +15,7 @@ export class ImageViewerConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Image.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/image-icon.png', alt: 'Image application' };
+  public readonly appIcon = { src: getPublicPath('/icons/image-icon.png'), alt: 'Image application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

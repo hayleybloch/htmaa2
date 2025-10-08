@@ -6,6 +6,7 @@ import { LocalApplicationManager } from "../LocalApplicationManager";
 import { WindowContext } from "@/components/WindowManagement/WindowCompositor";
 import { ApplicationEvent } from "../ApplicationEvents";
 import dynamic from 'next/dynamic';
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./NotesView'));
 
@@ -14,7 +15,7 @@ export class NotesConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Notes.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'Notes application' };
+  public readonly appIcon = { src: getPublicPath('/icons/file-icon.png'), alt: 'Notes application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

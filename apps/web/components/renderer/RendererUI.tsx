@@ -6,6 +6,26 @@ import { SoundService } from "./sound/SoundService";
 
 const MStoWriteChar = 35;
 
+// Helper to build asset URLs that respect NEXT_PUBLIC_BASE_PATH but omit it on local dev
+function getPublicPath(path: string): string {
+  // server/build-time value
+  const buildPrefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+  // normalize
+  let prefix = buildPrefix;
+  if (prefix && !prefix.startsWith('/')) { prefix = `/${prefix}` }
+  if (prefix.endsWith('/')) { prefix = prefix.slice(0, -1) }
+
+  // if running in browser on localhost, omit prefix so paths are like /icons/...
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname || '';
+    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+    if (isLocal) { prefix = '' }
+  }
+
+  return `${prefix}${path}`;
+}
+
 function useSoundManagement(soundService: SoundService) {
   const [isSoundEnabled, setSoundEnabled] = useState(true);
 
@@ -55,7 +75,7 @@ type SubViewProps = {
 function SoundManagementButton(props: { sound: SubViewSound }) {
   const { isSoundEnabled, toggleSound } = props.sound;
 
-  const icon = isSoundEnabled ? "/htmaa2/icons/mute-icon.svg" : "/htmaa2/icons/unmute-icon.svg"
+  const icon = isSoundEnabled ? getPublicPath('/icons/mute-icon.svg') : getPublicPath('/icons/unmute-icon.svg')
 
   return (
     <button className={styles['mute-button']} onClick={() => toggleSound()}>
@@ -65,7 +85,7 @@ function SoundManagementButton(props: { sound: SubViewSound }) {
 }
 
 function ChangeSceneButton(props: { targetState: CameraHandlerState, cameraHandler: RefObject<CameraHandler | null> }) {
-  const icon = "/htmaa2/icons/camera.svg";
+  const icon = getPublicPath('/icons/camera.svg');
 
   const { targetState, cameraHandler } = props;
 

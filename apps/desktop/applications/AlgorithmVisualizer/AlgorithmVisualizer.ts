@@ -5,6 +5,7 @@ import { Application, ApplicationConfig, MenuEntry } from "../ApplicationManager
 import { LocalApplicationManager } from "../LocalApplicationManager";
 import dynamic from 'next/dynamic';
 import { SystemAPIs } from "@/components/OperatingSystem";
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./AlgorithmVisualizerView'));
 
@@ -13,7 +14,7 @@ export class AlgorithmVisualizerConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Algorithms.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/algorithm-visualizer-icon.png', alt: 'Algorithm visualizer' };
+  public readonly appIcon = { src: getPublicPath('/icons/algorithm-visualizer-icon.png'), alt: 'Algorithm visualizer' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

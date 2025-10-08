@@ -5,6 +5,7 @@ import { LocalApplicationManager } from "../LocalApplicationManager";
 import { Window, WindowContext } from "@/components/WindowManagement/WindowCompositor";
 import { ApplicationEvent, ApplicationOpenEvent } from "../ApplicationEvents";
 import dynamic from 'next/dynamic';
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./ContactView'));
 
@@ -13,7 +14,7 @@ export class ContactConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Contact.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/contact-app.png', alt: 'Contact application' };
+  public readonly appIcon = { src: getPublicPath('/icons/contact-app.png'), alt: 'Contact application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

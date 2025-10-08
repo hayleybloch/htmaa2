@@ -12,6 +12,7 @@ import { FileSystemItemDragDrop, FileSystemItemDragEnter, FileSystemItemDragEven
 import { contactConfig } from '@/applications/Contract/Contact';
 import { skillsConfig } from '@/applications/Skills/Skills';
 import { terminalConfig } from '@/applications/Terminal/TerminalApplication';
+import getPublicPath from '@/lib/getPublicPath';
 
 const DockApplications = [
   finderConfig,
@@ -222,7 +223,7 @@ export function Dock(props: { apis: SystemAPIs, manager: ApplicationManager, win
       kind: 'directory',
       title: 'Applications',
       path: '/Applications',
-      icon:  { src: '/htmaa2/desktop/icons/icon-applications-folder.png', alt: 'File icon' },
+      icon:  { src: getPublicPath('/icons/icon-applications-folder.png'), alt: 'File icon' },
       onClick: () => onClickDirectory('/Applications'),
     });
     
@@ -230,7 +231,7 @@ export function Dock(props: { apis: SystemAPIs, manager: ApplicationManager, win
       kind: 'directory',
       title: 'Documents',
       path: '/Users/hayley/Documents',
-      icon:  { src: '/htmaa2/desktop/icons/icon-documents-folder.png', alt: 'File icon' },
+      icon:  { src: getPublicPath('/icons/icon-documents-folder.png'), alt: 'File icon' },
       onClick: () => onClickDirectory('/Users/hayley/Documents'),
     });
 
@@ -238,7 +239,7 @@ export function Dock(props: { apis: SystemAPIs, manager: ApplicationManager, win
       kind: 'directory',
       title: 'Bin',
       path: '/Users/hayley/Trash',
-      icon:  { src: '/htmaa2/desktop/icons/trash-icon.png', alt: 'Trash can' },
+      icon:  { src: getPublicPath('/icons/trash-icon.png'), alt: 'Trash can' },
       onClick: () => onClickDirectory('/Users/hayley/Trash'),
     });
   

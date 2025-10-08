@@ -5,6 +5,7 @@ import { Application, ApplicationConfig, MenuEntry } from "../ApplicationManager
 import { LocalApplicationManager } from "../LocalApplicationManager";
 import { SystemAPIs } from "@/components/OperatingSystem";
 import dynamic from 'next/dynamic';
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./FinderView'));
 
@@ -13,7 +14,7 @@ export class FinderConfig implements ApplicationConfig {
   public readonly dockPriority = -100;
   public readonly path = '/Applications/';
   public readonly appName = 'Finder.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/finder-icon.png', alt: 'Finder application' };
+  public readonly appIcon = { src: getPublicPath('/icons/finder-icon.png'), alt: 'Finder application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

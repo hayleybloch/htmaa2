@@ -5,6 +5,7 @@ import { SystemAPIs } from "@/components/OperatingSystem";
 import { WindowContext } from "@/components/WindowManagement/WindowCompositor";
 import { ApplicationEvent } from "../ApplicationEvents";
 import dynamic from 'next/dynamic';
+import getPublicPath from '@/lib/getPublicPath';
 
 const View = dynamic(() => import('./SkillsView'));
 
@@ -13,7 +14,7 @@ export class SkillsConfig implements ApplicationConfig {
   public readonly dockPriority = null;
   public readonly path = '/Applications/';
   public readonly appName = 'Skills.app';
-  public readonly appIcon = { src: '/htmaa2/desktop/icons/skills-icon.png', alt: 'Skills application' };
+  public readonly appIcon = { src: getPublicPath('/icons/skills-icon.png'), alt: 'Skills application' };
   public readonly entrypoint = (
     compositor: LocalWindowCompositor,
     manager: LocalApplicationManager,

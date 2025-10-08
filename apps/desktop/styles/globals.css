@@ -2,14 +2,14 @@
   font-family: 'Century Schoolbook';
   font-style: sans-serif;
   font-weight: normal;
-  src: local('Century Schoolbook'), url('/htmaa2/desktop/fonts/century_schoolbook.ttf') format('truetype');
+  src: local('Century Schoolbook'), var(--font-century) format('truetype');
 }
 
 @font-face {
   font-family: 'Noto Serif Toto';
   font-style: sans-serif;
   font-weight: normal;
-  src: local('Noto Serif Toto'), url('/htmaa2/desktop/fonts/noto_serif_toto.ttf') format('truetype');
+  src: local('Noto Serif Toto'), var(--font-noto) format('truetype');
 }
 
 html, body {
@@ -52,6 +52,7 @@ html, body {
 }
 
 .system-text-input {
+  appearance: none;
   -webkit-appearance: none;
   border: none;
   outline: none;
@@ -170,5 +171,5 @@ h6 {
   image-rendering: pixelated;
   background-size: 80px 16px;
   background-repeat: no-repeat;
-  background-image: url('/htmaa2/desktop/icons/icon-spritesheet.png');
+  background-image: var(--icon-spritesheet);
 }

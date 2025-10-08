@@ -16,6 +16,7 @@ import { contactConfig } from "@/applications/Contract/Contact";
 import { IconHeight, IconWidth } from "@/components/Icons/FolderIcon";
 import { skillsConfig } from "@/applications/Skills/Skills";
 import { terminalConfig } from "@/applications/Terminal/TerminalApplication";
+import getPublicPath from '@/lib/getPublicPath';
 import { ProgramConfig } from "@/programs/Programs";
 import { lsConfig } from "@/programs/ListFiles/ListFiles";
 import { pwdConfig } from "@/programs/PrintWorkingDirectory/PrintWorkingDirectory";
@@ -265,12 +266,12 @@ export function getIconFromNode(node: FileSystemNode): ApplicationIcon {
     case 'hyperlink': return node.icon;
     case "directory": {
       if (node.icon) { return node.icon; }
-      return { src: '/htmaa2/desktop/icons/folder-icon.png', alt: 'Directory icon' };
+      return { src: getPublicPath('/icons/folder-icon.png'), alt: 'Directory icon' };
     }
-    case "hyperlink": return { src: '/htmaa2/desktop/icons/folder-icon.png', alt: 'Hyperlink icon' };
-    case "textfile": return { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'File icon' }
-    case "image": return { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'Image icon' }
-    case "program":  return { src: '/htmaa2/desktop/icons/file-icon.png', alt: 'Program icon' }
+    case "hyperlink": return { src: getPublicPath('/icons/folder-icon.png'), alt: 'Hyperlink icon' };
+    case "textfile": return { src: getPublicPath('/icons/file-icon.png'), alt: 'File icon' }
+    case "image": return { src: getPublicPath('/icons/file-icon.png'), alt: 'Image icon' }
+    case "program":  return { src: getPublicPath('/icons/file-icon.png'), alt: 'Program icon' }
   }
 }
 
@@ -281,8 +282,8 @@ export function createBaseFileSystem(): FileSystem {
   if (!rootEntry.ok) { return fileSystem; }
   const root = rootEntry.value;
 
-  const applicationFolderIcon = { src: '/htmaa2/desktop/icons/icon-applications-folder.png', alt: 'Application folder' };
-  const documentsFolderIcon =  { src: '/htmaa2/desktop/icons/icon-documents-folder.png', alt: 'Documents folder' };
+  const applicationFolderIcon = { src: getPublicPath('/icons/icon-applications-folder.png'), alt: 'Application folder' };
+  const documentsFolderIcon =  { src: getPublicPath('/icons/icon-documents-folder.png'), alt: 'Documents folder' };
 
   // Create base file tree
   const applications = fileSystem.addDirectory(root, 'Applications', false, false, applicationFolderIcon);
@@ -304,7 +305,7 @@ export function createBaseFileSystem(): FileSystem {
 
   const desktop = fileSystem.addDirectory(hayley, 'Desktop', false, true);
   const documents = fileSystem.addDirectory(hayley, 'Documents', false, true, documentsFolderIcon);
-  const trashCanIcon = { src: '/htmaa2/desktop/icons/trash-icon.png', alt: 'Trash can icon' };
+  const trashCanIcon = { src: getPublicPath('/icons/trash-icon.png'), alt: 'Trash can icon' };
   const trash = fileSystem.addDirectory(hayley, 'Trash', false, true, trashCanIcon);
 
   fileSystem.addHyperLink(desktop, applications, 'Applications', applicationFolderIcon, true);

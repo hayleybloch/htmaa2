@@ -9,10 +9,33 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
 // Helper function to get the correct asset path
 function getAssetPath(path: string): string {
-  // Hardcode the base path for GitHub Pages deployment
-  const prefix = "/htmaa2";
+  // Use NEXT_PUBLIC_BASE_PATH (set in next.config.js for production builds)
+  // Fallback to empty string for local development so paths resolve to "/assets/..."
+  let rawPrefix = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+  // Normalize prefix: ensure it starts with '/' (unless empty) and does not end with '/'
+  let prefix = rawPrefix;
+  if (prefix && !prefix.startsWith('/')) { prefix = `/${prefix}` }
+  if (prefix.endsWith('/')) { prefix = prefix.slice(0, -1) }
+
+  // If we're running in the browser on a local dev server, don't apply the repo prefix.
+  // This covers cases where NEXT_PUBLIC_BASE_PATH may be set for production builds
+  // but you are running the dev server on localhost.
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname || '';
+    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+
+    if (isLocal) {
+      prefix = '';
+    }
+  }
+
   const fullPath = `${prefix}${path}`;
-  console.log(`getAssetPath (scene-loader): ${path} -> ${fullPath} (hardcoded prefix: "${prefix}")`);
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`getAssetPath (scene-loader): ${path} -> ${fullPath} (prefix: "${prefix}")`);
+  }
+
   return fullPath;
 }
 
@@ -73,6 +96,16 @@ function getDesktopTargetUrl(): string {
     return desktopUrl;
   }
   
+  // If running in a browser on localhost (dev), point to the local desktop dev server
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname || '';
+    const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+
+    if (isLocal) {
+      return 'http://localhost:3001/';
+    }
+  }
+
   // Use production URL for GitHub Pages deployment - point to desktop subdirectory
   const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'https://hayleybloch.github.io/htmaa2/'
   return `${target}desktop/`;

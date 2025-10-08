@@ -1,0 +1,36 @@
+Patch: asset-path-fixes
+
+Files changed:
+- apps/desktop/next.config.js
+  - Rewrote dev rewrite rule to map /htmaa2/desktop/:path* -> /:path* (so dev requests map to public/ assets).
+
+- apps/desktop/pages/_document.tsx
+  - Changed dev fallback URLs from /desktop/fonts/... and /desktop/icons/... to /fonts/... and /icons/... so CSS and fonts resolve in local dev.
+
+- apps/web/renderer/RendererUI.tsx
+  - Replaced hard-coded "/htmaa2/icons/..." paths with runtime-aware `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/icons/...`.
+
+- apps/web/pages/index.tsx
+  - Replaced hard-coded full GitHub Pages OG/Twitter image and URL with `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/thumbnail.png` and `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/` so meta tags work in dev and prod.
+
+Reasoning:
+- Production is hosted under /htmaa2/ (and /htmaa2/desktop for the desktop app). In production we set NEXT_PUBLIC_BASE_PATH, but in dev that variable is empty. The codebase had mixed absolute hard-coded paths and dev rewrites that didn't map to the actual public/ layout. These changes make asset references respect NEXT_PUBLIC_BASE_PATH and ensure local dev fetches the correct paths from `public/`.
+
+How to apply/open a PR:
+- The edits are already applied in this branch. You can create a branch and open a PR from `main` with these changes.
+
+Commands (optional):
+
+  # create a feature branch
+  git checkout -b fix/dev-asset-paths
+
+  # review changes
+  git add -A
+  git commit -m "Fix asset path handling for local dev and production (use NEXT_PUBLIC_BASE_PATH and correct rewrites)"
+  git push origin fix/dev-asset-paths
+
+  # open a PR on GitHub from the branch
+
+Notes:
+- I intentionally did not modify deployment scripts or docs that refer to /htmaa2/ (they are correct for production).
+- If you want, I can also update the small number of scripts (preview_static.js/node) to use the runtime base path, but they are OK as-is for static preview tooling.

@@ -34,10 +34,11 @@ export default function Web() {
         <meta property="og:title" content="Hayley Bloch - HTMAA Portfolio" />
         <meta property="og:description" content="MIT HTMAA student showcasing digital fabrication projects, electronics, and creative engineering work" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://hayleybloch.github.io/htmaa2/assets/thumbnail.png" />
-        <meta property="og:url" content="https://hayleybloch.github.io/htmaa2/" />
-        
-        <meta property="twitter:image" content="https://hayleybloch.github.io/htmaa2/assets/thumbnail.png"/>
+  {/* Use NEXT_PUBLIC_BASE_PATH so these meta tags work in both prod and dev */}
+  <meta property="og:image" content={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/thumbnail.png`} />
+  <meta property="og:url" content={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/`} />
+
+  <meta property="twitter:image" content={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/thumbnail.png`}/>
         <meta property="twitter:card" content="summary_large_image"/>
         <meta property="twitter:title" content="Hayley Bloch - HTMAA Portfolio"/>
         <meta property="twitter:description" content="MIT HTMAA student showcasing digital fabrication projects, electronics, and creative engineering work"/>

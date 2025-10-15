@@ -1,19 +1,15 @@
 import { SubViewNavigation, SubViewParams } from "./AboutView";
 import styles from './AboutView.module.css';
 import Image from 'next/image';
-import getPublicPath from '@/lib/getPublicPath';
 
 
 function ProjectImage(props: { src: string, alt: string, label?: string, labelNumber?: number }) {
   const { src, alt, label, labelNumber } = props;
-  // Resolve at build-time to ensure exported static files point to the
-  // correct GitHub Pages location (e.g. /htmaa2/desktop/images/...)
-  const resolvedSrc = getPublicPath(src);
 
   return (<>
       <div className={styles['project-image-container']}>
         <Image
-          src={resolvedSrc}
+          src={src}
           alt={alt}
           fill
           quality={90}
@@ -198,10 +194,8 @@ export function ProjectWeek1(params: SubViewParams) {
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
                   <ProjectImage src="/images/Week-1/2w1-min.jpg" alt="AI sketch-to-render example" label="AI render example (2w1)" labelNumber={2} />
-                  <ProjectImage src="/images/Week-1/2w1-min.jpg" alt="AI sketch-to-render example" label="AI render example (2w1)" labelNumber={2} />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
-                  <ProjectImage src="/images/Week-1/3w1-min.jpg" alt="Blender import / initial STL example" label="AI-to-STL / Blender import (3w1)" labelNumber={3} />
                   <ProjectImage src="/images/Week-1/3w1-min.jpg" alt="Blender import / initial STL example" label="AI-to-STL / Blender import (3w1)" labelNumber={3} />
                 </div>
               </div>
@@ -220,7 +214,6 @@ export function ProjectWeek1(params: SubViewParams) {
               <li>Mouth geometry was stretched and broken.</li>
             </ul>
             <ProjectImage src="/images/Week-1/maker world.png" alt="MakerWorld / Image-to-3D rough output with distorted facial features" label="MakerWorld rough STL" labelNumber={3} />
-            <ProjectImage src="/images/Week-1/maker world.png" alt="MakerWorld / Image-to-3D rough output with distorted facial features" label="MakerWorld rough STL" labelNumber={3} />
           </li>
 
           <li>
@@ -237,7 +230,6 @@ export function ProjectWeek1(params: SubViewParams) {
               <li>Jaw & neck: corrected proportions and reinforced weak areas.</li>
             </ul>
             <ProjectImage src="/images/Week-1/vertex clean.png" alt="Vertex clean showing topology fixes in Blender" label="Vertex cleanup / remesh" labelNumber={4} />
-            <ProjectImage src="/images/Week-1/vertex clean.png" alt="Vertex clean showing topology fixes in Blender" label="Vertex cleanup / remesh" labelNumber={4} />
           </li>
 
           <li>
@@ -247,8 +239,6 @@ export function ProjectWeek1(params: SubViewParams) {
               model for future mechanical integration and possible 3D printing.
             </p>
             <ProjectImage src="/images/Week-1/blender clean up.png" alt="Blender cleanup showing repaired and remeshed geometry" label="Blender cleanup / final cleaned model" labelNumber={5} />
-            <ProjectImage src="/images/Week-1/blender clean up.png" alt="Blender cleanup showing repaired and remeshed geometry" label="Blender cleanup / final cleaned model" labelNumber={5} />
-            <ProjectImage src="/images/Week-1/1w1-min.jpg" alt="Initial concept sketch of humanoid bust" label="Initial concept sketch of humanoid bust" labelNumber={1} />
           </li>
         </ol>
 
@@ -338,16 +328,13 @@ export function ProjectWeek2(params: SubViewParams) {
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <ProjectImage src="/images/Week-2/parametrics.png" alt="Parametric table from Fusion" label="Parametric table" labelNumber={1} />
-                  <ProjectImage src="/images/Week-2/parametrics.png" alt="Parametric table from Fusion" label="Parametric table" labelNumber={1} />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
-                  <ProjectImage src="/images/Week-2/fusion assembled box picture.png" alt="Fusion assembled box" label="Fusion assembled box" />
                   <ProjectImage src="/images/Week-2/fusion assembled box picture.png" alt="Fusion assembled box" label="Fusion assembled box" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                     <source src="/images/Week-2/fusion simulation.mp4" type="video/mp4" />
-                    <source src={getPublicPath('/images/Week-2/fusion simulation.mp4')} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Fusion simulation</div>
@@ -355,7 +342,6 @@ export function ProjectWeek2(params: SubViewParams) {
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                     <source src="/images/Week-2/fusion assembly.mp4" type="video/mp4" />
-                    <source src={getPublicPath('/images/Week-2/fusion assembly.mp4')} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Fusion assembly</div>
@@ -391,7 +377,6 @@ export function ProjectWeek2(params: SubViewParams) {
             </p>
             <div style={{marginTop: 8}}>
               <ProjectImage src="/images/Week-2/drawing file.png" alt="Vinyl overlay drawing / cut file" label="Vinyl overlay drawing / cut file" />
-                <ProjectImage src="/images/Week-2/drawing file.png" alt="Vinyl overlay drawing / cut file" label="Vinyl overlay drawing / cut file" />
             </div>
           </li>
 
@@ -415,7 +400,6 @@ export function ProjectWeek2(params: SubViewParams) {
         <div style={{marginTop: 8}}>
           <div style={{maxWidth: 480}}>
             <ProjectImage src="/images/Week-2/kerf test.JPG" alt="Kerf test square with caliper measurement" label="Kerf test" />
-            <ProjectImage src="/images/Week-2/kerf test.JPG" alt="Kerf test square with caliper measurement" label="Kerf test" />
           </div>
         </div>
           </li>
@@ -431,18 +415,14 @@ export function ProjectWeek2(params: SubViewParams) {
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
                   <ProjectImage src="/images/Week-2/cardboard laser cut.JPG" alt="Cardboard laser cut" label="Cardboard laser cut" />
-                  <ProjectImage src="/images/Week-2/cardboard laser cut.JPG" alt="Cardboard laser cut" label="Cardboard laser cut" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
-                  <ProjectImage src="/images/Week-2/engraved cardboard.JPG" alt="Engraved cardboard" label="Engraved cardboard" />
                   <ProjectImage src="/images/Week-2/engraved cardboard.JPG" alt="Engraved cardboard" label="Engraved cardboard" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
                   <ProjectImage src="/images/Week-2/IMG_0163-min.JPG" alt="Assembly / cardboard photo" label="Assembly / cardboard photo" />
-                  <ProjectImage src="/images/Week-2/IMG_0163-min.JPG" alt="Assembly / cardboard photo" label="Assembly / cardboard photo" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
-                  <ProjectImage src="/images/Week-2/top view engraved cardboard.JPG" alt="Top view engraved cardboard" label="Top view (cardboard)" />
                   <ProjectImage src="/images/Week-2/top view engraved cardboard.JPG" alt="Top view engraved cardboard" label="Top view (cardboard)" />
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 140}}>
@@ -490,11 +470,6 @@ export function ProjectWeek2(params: SubViewParams) {
               <div style={{flex: '1 1 100%', minWidth: 220}}>
                 <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                   <source src="/images/Week-2/demonstration_video.mp4" type="video/mp4" />
-                  <source src={getPublicPath('/images/Week-2/demonstration_video.mp4')} type="video/mp4" />
-            <ProjectImage src="/images/Week-2/preset laser settings.JPG" alt="Preset laser settings" label="Laser preset settings" />
-            <ProjectImage src="/images/Week-2/laser wood cut.JPG" alt="Laser cutting wood" label="Laser cutting (wood)" />
-            <ProjectImage src="/images/Week-2/inside of wooden box.JPG" alt="Inside of wooden box" label="Inside (wooden box)" />
-            <ProjectImage src="/images/Week-2/final built box.JPG" alt="Finished cut pieces / final built box" label="Final built box" />
                   Your browser does not support the video tag.
                 </video>
                 <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Demonstration: iris opening/closing</div>
@@ -648,11 +623,6 @@ export function ProjectWeek3(params: SubViewParams) {
             <div style={{marginTop: 8}}>
               <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
                 <source src="/images/Week-3/my program.mp4" type="video/mp4" />
-                <source src={getPublicPath('/images/Week-3/my program.mp4')} type="video/mp4" />
-                <ProjectImage src="/images/Week-3/QPAD21.JPG" alt="QPAD21 board" label="QPAD21 board" />
-                <ProjectImage src="/images/Week-3/soldering.JPG" alt="Soldering process" label="Soldering" />
-                <ProjectImage src="/images/Week-3/QPAD XAIO.JPG" alt="QPAD XIAO board" label="QPAD-XIAO board" />
-                <ProjectImage src="/images/Week-3/programmer.JPG" alt="Programmer setup" label="Programmer / development" />
                 Your browser does not support the video tag.
               </video>
               <div style={{fontSize: 12, color: '#666', marginTop: 6}}>End-to-end test: Python → OLED</div>
@@ -749,11 +719,9 @@ export function ProjectWeek4(params: SubViewParams) {
         <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
           <div style={{flex: '1 1 48%', minWidth: 160}}>
             <ProjectImage src="/images/Week-4/bust stl.png" alt="Week 1 bust STL / render" label="Week 1 bust STL" />
-                <ProjectImage src="/images/Week-4/bust stl.png" alt="Week 1 bust STL / render" label="Week 1 bust STL" />
           </div>
           <div style={{flex: '1 1 48%', minWidth: 160}}>
             <ProjectImage src="/images/Week-4/bust and head.JPG" alt="Bust and head render" label="Bust and head" />
-                <ProjectImage src="/images/Week-4/bust and head.JPG" alt="Bust and head render" label="Bust and head" />
           </div>
         </div>
 
@@ -770,9 +738,6 @@ export function ProjectWeek4(params: SubViewParams) {
         <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
           <div style={{flex: '1 1 48%', minWidth: 160}}>
             <ProjectImage src="/images/Week-4/head1.JPG" alt="Blender mesh cleanup" label="Blender cleanup" />
-          </div>
-          <div style={{flex: '1 1 48%', minWidth: 160}}>
-            <ProjectImage src="/images/Week-4/bust stl.png" alt="STL insights" label="STL / mesh" />
           </div>
         </div>
 
@@ -861,62 +826,324 @@ export function ProjectWeek5(params: SubViewParams) {
       <div>
         <h3>Project Goal</h3>
         <p>
-          Short statement of the week's objective. (Replace this with your Week 5 goal.)
+          Design and document an embedded control board that can initially
+          drive six servos for a two-eye mechanism, expose an I2C connection
+          for a future companion Pico board, verify the schematic with ERC,
+          simulate servo behavior, and complete a PCB layout suitable for
+          fabrication. An additional goal was to strengthen my understanding of
+          the full KiCad workflow while developing a simpler, modular approach
+          that could be reused in later iterations.
         </p>
 
         <h3>Process</h3>
         <ol>
           <li>
-            <strong>Kickoff & Research</strong>
-            <p>Summarize initial research, references, and early design choices.</p>
-          </li>
-
-          <li>
-            <strong>Design & Prototype</strong>
-            <p>Describe the prototyping approach and tools used.</p>
+            <strong>Research and Planning</strong>
+            <p>
+              I began by reviewing open-source eye-mechanism designs and
+              sketched out a controller architecture that included:
+            </p>
+            <ul>
+              <li>a microcontroller with six PWM outputs,</li>
+              <li>a 5 V rail for servos and a 3.3 V rail for logic,</li>
+              <li>bulk and local decoupling capacitors,</li>
+              <li>an I2C header to link to a second Pico for future expansion.</li>
+            </ul>
             <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
               <div style={{flex: '1 1 48%', minWidth: 140}}>
-                <ProjectImage src="/images/Week-5/IMG_0371-min.JPG" alt="Prototype photo 1" label="Prototype photo 1" />
-              </div>
-              <div style={{flex: '1 1 48%', minWidth: 140}}>
-                <ProjectImage src="/images/Week-5/IMG_0370-min.JPG" alt="Prototype photo 2" label="Prototype photo 2" />
+                <ProjectImage src="/images/Week-5/block-diagram.jpg" alt="Block diagram of controller architecture" label="Early block diagram" />
               </div>
             </div>
           </li>
 
           <li>
-            <strong>Testing</strong>
-            <p>Explain test methodology and key observations.</p>
-            <div style={{marginTop: 8}}>
-              <div style={{fontSize: 14, color: '#666'}}>No demo video found for Week 5 — showing prototype photos above.</div>
+            <strong>Schematic in KiCad</strong>
+            <p>
+              I structured the schematic into clear sections: Power Input (5 V
+              for servos, 3.3 V for logic, bulk caps near the regulator and
+              0.1 µF local decoupling), MCU section with six PWM pins labeled
+              Left, Right, Blink L/R, Up, Down, servo connectors (three-pin
+              headers), an I2C header with pull-ups, and programming header/test
+              points. The schematic passed ERC cleanly.
+            </p>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-5/kicad-schematic.png" alt="KiCad schematic overview" label="KiCad schematic" />
+              </div>
             </div>
+          </li>
+
+          <li>
+            <strong>Behavior Simulation in Wokwi</strong>
+            <p>
+              To verify control logic before committing to hardware, I built a
+              Wokwi simulation using six virtual servos. My test program
+              exercised left-right eye motion, synchronized blink, and up-down
+              tracking with eased timing. All motions behaved as expected,
+              confirming PWM timing and pin mapping.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-5/wokwi.png" alt="Wokwi simulation workspace" label="Wokwi simulation" />
+            </div>
+          </li>
+
+          <li>
+            <strong>First PCB Layout Attempt</strong>
+            <p>
+              Routing six servo headers on a compact board was challenging:
+              power traces needed to be wide, grounds well distributed, and
+              signal paths short. After several placement/routing iterations
+              and a crowded ratsnest, I determined the current layout needed
+              more time and experience to become reliably fabricatable.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-5/pcb-attempt.png" alt="Crowded PCB placement attempt" label="PCB placement attempt" />
+            </div>
+          </li>
+
+          <li>
+            <strong>Pivot and New Board — Drum Synthesizer</strong>
+            <p>
+              To keep momentum and practice the same KiCad skills with fewer
+              constraints, I designed a drum synthesizer using the Raspberry
+              Pi Pico W and DFPlayer Mini (DFR0299) audio module. The goal was
+              to trigger samples from tactile buttons stored on microSD and
+              played through an 8 Ω speaker.
+            </p>
+            <p>The new schematic featured:</p>
+            <ul>
+              <li>Raspberry Pi Pico W controlling DFPlayer via UART.</li>
+              <li>DFPlayer Mini handling MP3 playback from microSD.</li>
+              <li>8 tactile buttons wired to GPIO with internal pull-ups.</li>
+              <li>Speaker output through DFPlayer amplifier pins to an 8 Ω speaker.</li>
+              <li>5 V input rail with decoupling and optional USB power via Pico.</li>
+            </ul>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-5/drum-synth-schematic.png" alt="Drum synth schematic" label="Drum synth schematic" />
+              </div>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-5/drum-synth-board.png" alt="Routed drum synth PCB" label="Routed PCB" />
+              </div>
+            </div>
+            <p>
+              The two-layer board routed cleanly, passed ERC and DRC, and
+              exported Gerber files for fabrication.
+            </p>
           </li>
         </ol>
 
+        <h3>Outcome</h3>
+        <ul>
+          <li>Complete schematic and routed board for a Pico W + DFPlayer Mini drum synthesizer.</li>
+          <li>Eight tactile inputs mapped to drum samples on microSD.</li>
+          <li>ERC and DRC checks passed with proper decoupling and net labeling.</li>
+          <li>Fabrication-ready board including speaker output and programming access.</li>
+          <li>Achieved a full schematic-to-PCB workflow while shifting focus from motion to audio interaction.</li>
+        </ul>
+
         <h3>Results</h3>
         <ul>
-          <li>Key outcome 1</li>
-          <li>Key outcome 2</li>
+          <li>Servo board: validated motion logic in simulation and established a modular system concept.</li>
+          <li>Drum synth board: clean layout, successful ERC/DRC, and organized power routing.</li>
+          <li>Hardware stack: Raspberry Pi Pico W, DFPlayer Mini, 8 tactile buttons, 8 Ω speaker.</li>
+          <li>Deliverables: schematic files, layout views, 3D renders, and Gerber outputs for fabrication.</li>
         </ul>
 
         <h3>Learnings</h3>
         <ul>
-          <li>Learning 1</li>
-          <li>Learning 2</li>
+          <li>Routing six servos on one board requires serious attention to power distribution and connector layout.</li>
+          <li>Pivoting to an audio project maintained momentum and made the workflow achievable within the week.</li>
+          <li>Working with the DFPlayer Mini taught serial communication protocols and grounding considerations for mixed-signal boards.</li>
+          <li>Consistent labeling, clear net classes, and early simulation prevent common debugging issues.</li>
+          <li>ERC and DRC are non-negotiable for board integrity and manufacturability.</li>
+          <li>Iteration and redirection are productive when learning complex tools like KiCad.</li>
         </ul>
 
         <h3>Reflection</h3>
-        <p><strong>What worked:</strong> ...</p>
-        <p><strong>What didn’t work:</strong> ...</p>
-
-        <h3>Files</h3>
-        <ul>
-          <li>Design file</li>
-          <li>Exported assets</li>
-        </ul>
+        <p>
+          <strong>What worked:</strong> Schematic organization, simulation discipline,
+          and a flexible mindset allowed me to learn more in a single week than
+          if I had stuck rigidly to the first plan. The drum synth was a
+          complete, engaging project that tied together electronics design,
+          sound, and interaction.
+        </p>
+        <p>
+          <strong>What didn’t work:</strong> The original six-servo layout was too
+          dense for my current PCB skills and time constraints. I underestimated
+          the importance of early connector and power-plane planning.
+        </p>
+        <p>
+          <strong>Looking ahead:</strong> I plan to fabricate and test the drum
+          synth board to verify my workflow end-to-end. After that, I’ll return
+          to the servo controller with better power and ground strategies,
+          potentially using a modular backplane for multi-servo control. This
+          week demonstrated that flexibility and experimentation are core to
+          creative engineering practice.
+        </p>
       </div>
     );
   }
 
   return ProjectPage({title: 'Week 5 - Prototype & Test', content: RenderEnglishContent(), params});
+}
+
+
+export function ProjectWeek6(params: SubViewParams) {
+  function RenderEnglishContent() {
+    return (
+      <div>
+        <h3>Project Goal</h3>
+        <p>
+          Fabricate and document the custom drum synthesizer PCB designed during
+          Week 5. This week’s focus was to complete the full physical production
+          process — from milling on the Bantam Tools PCB mill to soldering and
+          testing the assembled board. Additional goals included refining design
+          constraints for manufacturability, mastering the Bantam workflow, and
+          performing initial debugging of button and DFPlayer Mini behavior.
+        </p>
+
+        <h3>Process</h3>
+        <ol>
+          <li>
+            <strong>Revisiting the Week 5 Design</strong>
+            <p>
+              I began by returning to my Week 5 drum synthesizer schematic, which
+              used a Raspberry Pi Pico W and DFPlayer Mini (DFR0299) audio module
+              to play drum loops from a microSD card through an 8 Ω speaker.
+              The board included eight tactile buttons for triggering samples,
+              a UART connection between the Pico and DFPlayer, a 5 V power rail
+              with bulk and local decoupling, and test points for debugging. My
+              goal was to bring that KiCad design to life as a physical PCB.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-6/week6-schematic-1.jpg" alt="Week 5 drum synth schematic overview" label="Week 5 schematic overview" />
+            </div>
+          </li>
+
+          <li>
+            <strong>Preparing for Fabrication</strong>
+            <p>
+              Before milling, I exported Gerber and SVG files from KiCad and
+              set design rules to accommodate the Bantam Tools mill. To
+              simplify the job, I adjusted all trace widths and clearances to
+              be ≥ 0.4 mm (1/64 inch), ensuring the entire board could be milled
+              with a single tool bit. This eliminated bit changes and reduced
+              the risk of trace lifting or mismatch.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-6/week6-schematic-2.jpg" alt="Trace and clearance settings in KiCad" label="KiCad trace settings" />
+            </div>
+          </li>
+
+          <li>
+            <strong>Milling on the Bantam Tools PCB Mill</strong>
+            <p>
+              Using the Bantam Tools desktop PCB mill, I imported the Gerber
+              files, set the origin, and zeroed the toolhead. I used a 1/64”
+              end mill for traces and a 1/32” bit for the outline cut. The
+              machine precisely carved the top copper layer and outlined the
+              board. After vacuuming debris and deburring edges with fine
+              sandpaper, I had a clean, professional single-sided board ready
+              for assembly.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-6/week6-bantam-traces.jpg" alt="Bantam mill traces post-cut" label="Bantam traces" />
+            </div>
+          </li>
+
+          <li>
+            <strong>Soldering and Assembly</strong>
+            <p>
+              I soldered the Raspberry Pi Pico headers, DFPlayer Mini module,
+              speaker terminals, resistors, capacitors, and eight tactile
+              buttons. Polarity on electrolytic capacitors was checked twice,
+              and lead lengths were kept short for signal integrity. The board
+              was then cleaned with isopropyl alcohol to remove flux residue.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-6/week6-soldered-pcb.jpg" alt="Soldered PCB with Pico and DFPlayer" label="Soldered PCB" />
+            </div>
+          </li>
+
+          <li>
+            <strong>Programming and Initial Testing</strong>
+            <p>
+              After assembly, I uploaded a test sketch to the Pico to verify
+              button inputs and serial communication with the DFPlayer. Four
+              of the eight buttons responded correctly in the serial monitor,
+              confirming partial input success. When pressed, the first button
+              caused the speaker’s idle buzz to pause momentarily — evidence
+              that the DFPlayer was receiving some commands, but not yet
+              playing audio reliably.
+            </p>
+            <div style={{marginTop: 8}}>
+              <ProjectImage src="/images/Week-6/week6-serial-monitor.jpg" alt="Serial monitor output during testing" label="Serial monitor" />
+            </div>
+          </li>
+
+          <li>
+            <strong>Troubleshooting</strong>
+            <p>
+              The lack of audio playback pointed to potential issues in the
+              UART connection or SD card formatting. I verified TX/RX wiring,
+              confirmed the SD contained properly named MP3 files ("0001.mp3",
+              etc.), and validated stable 5 V power delivery. Next steps are to
+              re-test with an updated DFPlayer library, isolate serial lines to
+              check baud response, and add LED debug outputs for button
+              confirmation.
+            </p>
+          </li>
+        </ol>
+
+        <h3>Outcome</h3>
+        <ul>
+          <li>Successfully milled and assembled a custom drum synthesizer PCB from the Week 5 design.</li>
+          <li>Confirmed partial input functionality and serial communication from Pico to DFPlayer.</li>
+          <li>Identified audio debugging tasks planned for Week 7 refinement.</li>
+          <li>Validated design rules for 0.4 mm clearance and a single-bit Bantam milling workflow.</li>
+        </ul>
+
+        <h3>Results</h3>
+        <ul>
+          <li>Hardware stack: Raspberry Pi Pico W, DFPlayer Mini, 8 tactile buttons, 8 Ω speaker.</li>
+          <li>Fabrication: Milled on Bantam Tools mill using 1/64” and 1/32” bits.</li>
+          <li>Software: Arduino C++ sketch for testing button logic and UART playback.</li>
+          <li>Deliverables: Milled board, soldered assembly photos, serial test logs, DFPlayer debug notes.</li>
+        </ul>
+
+        <h3>Learnings</h3>
+        <ul>
+          <li>Designing for manufacturability is as important as functionality — small trace tweaks make milling easier.</li>
+          <li>The DFPlayer Mini is sensitive to power fluctuations and logic-level mismatches; stable grounding and proper decoupling are essential.</li>
+          <li>Bantam Tools workflow emphasizes physical tolerances and toolpath visualization before cutting.</li>
+          <li>Iterative debugging — even without immediate success — is core to electronics production practice.</li>
+        </ul>
+
+        <h3>Reflection</h3>
+        <p>
+          <strong>What worked:</strong> Clear trace constraints, organized component
+          placement, and a disciplined milling approach produced a clean board on
+          the first try. The project bridged design and production, completing
+          the KiCad workflow from schematic to physical board.
+        </p>
+        <p>
+          <strong>What didn’t work:</strong> Serial communication between the Pico
+          and DFPlayer was intermittent, and half the buttons failed to register
+          due to floating pins or inconsistent pull-ups. These require code and
+          hardware debugging.
+        </p>
+        <p>
+          <strong>Looking ahead:</strong> I plan to refine the code to isolate
+          button inputs, try alternative DFPlayer libraries, add on-board status
+          LEDs, and test a two-layer version with ground fill for noise
+          reduction. This iteration cemented my understanding of the complete
+          electronics production pipeline — from schematic to board to hardware
+          debugging.
+        </p>
+      </div>
+    );
+  }
+
+  return ProjectPage({title: 'Week 6 - Electronics Production', content: RenderEnglishContent(), params});
 }

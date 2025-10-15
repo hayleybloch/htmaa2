@@ -1,0 +1,151 @@
+Static export / Static-site conversion checklist for htmaa2
+
+Purpose
+-------
+A compact, actionable checklist and command reference to convert the Next.js apps in this repo to a pure static site (HTML/CSS/JS) using Next's static export (next export / output: 'export'). This file covers both `apps/web` and `apps/desktop` where applicable and includes npm / pnpm / yarn variants.
+
+Notes about this repo
+---------------------
+- This repository is a monorepo with at least two Next.js applications:
+  - apps/web  (3D portfolio)
+  - apps/desktop (desktop-like UI)
+- The repo already has deployment docs in `DEPLOYMENT.md` and helper scripts referencing static export.
+- The web app (`apps/web`) is intended for static export; the desktop app may contain server-like features—audit it before exporting.
+
+Checklist (quick)
+-----------------
+1. Audit for server-only features
+   - Search/replace or remove `getServerSideProps` and `pages/api/*`.
+   - Search for `fs.`, `path`, `child_process` used in page/component code.
+   - Search for `middleware` or custom server code.
+   - Search for `process.env` usage that is not `NEXT_PUBLIC_`.
+2. Make Next.js static-export friendly
+   - In `apps/*/next.config.js` set (or ensure):
+     - `images: { unoptimized: true }`
+     - (optional) `output: 'export'` (Next 13+)
+     - (optional) `trailingSlash: true` for consistent static paths
+     - If deploying under a subpath (e.g., GitHub Pages), set `basePath` and `assetPrefix`.
+3. Convert server data fetching
+   - Replace `getServerSideProps` with `getStaticProps` (and `getStaticPaths`) where possible.
+   - Or move data fetching to client-side (useEffect) for runtime-only data.
+4. Handle images and optimization
+   - Either set `images.unoptimized: true` and keep `next/image`, or replace `Image` with `img` tags.
+5. Update package.json scripts
+   - Add a `build:static` script: `next build && next export -o out` (or `next build` and rely on `output: 'export'` which writes exported output).
+6. Build & export
+   - Run the build and export commands from the app folder.
+7. Serve & test locally
+   - Use a static server to verify output (e.g., `npx serve out`).
+8. Deploy
+   - Upload `out/` (or `out` per app) to your host (GitHub Pages, Netlify, S3, etc.).
+
+Detailed commands (choose your package manager)
+-----------------------------------------------
+Replace <APP> with `apps/web` or `apps/desktop` depending on which app you are exporting.
+
+Using npm (recommended):
+
+# From repo root (monorepo)
+cd <APP>
+npm ci          # install deps for the app (or run from repo root if using workspaces)
+# Build & export to out/
+npm run build    # runs next build
+# If your next.config.js includes output: 'export', the exported files may be written automatically.
+# Otherwise run next export explicitly (older Next versions)
+npx next export -o out
+# Combined script you can add to package.json
+# "build:static": "next build && next export -o out"
+
+Using pnpm:
+
+cd <APP>
+pnpm install
+pnpm run build
+pnpm exec next export -o out
+# Or add to package.json: "build:static": "next build && next export -o out"
+
+Using yarn:
+
+cd <APP>
+yarn install
+yarn build
+yarn next export -o out
+# Or add to package.json a combined script
+
+Serving locally to verify:
+
+# Install a static server or use npx
+cd <APP>/out
+npx serve .
+# or
+npx http-server .
+# Open the printed URL (usually http://localhost:5000)
+
+Monorepo notes
+--------------
+- If you use workspace commands (pnpm workspaces or npm/yarn workspaces), you can run builds from the root with workspace flags. Example with npm workspaces:
+  npm run build --workspace=<workspace-name>
+- The repo contains scripts like `scripts/preview_full_static.sh` and `scripts/preview_full_static.js` which call the app build/export steps; you can inspect or reuse them.
+
+next.config.js suggestions
+--------------------------
+Add or confirm these options in each app you export (e.g., `apps/web/next.config.js`):
+
+module.exports = {
+  // For Next 13+ you can explicitly request static export
+  // output: 'export',
+
+  images: {
+    unoptimized: true,
+  },
+
+  trailingSlash: true,
+
+  // If deploying to a subpath like /htmaa2/ (GitHub Pages):
+  // basePath: '/htmaa2',
+  // assetPrefix: '/htmaa2',
+};
+
+Common issues & fixes
+---------------------
+- getServerSideProps: convert to getStaticProps or client-side fetch.
+- API routes under pages/api: these will not be exported. Move their logic to external services or client-side calls.
+- next/image: if you keep it, set `images.unoptimized: true` or images might try to call the image optimizer.
+- Dynamic routes: ensure `getStaticPaths` returns all paths (use `fallback: false`) or rely on client-side routing.
+- Environment variables: only `NEXT_PUBLIC_` prefixed vars are included in the static bundle.
+- Forms and auth: need serverless endpoints or external services to handle submissions or sign-in flows.
+
+Verify & QA checklist
+---------------------
+- [ ] Run `next build` and ensure no build-time errors.
+- [ ] Confirm `out/` exists and contains index.html and other pages.
+- [ ] Serve `out/` and click through the site to confirm client-side behavior and assets.
+- [ ] Search for `getServerSideProps`, `pages/api`, `middleware`, `fs` occurrences and fix where needed.
+- [ ] Run TypeScript checks and linting: `npm run tsc` (or repo-level scripts) if present.
+
+Deployment examples
+-------------------
+GitHub Pages (example for apps/web):
+1. Ensure `basePath` and `assetPrefix` are set to `/htmaa2/` in `next.config.js`.
+2. Build and export to `apps/web/out`.
+3. Use `gh-pages` package or GitHub Actions to push `out/` to `gh-pages` branch (see `DEPLOYMENT.md`).
+
+Netlify:
+1. Build & export locally to out/ and drag `out/` into Netlify (or set the publish directory to the out/ folder in CI).
+
+S3 + CloudFront:
+1. Sync `out/` to S3 with `aws s3 sync out/ s3://your-bucket/ --delete` and configure CloudFront.
+
+If you want me to add a script
+-----------------------------
+I can:
+- Add a `build:static` script to `apps/web/package.json` and/or `apps/desktop/package.json`.
+- Add `images.unoptimized: true` and `output: 'export'` to the apps' `next.config.js` files.
+- Run a quick scan for `getServerSideProps` / `pages/api` occurrences and produce a short blocker report.
+
+Which app(s) should I target (apps/web, apps/desktop, or both)?
+Which package manager should I use by default for commands (npm / pnpm / yarn)?
+
+
+---
+Generated: Oct 15, 2025

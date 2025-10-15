@@ -17,11 +17,11 @@ const WEB_OUT = path.join(ROOT_DIR, 'apps', 'web', 'out');
 console.log('Repo root:', ROOT_DIR);
 
 if (!fs.existsSync(WEB_OUT)) {
-  die(`Error: web export not found at ${WEB_OUT}\nRun:\n  cd apps/web && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export -o out`);
+  die(`Error: web export not found at ${WEB_OUT}\nRun:\n  cd apps/web && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export`);
 }
 
 if (!fs.existsSync(DESKTOP_OUT)) {
-  die(`Error: desktop export not found at ${DESKTOP_OUT}\nRun:\n  cd apps/desktop && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export -o out`);
+  die(`Error: desktop export not found at ${DESKTOP_OUT}\nRun:\n  cd apps/desktop && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export`);
 }
 
 // Copy desktop out -> web/out/desktop
@@ -34,6 +34,18 @@ try {
   fs.cpSync(DESKTOP_OUT, targetDesktopDir, { recursive: true });
 } catch (err) {
   die('Failed to copy desktop export: ' + err);
+}
+
+// Merge web/_next/static into web/out/desktop/_next/static so desktop pages can resolve hashed assets
+try {
+  const webNextStatic = path.join(WEB_OUT, '_next', 'static');
+  const desktopNextStatic = path.join(targetDesktopDir, '_next', 'static');
+  if (fs.existsSync(webNextStatic)) {
+    fs.mkdirSync(desktopNextStatic, { recursive: true });
+    fs.cpSync(webNextStatic, desktopNextStatic, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Failed to merge _next static assets into desktop:', err && err.message);
 }
 
 // Run the path fixer

@@ -4,7 +4,7 @@ import styles from './AboutView.module.css';
 import { BaseApplicationManager } from '../ApplicationManager';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-import { ProjectWeek1, ProjectWeek2, ProjectWeek3, ProjectWeek4, ProjectWeek5 } from './Projects';
+import { ProjectWeek1, ProjectWeek2, ProjectWeek3, ProjectWeek4, ProjectWeek5, ProjectWeek6 } from './Projects';
 import getPublicPath from '@/lib/getPublicPath';
 import { ScreenResolution } from '@/apis/Screen/ScreenService';
 
@@ -18,6 +18,7 @@ type SubView = (
   'project-week3' |
   'project-week4' |
   'project-week5' |
+  'project-week6' |
   'contact'
 );
 
@@ -243,6 +244,7 @@ function ProjectsSubView(params: SubViewParams) {
           <li>{ProjectButton('Week 3 - Electronics Production', 'project-week3', '/icons/project-redis.png')}</li>
           <li>{ProjectButton('Week 4 - 3D Printing & Scanning', 'project-week4', '/icons/project-t-bot.png')}</li>
             <li>{ProjectButton('Week 5 - Prototype & Test', 'project-week5', '/icons/printer.png')}</li>
+            <li>{ProjectButton('Week 6 - Electronics Production', 'project-week6', '/icons/skills/soldering.svg')}</li>
         </ul>
       </div>
     </div>
@@ -260,6 +262,7 @@ function RenderSubView(view: SubView, params: SubViewParams): JSX.Element {
     case 'project-week3': return ProjectWeek3(params);
     case 'project-week4': return ProjectWeek4(params);
       case 'project-week5': return ProjectWeek5(params);
+      case 'project-week6': return ProjectWeek6(params);
   }
   
   return <></>;

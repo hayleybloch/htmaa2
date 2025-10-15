@@ -6,7 +6,8 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:static": "BUILD_FOR_GITHUB=true NODE_ENV=production next build && npx next export -o out"
   },
   "devDependencies": {
     "@types/node": "^22.7.6",

@@ -19,7 +19,10 @@ const nextConfig = {
     // GitHub Pages. This is picked up by `getPublicPath()`.
     NEXT_PUBLIC_DESKTOP_BASE: isProd ? `/${repo}/desktop` : ''
   },
-  images: { unoptimized: true },
+  images: { 
+    unoptimized: true,
+    qualities: [25, 50, 75, 100]
+  },
   devIndicators: false,
   webpack: (webpackConfig, { webpack }) => {
     webpackConfig.plugins.push(

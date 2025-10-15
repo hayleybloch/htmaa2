@@ -56,6 +56,43 @@ This interactive portfolio is built as a desktop-like experience where visitors 
 npm run build
 ```
 
+### Static preview (dev)
+
+Use the static preview to build both `apps/web` and `apps/desktop`, copy the desktop export into the web export, fix paths for GitHub Pages-style hosting, and serve the combined static files locally. This is useful to verify the exact static output before committing and publishing.
+
+1. From the repo root, install deps (if you haven't already):
+```bash
+npm install
+```
+
+2. Start the full static dev preview (example uses port 5002):
+```bash
+npm run preview:full-static:dev -- 5002
+```
+
+What this does:
+- Runs production `npm run build` for `apps/web` and `apps/desktop` (Next build).
+- Uses the generated `out/` directories (Next >=15 may generate `out/` during `next build` when `output: 'export'` is configured).
+- Copies `apps/desktop/out` into `apps/web/out/desktop` and runs `scripts/fix_export_paths.js` to rewrite HTML/CSS paths so assets resolve under `/htmaa2/desktop/...`.
+- Merges `apps/web/out/_next/static` into `apps/web/out/desktop/_next/static` so hashed `_next` assets referenced by desktop pages are available.
+- Starts a small static server and watches source files; rebuilding + restarting automatically on changes.
+
+3. Open the preview in your browser:
+
+```
+http://localhost:5002/htmaa2/
+```
+
+Troubleshooting tips:
+- If you get `EADDRINUSE` or a port conflict, choose another port and pass it after `--` (for example `-- 5003`).
+- If a browser asset returns 404, confirm the asset exists on disk:
+   ```bash
+   ls -la apps/web/out/desktop/_next/static/css
+   curl -I http://localhost:5002/htmaa2/desktop/_next/static/css/<that-file>.css
+   ```
+- If there are multiple lockfiles or Next warns about workspace root, set `outputFileTracingRoot` in your Next config or remove unused lockfiles.
+
+
 ## Project Structure
 
 - `apps/web/` - 3D web environment and scene loader

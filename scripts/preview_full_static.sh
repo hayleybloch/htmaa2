@@ -17,14 +17,14 @@ echo "Repo root: $ROOT_DIR"
 if [ ! -d "$WEB_OUT" ]; then
   echo "Error: web export not found at $WEB_OUT"
   echo "Run from repo root:"
-  echo "  cd apps/web && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export -o out"
+  echo "  cd apps/web && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export"
   exit 1
 fi
 
 if [ ! -d "$DESKTOP_OUT" ]; then
   echo "Error: desktop export not found at $DESKTOP_OUT"
   echo "Run from repo root:"
-  echo "  cd apps/desktop && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export -o out"
+  echo "  cd apps/desktop && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export"
   exit 1
 fi
 

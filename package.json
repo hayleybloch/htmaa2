@@ -16,13 +16,16 @@
     "build:web": "npm run build --workspace=apps/web",
     "preview:web": "npm run preview:static --workspace=apps/web",
     "prepreview:full-static": "node scripts/prepreview_full_static.js",
-    "preview:full-static": "node scripts/preview_full_static.js"
+    "preview:full-static": "node scripts/preview_full_static.js",
+    "preview:full-static:dev": "node scripts/preview_full_static_dev.js"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",
     "@types/nodemailer": "^6.4.17",
+    "chokidar": "^3.5.3",
     "eslint-config-custom": "*",
     "prettier": "latest",
+    "sharp": "^0.34.4",
     "turbo": "^2.5.5"
   },
   "engines": {

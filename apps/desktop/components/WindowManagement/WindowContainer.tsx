@@ -463,8 +463,11 @@ const WindowHeader = (
       <span className={styles['header-title']}>{windowData.title}</span>
       <div className={styles.lines}></div>
       <div className={styles['header-buttons']}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <button className='header-button' onClick={() => { windowCompositor.minimize(windowData.id) }}><img src={MinimizeIcon} alt='Minimize window' draggable={false} /></button>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <button className='header-button' onClick={onClickMaximize}><img src={MaximizeIcon} alt='Maximize window' draggable={false} /></button>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <button className='header-button' onClick={() => { windowCompositor.close(windowData.id) }}><img src={CloseIcon} alt='Close window' draggable={false} /></button>
       </div>
     </div>

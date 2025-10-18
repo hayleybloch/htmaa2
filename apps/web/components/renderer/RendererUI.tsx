@@ -79,7 +79,7 @@ function SoundManagementButton(props: { sound: SubViewSound }) {
 
   return (
     <button className={styles['mute-button']} onClick={() => toggleSound()}>
-      <img draggable={false} src={icon} width={25} height={20}/>
+      <img draggable={false} src={icon} alt={isSoundEnabled ? 'Mute sound' : 'Unmute sound'} width={25} height={20}/>
     </button>
   )
 }
@@ -96,7 +96,7 @@ function ChangeSceneButton(props: { targetState: CameraHandlerState, cameraHandl
 
   return (
     <button className={styles['camera-button']} onClick={() => changeScene()}>
-      <img draggable={false} src={icon} width={25} height={20}/>
+      <img draggable={false} src={icon} alt="Change scene" width={25} height={20}/>
     </button>
   );
 }

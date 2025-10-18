@@ -1,97 +1,65 @@
 {
-  "url": "http://localhost:5003/htmaa2/desktop/",
+  "url": "http://localhost:5002/htmaa2/desktop/",
   "logs": [
     {
       "type": "console",
-      "text": "Application focussed: About"
+      "text": "Application focussed: About",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Application focussed: About"
+      "text": "Application focussed: About",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Application focussed: Finder"
+      "text": "Application focussed: Finder",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Application focussed: Finder"
+      "text": "Application focussed: Finder",
+      "recentNetwork": []
     },
     {
       "type": "action",
       "action": "click",
-      "target": "Finder"
+      "target": "Finder",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      "text": "Application focussed: About",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
-    },
-    {
-      "type": "console",
-      "text": "Cannot play audio"
-    },
-    {
-      "type": "console",
-      "text": "Cannot play audio"
-    },
-    {
-      "type": "console",
-      "text": "Application focussed: About"
-    },
-    {
-      "type": "console",
-      "text": "Application focussed: About"
+      "text": "Application focussed: About",
+      "recentNetwork": []
     },
     {
       "type": "action",
       "action": "click",
-      "target": "About"
+      "target": "About",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      "text": "Application focussed: Terminal",
+      "recentNetwork": []
     },
     {
       "type": "console",
-      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
-    },
-    {
-      "type": "console",
-      "text": "Cannot play audio"
-    },
-    {
-      "type": "console",
-      "text": "Cannot play audio"
-    },
-    {
-      "type": "console",
-      "text": "Cannot play audio"
-    },
-    {
-      "type": "console",
-      "text": "Cannot play audio"
-    },
-    {
-      "type": "console",
-      "text": "Application focussed: Terminal"
-    },
-    {
-      "type": "console",
-      "text": "Application focussed: Terminal"
+      "text": "Application focussed: Terminal",
+      "recentNetwork": []
     },
     {
       "type": "action",
       "action": "click",
-      "target": "Terminal"
-    },
-    {
-      "type": "console",
-      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      "target": "Terminal",
+      "recentNetwork": []
     }
   ],
-  "requests": []
+  "requests": [],
+  "failures": []
 }

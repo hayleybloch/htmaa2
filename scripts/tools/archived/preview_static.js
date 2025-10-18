@@ -3,7 +3,7 @@
 const express = require('express');
 const path = require('path');
 
-const PORT = Number(process.argv[2]) || 5000;
+const PORT = Number(process.argv[2]) || 5001;
 const app = express();
 
 const outDir = path.join(__dirname, '..', '..', 'out');

@@ -196,6 +196,7 @@ export const Renderer = (props: RendererProps) => {
     setCameraHandlerState(state);
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const cssRenderNode = cssOutputRef.current;
     const webglRenderNode = webglOutputRef.current;

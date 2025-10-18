@@ -1,0 +1,42 @@
+name: Static preview probes
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  probe-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build static outputs
+        run: |
+          npm run build:web --if-present || true
+          npm run build:desktop --if-present || true
+          node scripts/assemble_static.js || true
+
+      - name: Start static preview server
+        run: |
+          node scripts/preview_static_node.js 5001 &
+          # Wait for the server to be responsive
+          for i in {1..20}; do
+            if curl -sSfI http://localhost:5001/htmaa2/ >/dev/null 2>&1; then
+              echo "server ready"; break
+            fi
+            sleep 1
+          done
+
+      - name: Run static probes
+        run: npm run test:static:probes

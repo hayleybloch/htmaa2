@@ -65,9 +65,13 @@ Use the static preview to build both `apps/web` and `apps/desktop`, copy the des
 npm install
 ```
 
-3. Start the full static dev preview (example uses port 5002):
+3. Start the full static dev preview (example uses port 5001 for web static and 5002 for desktop static):
 ```bash
-npm run preview:full-static:dev -- 5002
+# Start the combined static preview server (serves repo root under /htmaa2) on 5001
+npm run preview:web:static
+
+# Start a desktop-only static preview (serves out/desktop) on 5002
+npm run preview:desktop:static
 ```
 
 What this does:
@@ -80,7 +84,11 @@ What this does:
 3. Open the preview in your browser:
 
 ```
-http://localhost:5002/htmaa2/
+# Combined assembled site served under /htmaa2 on port 5001
+http://localhost:5001/htmaa2/
+
+# Desktop-only assembled site (out/desktop) on port 5002
+http://localhost:5002/
 ```
 
 Troubleshooting tips:

@@ -8,7 +8,8 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-const PORT = Number(process.argv[2]) || 5000;
+// Default web/static preview port (serves repo-root out/ under /htmaa2)
+const PORT = Number(process.argv[2]) || 5001;
 const root = path.join(__dirname, '..', 'out');
 
 const mime = {
@@ -53,7 +54,36 @@ function serveFile(res, filePath) {
 }
 
 const server = http.createServer((req, res) => {
-  const parsed = url.parse(req.url);
+  const rawParsed = url.parse(req.url);
+  // Decode percent-encoded pathnames so files with spaces or other encoded
+  // characters map correctly to the filesystem. Fall back to the raw
+  // pathname on decode errors.
+  let decodedPathname = rawParsed.pathname || '/';
+  try {
+    decodedPathname = decodeURIComponent(decodedPathname);
+  } catch (e) {
+    // Malformed percent-encoding — keep the raw pathname
+  }
+  // Collapse repeated slashes to avoid mismatches like //htmaa2//desktop
+  decodedPathname = decodedPathname.replace(/\/+/g, '/');
+  // Extra normalization: collapse known duplicated base prefixes that
+  // sometimes sneak into compiled bundles (e.g. '/htmaa2/desktop/htmaa2/desktop/...')
+  // Make this idempotent and conservative so we don't change valid paths.
+  (function collapseDuplicates() {
+    const patterns = [
+      [/\/htmaa2\/desktop\/htmaa2\/desktop\//g, '/htmaa2/desktop/'],
+      [/\/htmaa2\/desktop\/htmaa2\//g, '/htmaa2/desktop/'],
+      [/\/desktop\/desktop\//g, '/desktop/'],
+      [/\/htmaa2\/htmaa2\//g, '/htmaa2/']
+    ];
+    let prev;
+    do {
+      prev = decodedPathname;
+      for (const [re, sub] of patterns) decodedPathname = decodedPathname.replace(re, sub);
+    } while (decodedPathname !== prev);
+  })();
+  const parsed = Object.assign({}, rawParsed, { pathname: decodedPathname });
+
   // Redirect root to /htmaa2/
   if (parsed.pathname === '/') {
     res.writeHead(302, { Location: '/htmaa2/' });
@@ -74,6 +104,13 @@ const server = http.createServer((req, res) => {
     // Map /htmaa2/... -> out/...
     const relPath = parsed.pathname.replace(/^\/htmaa2\//, '');
     filePath = path.join(root, relPath);
+  } else if (parsed.pathname === '/desktop' || parsed.pathname === '/desktop/') {
+    // Allow unprefixed /desktop/ to map to the desktop index for local preview
+    filePath = path.join(root, 'desktop', 'index.html');
+  } else if (parsed.pathname.startsWith('/desktop/')) {
+    // Map /desktop/... -> out/desktop/...
+    const relPath = parsed.pathname.replace(/^\/desktop\//, '');
+    filePath = path.join(root, 'desktop', relPath);
   } else if (parsed.pathname.startsWith('/assets/')) {
     // Map /assets/... -> out/assets/...
     const relPath = parsed.pathname.replace(/^\//, '');
@@ -132,6 +169,24 @@ const server = http.createServer((req, res) => {
   if (!filePath.startsWith(root)) {
     console.log('Blocked path traversal:', parsed.pathname, filePath);
     return send404(res);
+  }
+
+  // If the exact desktop-prefixed asset doesn't exist, try a fallback
+  // to the repository-level location. Many compiled bundles request
+  // "/htmaa2/desktop/assets/..." while shared assets live at
+  // "out/assets/..." (copied from the web app). Try that before
+  // returning a 404 to make local previews more forgiving.
+  try {
+    if (!fs.existsSync(filePath) && parsed.pathname.startsWith('/htmaa2/desktop/')) {
+      const altRel = parsed.pathname.replace(/^\/htmaa2\/desktop\//, '');
+      const altCandidate = path.join(root, altRel);
+      if (fs.existsSync(altCandidate)) {
+        console.log('Fallback mapping:', parsed.pathname, '=>', altCandidate);
+        filePath = altCandidate;
+      }
+    }
+  } catch (e) {
+    // ignore filesystem lookup errors and continue to normal handling
   }
 
   // Debug logging for troubleshooting missing assets

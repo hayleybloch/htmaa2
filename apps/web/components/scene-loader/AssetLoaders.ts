@@ -101,12 +101,39 @@ function getDesktopTargetUrl(): string {
     const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
 
     if (isLocal) {
-      return 'http://localhost:3001/';
+      // In local preview we serve the assembled site under /htmaa2/, so
+      // make the desktop target explicitly request the desktop subtree.
+      // Prefer a site-relative path so the assembled static preview (and production)
+      // will resolve the desktop subtree under the same base path (e.g. /htmaa2/desktop/).
+      let rawTarget = process.env.NEXT_PUBLIC_TARGET_URL ?? process.env.NEXT_PUBLIC_BASE_PATH ?? process.env.DEPLOY_BASE_PATH ?? '/';
+      let target = rawTarget;
+      try {
+        if (target.startsWith('http://') || target.startsWith('https://')) {
+          const u = new URL(target);
+          target = u.pathname || '/';
+        }
+      } catch (e) {
+        // ignore and use raw string
+      }
+      if (!target.endsWith('/')) { target = `${target}/`; }
+      return `${target}desktop/`;
     }
   }
+  // Use NEXT_PUBLIC_TARGET_URL when provided. If it's a full URL, extract the pathname
+  // so we don't accidentally embed a host like hayleybloch.github.io in the built bundle.
+  const rawTarget = process.env.NEXT_PUBLIC_TARGET_URL ?? '/';
+  let target = rawTarget;
+  try {
+    if (target.startsWith('http://') || target.startsWith('https://')) {
+      // Use the pathname portion of the URL (e.g. https://.../htmaa2/ -> /htmaa2/)
+      const u = new URL(target);
+      target = u.pathname || '/';
+    }
+  } catch (e) {
+    // If parsing fails, fall back to using the raw string as-is.
+  }
 
-  // Use production URL for GitHub Pages deployment - point to desktop subdirectory
-  const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'https://hayleybloch.github.io/htmaa2/'
+  if (!target.endsWith('/')) { target = `${target}/`; }
   return `${target}desktop/`;
 }
 
@@ -115,7 +142,8 @@ function getDesktopTarget(debug: boolean): string {
 
   if (!debug) { return url; }
 
-  return `${url}/?debug`;
+  // Append debug query without introducing an extra '/'.
+  return `${url}?debug`;
 }
 
 export function NoopLoader(): AssetLoader {

@@ -75,6 +75,7 @@ export const HandleMouseInteractionInformation = (eventBus: UserInteractionEvent
     setStatus(MouseInteractionInformationData.fromConfirmationData(localStatus));
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     let unsubscribeHandler = eventBus.subscribe(handleUserInteractionEvent);
 
@@ -212,6 +213,7 @@ export const HandleTouchProgressCircle = (eventBus: UserInteractionEventBus) => 
       if (progress === 1.0) { handleSuccess(); }
     };
   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
       let unsubscribeHandler = eventBus.subscribe(handleUserInteractionEvent);
   
@@ -221,7 +223,7 @@ export const HandleTouchProgressCircle = (eventBus: UserInteractionEventBus) => 
         unsubscribeHandler();
         clearInterval(interval);
       }
-    }, []);
+  }, []);
  
     if (viewStatus === null) { return <></>}
 

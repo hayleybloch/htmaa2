@@ -9,6 +9,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:desktop": "npm run dev --workspace=apps/desktop",
+    "dev:both": "npm run dev:web & npm run dev:desktop",
     "start": "turbo run start",
     "start-clean": "turbo run build && turbo run start",
     "lint": "turbo run lint",
@@ -17,9 +20,13 @@
   "build:desktop": "npm run build --workspace=apps/desktop",
   "build:static": "npm run build:web && npm run build:desktop && node scripts/assemble_static.js",
   "preview:web": "npm run preview:static --workspace=apps/web",
+  "preview:web:static": "node scripts/preview_static_node.js 5001",
+  "preview:desktop:static": "node scripts/preview_desktop_node.js 5002",
   "prepreview:full-static": "node scripts/tools/archived/prepreview_full_static.js",
   "preview:full-static": "node scripts/tools/archived/preview_full_static.js",
   "preview:full-static:dev": "node scripts/tools/archived/preview_full_static_dev.js"
+  ,
+  "test:static:probes": "node scripts/check_static_probes.js"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",

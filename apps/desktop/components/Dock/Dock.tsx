@@ -48,7 +48,7 @@ function DockItemViewApplication(item: ApplicationDockItem) {
         draggable={false}
       />
       <div className={[styles.status, item.active ? styles.active : styles.inactive].join(' ')}>
-        {item.active ? <img draggable={false} className={styles['dock-app-active-image']} src={ActiveIcon} /> : <></>}
+        {item.active ? <img draggable={false} className={styles['dock-app-active-image']} src={ActiveIcon} alt="" /> : <></>}
       </div>
     </button>
   </>)
@@ -65,7 +65,7 @@ function DockItemMinimizedApplication(item: MinimizedApplicationDockItem) {
         height={64}
         draggable={false}
       />
-      <div className={[styles.status].join(' ')}></div>
+  <div className={[styles.status].join(' ')}></div>
     </button>
   </>)
 }

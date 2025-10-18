@@ -60,7 +60,7 @@ async function run(url, outFile) {
 }
 
 if (require.main === module) {
-  const url = process.argv[2] || 'http://localhost:5003/htmaa2/desktop/';
+  const url = process.argv[2] || 'http://localhost:5002/htmaa2/desktop/';
   const out = process.argv[3] || 'htmaa2/desktop-interaction.json';
   run(url, out).then(r => console.log('Done, wrote', out)).catch(err => { console.error(err); process.exit(1); });
 }

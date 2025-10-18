@@ -1,5 +1,5 @@
 {
-  "url": "http://localhost:5003/htmaa2/desktop/",
+  "url": "http://localhost:5002/htmaa2/desktop/",
   "logs": [
     {
       "type": "console",
@@ -14,22 +14,22 @@
   ],
   "requests": [
     {
-      "url": "http://localhost:5003/htmaa2/desktop/",
+      "url": "http://localhost:5002/htmaa2/desktop/",
       "method": "GET",
       "resourceType": "document"
     },
     {
-      "url": "http://localhost:5003/htmaa2/desktop/",
+      "url": "http://localhost:5002/htmaa2/desktop/",
       "status": 200,
       "contentType": ""
     },
     {
-      "url": "http://localhost:5003/htmaa2/desktop/_next/static/css/5d69ed28165c5c29.css",
+      "url": "http://localhost:5002/htmaa2/desktop/_next/static/css/5d69ed28165c5c29.css",
       "method": "GET",
       "resourceType": "stylesheet"
     },
     {
-      "url": "http://localhost:5003/htmaa2/desktop/_next/static/css/edc3128e5b0dba2d.css",
+      "url": "http://localhost:5002/htmaa2/desktop/_next/static/css/edc3128e5b0dba2d.css",
       "method": "GET",
       "resourceType": "stylesheet"
     },

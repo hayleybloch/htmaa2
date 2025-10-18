@@ -1,15 +1,17 @@
 import { SubViewNavigation, SubViewParams } from "./AboutView";
 import styles from './AboutView.module.css';
 import Image from 'next/image';
+import getPublicPath from '@/lib/getPublicPath';
 
 
 function ProjectImage(props: { src: string, alt: string, label?: string, labelNumber?: number }) {
   const { src, alt, label, labelNumber } = props;
+  const publicSrc = getPublicPath(src);
 
   return (<>
       <div className={styles['project-image-container']}>
         <Image
-          src={src}
+          src={publicSrc}
           alt={alt}
           fill
           quality={90}
@@ -334,14 +336,14 @@ export function ProjectWeek2(params: SubViewParams) {
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
-                    <source src="/images/Week-2/fusion simulation.mp4" type="video/mp4" />
+                    <source src={getPublicPath('/images/Week-2/fusion simulation.mp4')} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Fusion simulation</div>
                 </div>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
-                    <source src="/images/Week-2/fusion assembly.mp4" type="video/mp4" />
+                    <source src={getPublicPath('/images/Week-2/fusion assembly.mp4')} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Fusion assembly</div>
@@ -469,7 +471,7 @@ export function ProjectWeek2(params: SubViewParams) {
               </div>
               <div style={{flex: '1 1 100%', minWidth: 220}}>
                 <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
-                  <source src="/images/Week-2/demonstration_video.mp4" type="video/mp4" />
+                  <source src={getPublicPath('/images/Week-2/demonstration_video.mp4')} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
                 <div style={{fontSize: 12, color: '#666', marginTop: 6}}>Demonstration: iris opening/closing</div>
@@ -622,7 +624,7 @@ export function ProjectWeek3(params: SubViewParams) {
             </p>
             <div style={{marginTop: 8}}>
               <video controls style={{width: '100%', height: '100vh', maxHeight: '100vh', borderRadius: 6, objectFit: 'contain'}}>
-                <source src="/images/Week-3/my program.mp4" type="video/mp4" />
+                <source src={getPublicPath('/images/Week-3/my program.mp4')} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <div style={{fontSize: 12, color: '#666', marginTop: 6}}>End-to-end test: Python → OLED</div>

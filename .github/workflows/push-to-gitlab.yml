@@ -1,0 +1,48 @@
+name: Build and push to CBA GitLab
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Install and build static site
+        env:
+          DEPLOY_TARGET: "gitlab"
+        run: |
+          npm ci
+          # Build web and desktop and assemble a single static output at repo-root out/
+          npm run build:static
+          test -d out
+
+      - name: Clone GitLab destination
+        run: |
+          git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch.git gitlab-repo
+
+      - name: Sync built files
+        run: |
+          rsync -av --delete out/ gitlab-repo/
+
+      - name: Commit and push to GitLab main
+        run: |
+          cd gitlab-repo
+          git config user.name "Hayley Bloch"
+          git config user.email "hayleybl@mit.edu"
+          git add .
+          git pull --rebase origin main || true
+          git commit -m "${{ github.event.head_commit.message || 'Site update from GitHub Actions' }}" || echo "No changes to commit"
+          git push origin main

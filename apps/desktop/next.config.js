@@ -1,23 +1,47 @@
 /** @type {import('next').NextConfig} */
 const repo = 'htmaa2';
+// Allow an explicit deployment base path for non-GitHub hosts (e.g. GitLab pages)
+// Example: DEPLOY_BASE_PATH='/classes/863.25/people/HayleyBloch'
+const deployBase = process.env.DEPLOY_BASE_PATH || '';
 const isGitHub = process.env.NODE_ENV === 'production' && process.env.BUILD_FOR_GITHUB === 'true';
-const isProd = isGitHub;
+const isProd = isGitHub || !!deployBase;
 
 const nextConfig = {
   // Only use static export output for production GitHub Pages builds.
   output: isProd ? 'export' : undefined,
-  // Only apply basePath/assetPrefix in production builds for GitHub Pages
-  basePath: isProd ? `/${repo}/desktop` : '',
-  assetPrefix: isProd ? `/${repo}/desktop/` : '',
+  // Apply basePath/assetPrefix in production builds. If DEPLOY_BASE_PATH is
+  // provided we use that value (it should be a leading-slash path without
+  // trailing slash, e.g. '/classes/863.25/people/HayleyBloch'). Otherwise
+  // fall back to the repo-based GitHub Pages path used previously.
+  basePath: (function(){
+    if (deployBase) {
+      const p = deployBase.startsWith('/') ? deployBase : '/' + deployBase;
+      return `${p}/desktop`;
+    }
+    return isProd ? `/${repo}/desktop` : '';
+  })(),
+  assetPrefix: (function(){
+    if (deployBase) {
+      const p = deployBase.startsWith('/') ? deployBase : '/' + deployBase;
+      return `${p}/desktop/`;
+    }
+    return isProd ? `/${repo}/desktop/` : '';
+  })(),
   // Expose the repository base (without the /desktop suffix) to runtime code
   // so code that uses NEXT_PUBLIC_BASE_PATH (and _document.tsx) can build correct URLs.
   env: {
     // Generic repo base (used by some runtime code)
-    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : '',
+    NEXT_PUBLIC_BASE_PATH: (function(){
+      if (deployBase) return deployBase.startsWith('/') ? deployBase : '/' + deployBase;
+      return isProd ? `/${repo}` : '';
+    })(),
     // Desktop-specific published base so build-time code can emit
     // '/htmaa2/desktop/...' directly when building the desktop app for
     // GitHub Pages. This is picked up by `getPublicPath()`.
-    NEXT_PUBLIC_DESKTOP_BASE: isProd ? `/${repo}/desktop` : ''
+    NEXT_PUBLIC_DESKTOP_BASE: (function(){
+      if (deployBase) return (deployBase.startsWith('/') ? deployBase : '/' + deployBase) + '/desktop';
+      return isProd ? `/${repo}/desktop` : '';
+    })()
   },
   images: { 
     unoptimized: true,

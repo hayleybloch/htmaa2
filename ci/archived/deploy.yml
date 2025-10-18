@@ -1,0 +1,7 @@
+name: Deploy htmaa2 to GitHub Pages (archived)
+
+# Archived: original workflow moved to ci/archived to stop automatic GitHub Pages deploys.
+
+on: [workflow_dispatch]
+
+# See original at .github/workflows/deploy.yml (archived here)

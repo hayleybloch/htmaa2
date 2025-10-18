@@ -1,4 +1,4 @@
-// Lightweight preview server that mounts the exported `apps/web/out` under `/htmaa2`.
+// Lightweight preview server that mounts the assembled repo-root `out/` under `/htmaa2`.
 // Usage: node scripts/preview_static.js [port]
 const express = require('express');
 const path = require('path');
@@ -6,7 +6,7 @@ const path = require('path');
 const PORT = Number(process.argv[2]) || 5000;
 const app = express();
 
-const outDir = path.join(__dirname, '..', 'apps', 'web', 'out');
+const outDir = path.join(__dirname, '..', 'out');
 
 app.use('/htmaa2', express.static(outDir, {
   extensions: ['html'],

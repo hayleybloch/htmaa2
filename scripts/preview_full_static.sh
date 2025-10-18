@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Usage: scripts/preview_full_static.sh [port]
-# Copies apps/desktop/out -> apps/web/out/desktop, runs fix_export_paths, then starts the preview server.
+# Assembles repo-root `out/` by copying web and desktop exports, runs fix_export_paths, then starts the preview server.
 
 PORT="${1:-8080}"
 
@@ -11,6 +11,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 DESKTOP_OUT="$ROOT_DIR/apps/desktop/out"
 WEB_OUT="$ROOT_DIR/apps/web/out"
+OUT_ROOT="$ROOT_DIR/out"
 
 echo "Repo root: $ROOT_DIR"
 
@@ -28,13 +29,21 @@ if [ ! -d "$DESKTOP_OUT" ]; then
   exit 1
 fi
 
-echo "Copying desktop export into web/out/desktop..."
-mkdir -p "$WEB_OUT/desktop"
-# Use rsync-like behavior with cp (POSIX) — copy contents (including hidden files)
-cp -R "$DESKTOP_OUT/." "$WEB_OUT/desktop/"
+echo "Assembling repo-root out/ from web and desktop exports..."
+rm -rf "$OUT_ROOT"
+mkdir -p "$OUT_ROOT"
+
+echo "Copying web export into out/..."
+cp -R "$WEB_OUT/." "$OUT_ROOT/"
+
+if [ -d "$DESKTOP_OUT" ]; then
+  echo "Copying desktop export into out/desktop..."
+  mkdir -p "$OUT_ROOT/desktop"
+  cp -R "$DESKTOP_OUT/." "$OUT_ROOT/desktop/"
+fi
 
 echo "Running path fixer to add /htmaa2 prefixes where needed..."
-node "$ROOT_DIR/scripts/fix_export_paths.js" "$WEB_OUT" "/htmaa2"
+node "$ROOT_DIR/scripts/fix_export_paths.js" "$OUT_ROOT/desktop" "/htmaa2"
 
 echo "Starting preview server at http://localhost:$PORT/htmaa2/"
-node "$ROOT_DIR/scripts/preview_static.js" "$PORT"
+node "$ROOT_DIR/scripts/preview_static_node.js" "$PORT"

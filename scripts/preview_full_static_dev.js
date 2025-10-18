@@ -15,6 +15,7 @@ const DESKTOP_DIR = path.join(APPS_DIR, 'desktop');
 const WEB_DIR = path.join(APPS_DIR, 'web');
 const DESKTOP_OUT = path.join(DESKTOP_DIR, 'out');
 const WEB_OUT = path.join(WEB_DIR, 'out');
+const OUT_ROOT = path.join(ROOT_DIR, 'out');
 const PREVIEW_PORT = parseInt(process.argv[2], 10) || 8080;
 
 function runCommand(cmd, args, opts = {}) {
@@ -176,8 +177,20 @@ async function rebuildAll() {
     if (!fs.existsSync(WEB_OUT)) throw new Error('web export missing after build');
     if (!fs.existsSync(DESKTOP_OUT)) throw new Error('desktop export missing after build');
 
-    copyDesktopIntoWeb();
-    runPathFixer();
+    // Assemble into repo-root out/
+    try {
+      fs.rmSync(OUT_ROOT, { recursive: true, force: true });
+      fs.mkdirSync(OUT_ROOT, { recursive: true });
+      fs.cpSync(WEB_OUT, OUT_ROOT, { recursive: true });
+      const targetDesktopDir = path.join(OUT_ROOT, 'desktop');
+      fs.mkdirSync(targetDesktopDir, { recursive: true });
+      fs.cpSync(DESKTOP_OUT, targetDesktopDir, { recursive: true });
+    } catch (err) {
+      console.error('Failed to assemble out/:', err);
+    }
+
+    // Run path fixer on assembled desktop
+    try { runPathFixer(); } catch (err) { console.warn('Path fixer failed:', err); }
 
     startPreview();
     console.log('Rebuild and preview ready.');

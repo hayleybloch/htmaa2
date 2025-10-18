@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Very small static server using only Node core modules.
-// Serves apps/web/out under the /htmaa2 path so exported files resolve exactly
+// Serves repo-root out/ under the /htmaa2 path so exported files resolve exactly
 // Usage: node scripts/preview_static_node.js [port]
 
 const http = require('http');
@@ -9,7 +9,7 @@ const path = require('path');
 const url = require('url');
 
 const PORT = Number(process.argv[2]) || 5000;
-const root = path.join(__dirname, '..', 'apps', 'web', 'out');
+const root = path.join(__dirname, '..', 'out');
 
 const mime = {
   '.html': 'text/html; charset=UTF-8',
@@ -78,6 +78,46 @@ const server = http.createServer((req, res) => {
     // Map /assets/... -> out/assets/...
     const relPath = parsed.pathname.replace(/^\//, '');
     filePath = path.join(root, relPath);
+  } else if (parsed.pathname.startsWith('/icons/')) {
+    // Some built bundles request /icons/... when previewing on localhost.
+    // Prefer repo-root out/icons/..., fall back to out/desktop/icons/...
+    const relPath = parsed.pathname.replace(/^\//, '');
+    const candidate = path.join(root, relPath);
+    if (fs.existsSync(candidate)) {
+      filePath = candidate;
+    } else {
+      filePath = path.join(root, 'desktop', relPath);
+    }
+  } else if (parsed.pathname.startsWith('/fonts/')) {
+    // Map /fonts/... -> out/desktop/fonts/...
+    // Prefer repo-root out/fonts/..., fall back to out/desktop/fonts/...
+    const relPath = parsed.pathname.replace(/^\//, '');
+    const candidate = path.join(root, relPath);
+    if (fs.existsSync(candidate)) {
+      filePath = candidate;
+    } else {
+      filePath = path.join(root, 'desktop', relPath);
+    }
+  } else if (parsed.pathname.startsWith('/sounds/')) {
+    // Map /sounds/... -> out/desktop/sounds/...
+    // Prefer repo-root out/sounds/..., fall back to out/desktop/sounds/...
+    const relPath = parsed.pathname.replace(/^\//, '');
+    const candidate = path.join(root, relPath);
+    if (fs.existsSync(candidate)) {
+      filePath = candidate;
+    } else {
+      filePath = path.join(root, 'desktop', relPath);
+    }
+  } else if (parsed.pathname.startsWith('/images/')) {
+    // Map /images/... -> out/desktop/images/... (covers generic image roots)
+    // Prefer repo-root out/images/..., fall back to out/desktop/images/...
+    const relPath = parsed.pathname.replace(/^\//, '');
+    const candidate = path.join(root, relPath);
+    if (fs.existsSync(candidate)) {
+      filePath = candidate;
+    } else {
+      filePath = path.join(root, 'desktop', relPath);
+    }
   } else if (parsed.pathname.startsWith('/_next/')) {
     // Map /_next/... -> out/_next/...
     const relPath = parsed.pathname.replace(/^\//, '');

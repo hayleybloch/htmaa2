@@ -13,11 +13,13 @@
     "start-clean": "turbo run build && turbo run start",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "build:web": "npm run build --workspace=apps/web",
-    "preview:web": "npm run preview:static --workspace=apps/web",
-    "prepreview:full-static": "node scripts/prepreview_full_static.js",
-    "preview:full-static": "node scripts/preview_full_static.js",
-    "preview:full-static:dev": "node scripts/preview_full_static_dev.js"
+  "build:web": "npm run build --workspace=apps/web",
+  "build:desktop": "npm run build --workspace=apps/desktop",
+  "build:static": "npm run build:web && npm run build:desktop && node scripts/assemble_static.js",
+  "preview:web": "npm run preview:static --workspace=apps/web",
+  "prepreview:full-static": "node scripts/tools/archived/prepreview_full_static.js",
+  "preview:full-static": "node scripts/tools/archived/preview_full_static.js",
+  "preview:full-static:dev": "node scripts/tools/archived/preview_full_static_dev.js"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",

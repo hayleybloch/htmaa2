@@ -1,13 +1,21 @@
 /** @type {import('next').NextConfig} */
 const repo = "htmaa2";
+// Support an explicit deploy base path for non-GitHub hosts (e.g. GitLab pages)
+const deployBase = process.env.DEPLOY_BASE_PATH || '';
 const isGitHub = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GITHUB === "true";
 const isGitLab = process.env.NODE_ENV === "production" && process.env.BUILD_FOR_GITLAB === "true";
-const isProd = isGitHub || isGitLab;
+const isProd = isGitHub || isGitLab || !!deployBase;
 
 const nextConfig = {
   output: "export",
-  basePath: isProd ? `/${repo}` : "",
-  assetPrefix: isProd ? `/${repo}/` : "",
+  basePath: (function(){
+    if (deployBase) return deployBase.startsWith('/') ? deployBase : '/' + deployBase;
+    return isProd ? `/${repo}` : '';
+  })(),
+  assetPrefix: (function(){
+    if (deployBase) return (deployBase.startsWith('/') ? deployBase : '/' + deployBase) + '/';
+    return isProd ? `/${repo}/` : '';
+  })(),
   images: { 
     unoptimized: true,
     qualities: [25, 50, 75, 100]
@@ -17,7 +25,10 @@ const nextConfig = {
   transpilePackages: ["rpc"],
   devIndicators: false,
   env: {
-    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ""
+    NEXT_PUBLIC_BASE_PATH: (function(){
+      if (deployBase) return deployBase.startsWith('/') ? deployBase : '/' + deployBase;
+      return isProd ? `/${repo}` : '';
+    })()
   },
   webpack: (config) => {
     config.module.rules.push({ test: /\.frag$/, type: "asset/source" });

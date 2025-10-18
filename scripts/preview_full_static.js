@@ -13,6 +13,7 @@ const requestedPort = parseInt(process.argv[2], 10) || 8080;
 const ROOT_DIR = path.resolve(__dirname, '..');
 const DESKTOP_OUT = path.join(ROOT_DIR, 'apps', 'desktop', 'out');
 const WEB_OUT = path.join(ROOT_DIR, 'apps', 'web', 'out');
+const OUT_ROOT = path.join(ROOT_DIR, 'out');
 
 console.log('Repo root:', ROOT_DIR);
 
@@ -24,21 +25,25 @@ if (!fs.existsSync(DESKTOP_OUT)) {
   die(`Error: desktop export not found at ${DESKTOP_OUT}\nRun:\n  cd apps/desktop && NODE_ENV=production BUILD_FOR_GITHUB=true npm run build && NODE_ENV=production BUILD_FOR_GITHUB=true npx next export`);
 }
 
-// Copy desktop out -> web/out/desktop
-const targetDesktopDir = path.join(WEB_OUT, 'desktop');
-console.log('Copying desktop export into', targetDesktopDir);
+// Assemble repo-root out/ from web and desktop exports
 try {
-  // fs.cp available in Node 16.7+. Use recursive copy.
+  // Remove existing out/ and recreate
+  fs.rmSync(OUT_ROOT, { recursive: true, force: true });
+  fs.mkdirSync(OUT_ROOT, { recursive: true });
+  // Copy web export into out/
+  fs.cpSync(WEB_OUT, OUT_ROOT, { recursive: true });
+  // Copy desktop export into out/desktop
+  const targetDesktopDir = path.join(OUT_ROOT, 'desktop');
   fs.mkdirSync(targetDesktopDir, { recursive: true });
-  // Copy contents
   fs.cpSync(DESKTOP_OUT, targetDesktopDir, { recursive: true });
+  console.log('Assembled out/ in', OUT_ROOT);
 } catch (err) {
-  die('Failed to copy desktop export: ' + err);
+  die('Failed to assemble out/: ' + err);
 }
 
 // Merge web/_next/static into web/out/desktop/_next/static so desktop pages can resolve hashed assets
 try {
-  const webNextStatic = path.join(WEB_OUT, '_next', 'static');
+  const webNextStatic = path.join(OUT_ROOT, '_next', 'static');
   const desktopNextStatic = path.join(targetDesktopDir, '_next', 'static');
   if (fs.existsSync(webNextStatic)) {
     fs.mkdirSync(desktopNextStatic, { recursive: true });

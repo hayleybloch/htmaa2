@@ -4,7 +4,7 @@ const path = require('path');
 
 if (process.argv.length < 4) {
   console.error('Usage: node scripts/fix_export_paths.js <exported-desktop-dir> <basePath>');
-  console.error('Example: node scripts/fix_export_paths.js apps/web/out/desktop /htmaa2');
+  console.error('Example: node scripts/fix_export_paths.js out/desktop /htmaa2');
   process.exit(1);
 }
 
@@ -13,9 +13,11 @@ let base = process.argv[3];
 if (!base.startsWith('/')) base = '/' + base;
 if (base.endsWith('/')) base = base.slice(0, -1);
 
-// Only process HTML and CSS files. Avoid rewriting JS bundles to prevent
-// accidental corruption of regex literals or other code inside .js files.
-const exts = ['.html', '.htm', '.css'];
+// Process HTML, CSS — and now safely-targeted JS bundles. We only apply
+// conservative string/template-literal replacements (e.g. "/sounds/...")
+// to JS so runtime absolute paths get rewritten when the site is hosted at
+// a subpath. This minimizes the risk of corrupting arbitrary code.
+const exts = ['.html', '.htm', '.css', '.js', '.mjs'];
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -29,18 +31,19 @@ function walk(dir) {
 function processFile(file) {
   let s = fs.readFileSync(file, 'utf8');
 
-  // Patterns to rewrite: leading /_next, /icons/, /fonts/, /assets/, /desktop/
-  // Only rewrite occurrences that start with a leading slash and not already prefixed with base
+  // Patterns to rewrite: leading /_next, /icons/, /fonts/, /sounds/, /images/, /assets/, /desktop/
+  // Match quoted or template-literal forms so we safely rewrite string references
+  // like "/sounds/meow.mp3" or `/icons/foo.svg` inside JS bundles.
   const pats = [
-    // Map top-level asset paths to the GitHub Pages base + /desktop so
+    // Map top-level asset paths to the repository base + /desktop so
     // exported desktop files reference the files where they're copied.
-    {from: /(["'\(])\/(?:_next)\//g, to: `$1${base}/desktop/_next/`},
-    {from: /(["'\(])\/(?:icons)\//g, to: `$1${base}/desktop/icons/`},
-    {from: /(["'\(])\/(?:fonts)\//g, to: `$1${base}/desktop/fonts/`},
-    {from: /(["'\(])\/(?:sounds)\//g, to: `$1${base}/desktop/sounds/`},
-    {from: /(["'\(])\/(?:images)\//g, to: `$1${base}/desktop/images/`},
-    {from: /(["'\(])\/(?:assets)\//g, to: `$1${base}/desktop/assets/`},
-    {from: /(["'\(])\/(?:desktop)\//g, to: `$1${base}/desktop/`},
+    {from: /(['"`\(])\/(?:_next)\//g, to: `$1${base}/desktop/_next/`},
+    {from: /(['"`\(])\/(?:icons)\//g, to: `$1${base}/desktop/icons/`},
+    {from: /(['"`\(])\/(?:fonts)\//g, to: `$1${base}/desktop/fonts/`},
+    {from: /(['"`\(])\/(?:sounds)\//g, to: `$1${base}/desktop/sounds/`},
+    {from: /(['"`\(])\/(?:images)\//g, to: `$1${base}/desktop/images/`},
+    {from: /(['"`\(])\/(?:assets)\//g, to: `$1${base}/desktop/assets/`},
+    {from: /(['"`\(])\/(?:desktop)\//g, to: `$1${base}/desktop/`},
   ];
 
   let changed = false;
@@ -49,18 +52,19 @@ function processFile(file) {
     if (newS !== s) { changed = true; s = newS; }
   }
 
-  // Also rewrite cases where the files already contain the base path + /<asset>
+  // Also rewrite cases where files already contain the base path + /<asset>
   // (e.g. `/htmaa2/icons/...`) to the desktop location (`/htmaa2/desktop/icons/...`).
-  // This covers Next.js-generated HTML that was rendered with NEXT_PUBLIC_BASE_PATH.
+  // This covers Next.js-rendered HTML or JS that used NEXT_PUBLIC_BASE_PATH.
   function escapeForRegex(str) {
     return str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
   }
   const baseEsc = escapeForRegex(base);
   const assetTypes = ['icons', 'fonts', 'sounds', 'images', 'assets', '_next'];
   for (const t of assetTypes) {
-    const re = new RegExp(`(["'\\(])${baseEsc}\\/(?:${t})\\/`, 'g');
+    const quoteGroup = "(['\"`\\(])";
+    const re = new RegExp(quoteGroup + baseEsc + '\\/(?:' + t + ')\\/', 'g');
     if (re.test(s)) {
-      const newS = s.replace(re, `$1${base}/desktop/${t}/`);
+      const newS = s.replace(re, '$1' + base + '/desktop/' + t + '/');
       if (newS !== s) { changed = true; s = newS; }
     }
   }

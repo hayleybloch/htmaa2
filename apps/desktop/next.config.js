@@ -2,9 +2,15 @@
 const repo = 'htmaa2';
 // Allow an explicit deployment base path for non-GitHub hosts (e.g. GitLab pages)
 // Example: DEPLOY_BASE_PATH='/classes/863.25/people/HayleyBloch'
+// DEPLOY_BASE_PATH should only affect production/static exports. In local
+// development we must not pick up a deploy base (this causes assets to be
+// requested from the exported `out/` tree or unexpected absolute paths).
 const deployBase = process.env.DEPLOY_BASE_PATH || '';
 const isGitHub = process.env.NODE_ENV === 'production' && process.env.BUILD_FOR_GITHUB === 'true';
-const isProd = isGitHub || !!deployBase;
+// Treat as production only when explicitly building for GitHub Pages or when
+// NODE_ENV=production and a deploy base is intentionally provided. This
+// prevents local `next dev` from inheriting asset prefixes.
+const isProd = isGitHub || (process.env.NODE_ENV === 'production' && !!deployBase);
 
 const nextConfig = {
   // Only use static export output for production GitHub Pages builds.

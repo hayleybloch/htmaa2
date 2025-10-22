@@ -1,146 +1,68 @@
 #!/usr/bin/env node
-// Very small static server using only Node core modules.
-// Serves repo-root out/ under the /htmaa2 path so exported files resolve exactly
+// Lightweight static preview server for assembled `out/` directory.
 // Usage: node scripts/preview_static_node.js [port]
-
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
-const url = require('url');
+const fs = require('fs');
 
-const PORT = Number(process.argv[2]) || 5000;
-const root = path.join(__dirname, '..', 'out');
+const PORT = Number(process.argv[2]) || Number(process.env.PORT) || 5002;
+const repoRoot = path.resolve(__dirname, '..');
+const outDir = path.join(repoRoot, 'out');
 
-const mime = {
-  '.html': 'text/html; charset=UTF-8',
-  '.js': 'application/javascript; charset=UTF-8',
-  '.css': 'text/css; charset=UTF-8',
-  '.json': 'application/json; charset=UTF-8',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon',
-  '.mp4': 'video/mp4',
-  '.webm': 'video/webm',
-  '.woff2': 'font/woff2',
-  '.woff': 'font/woff',
-  '.ttf': 'font/ttf',
-  '.map': 'application/json',
-};
+function findBestBase() {
+  // Prefer explicit env var
+  const envBase = process.env.DEPLOY_BASE_PATH || process.env.NEXT_PUBLIC_BASE_PATH;
+  if (envBase) return envBase.replace(/\/$/, '');
 
-function send404(res) {
-  res.writeHead(404, {'Content-Type': 'text/plain'});
-  res.end('404 Not Found');
+  // If there's a top-level folder named "htmaa2", prefer that
+  const ht = path.join(outDir, 'htmaa2');
+  if (fs.existsSync(ht) && fs.statSync(ht).isDirectory()) return '/htmaa2';
+
+  // Otherwise, look for a folder that looks like a deployed base (contains 'desktop' or 'web')
+  try {
+    const children = fs.readdirSync(outDir).filter(n => n !== 'assets' && n !== '_next');
+    for (const name of children) {
+      const full = path.join(outDir, name);
+      if (!fs.statSync(full).isDirectory()) continue;
+      // If directory contains a nested `desktop` or `_next`, treat it as base
+      const desktop = path.join(full, 'desktop');
+      const next = path.join(full, '_next');
+      if (fs.existsSync(desktop) || fs.existsSync(next)) return '/' + name;
+    }
+    // fallback: first directory
+    if (children.length) return '/' + children[0];
+  } catch (e) {
+    // ignore
+  }
+  return '/';
 }
 
-function serveFile(res, filePath) {
-  fs.stat(filePath, (err, st) => {
-    if (err) return send404(res);
-    if (st.isDirectory()) {
-      const index = path.join(filePath, 'index.html');
-      return fs.stat(index, (ie, ist) => {
-        if (ie) return send404(res);
-        fs.createReadStream(index).pipe(res);
-      });
-    }
-    const ext = path.extname(filePath).toLowerCase();
-    const type = mime[ext] || 'application/octet-stream';
-    res.writeHead(200, { 'Content-Type': type });
-    fs.createReadStream(filePath).pipe(res);
-  });
+if (!fs.existsSync(outDir)) {
+  console.error('out/ directory not found at', outDir);
+  process.exit(2);
 }
 
-const server = http.createServer((req, res) => {
-  const parsed = url.parse(req.url);
-  // Redirect root to /htmaa2/
-  if (parsed.pathname === '/') {
-    res.writeHead(302, { Location: '/htmaa2/' });
-    return res.end();
-  }
+const app = express();
 
-  // Serve both the /htmaa2 prefixed site and common root asset paths so
-  // previews work whether code requests /assets/... or /htmaa2/assets/...
-  let filePath = null;
+// Serve static files from out/ at root so absolute paths like /classes/... work
+app.use(express.static(outDir, { extensions: ['html'], index: false }));
 
-  // Redirect root to /htmaa2/
-  if (parsed.pathname === '/') {
-    res.writeHead(302, { Location: '/htmaa2/' });
-    return res.end();
-  }
+const base = findBestBase();
 
-  if (parsed.pathname.startsWith('/htmaa2/')) {
-    // Map /htmaa2/... -> out/...
-    const relPath = parsed.pathname.replace(/^\/htmaa2\//, '');
-    filePath = path.join(root, relPath);
-  } else if (parsed.pathname.startsWith('/assets/')) {
-    // Map /assets/... -> out/assets/...
-    const relPath = parsed.pathname.replace(/^\//, '');
-    filePath = path.join(root, relPath);
-  } else if (parsed.pathname.startsWith('/icons/')) {
-    // Some built bundles request /icons/... when previewing on localhost.
-    // Prefer repo-root out/icons/..., fall back to out/desktop/icons/...
-    const relPath = parsed.pathname.replace(/^\//, '');
-    const candidate = path.join(root, relPath);
-    if (fs.existsSync(candidate)) {
-      filePath = candidate;
-    } else {
-      filePath = path.join(root, 'desktop', relPath);
-    }
-  } else if (parsed.pathname.startsWith('/fonts/')) {
-    // Map /fonts/... -> out/desktop/fonts/...
-    // Prefer repo-root out/fonts/..., fall back to out/desktop/fonts/...
-    const relPath = parsed.pathname.replace(/^\//, '');
-    const candidate = path.join(root, relPath);
-    if (fs.existsSync(candidate)) {
-      filePath = candidate;
-    } else {
-      filePath = path.join(root, 'desktop', relPath);
-    }
-  } else if (parsed.pathname.startsWith('/sounds/')) {
-    // Map /sounds/... -> out/desktop/sounds/...
-    // Prefer repo-root out/sounds/..., fall back to out/desktop/sounds/...
-    const relPath = parsed.pathname.replace(/^\//, '');
-    const candidate = path.join(root, relPath);
-    if (fs.existsSync(candidate)) {
-      filePath = candidate;
-    } else {
-      filePath = path.join(root, 'desktop', relPath);
-    }
-  } else if (parsed.pathname.startsWith('/images/')) {
-    // Map /images/... -> out/desktop/images/... (covers generic image roots)
-    // Prefer repo-root out/images/..., fall back to out/desktop/images/...
-    const relPath = parsed.pathname.replace(/^\//, '');
-    const candidate = path.join(root, relPath);
-    if (fs.existsSync(candidate)) {
-      filePath = candidate;
-    } else {
-      filePath = path.join(root, 'desktop', relPath);
-    }
-  } else if (parsed.pathname.startsWith('/_next/')) {
-    // Map /_next/... -> out/_next/...
-    const relPath = parsed.pathname.replace(/^\//, '');
-    filePath = path.join(root, relPath);
-  } else if (parsed.pathname === '/favicon.ico') {
-    filePath = path.join(root, 'favicon.ico');
-  } else {
-    return send404(res);
-  }
+// If base is root, serve index.html from out/index.html
+if (base === '/' || base === '') {
+  app.get('/', (req, res) => res.sendFile(path.join(outDir, 'index.html')));
+} else {
+  // Mount a static handler at the base path as well
+  const basePrefix = base.replace(/\/$/, '');
+  app.use(basePrefix, express.static(outDir, { extensions: ['html'], index: 'index.html' }));
+  // Redirect root to the base path
+  app.get('/', (req, res) => res.redirect(basePrefix + '/'));
+}
 
-  // Security: prevent path traversal
-  if (!filePath.startsWith(root)) {
-    console.log('Blocked path traversal:', parsed.pathname, filePath);
-    return send404(res);
-  }
+app.get('/health', (req, res) => res.send('ok'));
 
-  // Debug logging for troubleshooting missing assets
-  console.log('Request:', parsed.pathname, '=>', filePath);
-
-  serveFile(res, filePath);
-});
-
-server.listen(PORT, () => {
-  console.log(`Static preview server running at http://localhost:${PORT}/htmaa2/`);
-  console.log(`Serving from ${root}`);
+app.listen(PORT, () => {
+  console.log(`Preview static server running at http://localhost:${PORT}${base === '/' ? '/' : base + '/'}`);
+  console.log(`Serving files from ${outDir}`);
 });

@@ -35,6 +35,24 @@ const nextConfig = {
     config.module.rules.push({ test: /\.vert$/, type: "asset/source" });
     return config;
   },
+  // Provide dev-only rewrites so hardcoded /htmaa2/... paths work when running locally
+  async rewrites() {
+    if (isProd) { return [] }
+
+    return [
+      // Map requests like /htmaa2/web/... -> /... first, then a generic /htmaa2/:path* -> /:path*
+      // This mirrors the desktop app's dev rewrites and ensures the more specific
+      // web subtree is handled before the generic fallback.
+      {
+        source: `/${repo}/web/:path*`,
+        destination: `/:path*`
+      },
+      {
+        source: `/${repo}/:path*`,
+        destination: `/:path*`
+      }
+    ];
+  },
 };
 
 module.exports = nextConfig;

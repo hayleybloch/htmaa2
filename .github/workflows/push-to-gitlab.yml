@@ -22,8 +22,9 @@ jobs:
 
       - name: Build static site
         env:
-          NEXT_PUBLIC_TARGET_URL: "https://gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch/"
-          NEXT_PUBLIC_BASE_PATH: "/htmaa2"
+          NEXT_PUBLIC_TARGET_URL: "https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/"
+          NEXT_PUBLIC_BASE_PATH: "/classes/863.25/people/HayleyBloch"
+          DEPLOY_BASE_PATH: "/classes/863.25/people/HayleyBloch"
         run: |
           npm ci
           # Build web and desktop and assemble a single static output at repo-root public/
@@ -38,7 +39,8 @@ jobs:
           set -euo pipefail
           if [ -z "${GITLAB_TOKEN:-}" ]; then echo "GITLAB_ACCESS_TOKEN secret is missing"; exit 1; fi
           # If your GitLab instance requires the :846 HTTPS port, include it here (this repo's remote uses it).
-          GURL="https://oauth2:${GITLAB_TOKEN}@gitlab.cba.mit.edu:846/classes/863.25/people/HayleyBloch.git"
+          # Use the Fab Academy web host (fab.cba.mit.edu) as the target repository host
+          GURL="https://oauth2:${GITLAB_TOKEN}@fab.cba.mit.edu:846/classes/863.25/people/HayleyBloch.git"
           git clone --depth=1 --branch main "$GURL" gitlab-repo || (
             git clone --depth=1 "$GURL" gitlab-repo && cd gitlab-repo && git checkout -b main || true
           )

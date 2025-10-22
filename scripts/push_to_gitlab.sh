@@ -71,27 +71,29 @@ fi
 git config user.name "$GIT_NAME"
 git config user.email "$GIT_EMAIL"
 
-# Instead of syncing everything and committing once (which creates a large pack),
-# we will push files in batches so each push's pack stays under the remote limit.
+# Instead of syncing everything, only copy new/modified files from OUT_DIR into
+# the cloned repo and commit/push those. We will NOT delete files that exist in
+# the remote but are missing locally (user requested no deletions).
 # Defaults to 25 MiB (GitLab default). Set GITLAB_MAX_BYTES to override.
 MAX_BYTES="${GITLAB_MAX_BYTES:-26214400}"
 SKIPPED_FILE_LIST="$TMPDIR/repo/SKIPPED_FILES.txt"
 > "$SKIPPED_FILE_LIST"
 
-echo "Collecting files from $OUT_DIR (skipping files > $MAX_BYTES bytes)..."
-# Build a list of files relative to $OUT_DIR, skipping large files
-RELFILES="$TMPDIR/relfiles.txt"
-> "$RELFILES"
+echo "Collecting changed/new files from $OUT_DIR (skipping files > $MAX_BYTES bytes)..."
+
+# Prepare list of candidate files in OUT_DIR
+OUT_LIST="$TMPDIR/out_files.txt"
+> "$OUT_LIST"
+
 find "$OUT_DIR" -type f -print0 | while IFS= read -r -d '' file; do
   # get size in bytes (cross-platform)
   size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo 0)
+  rel=${file#"$OUT_DIR"/}
   if [ "$size" -gt "$MAX_BYTES" ]; then
     echo "$file  $size" >> "$SKIPPED_FILE_LIST"
     continue
   fi
-  # store "size TAB relpath"
-  rel=${file#"$OUT_DIR"/}
-  printf "%d\t%s\n" "$size" "$rel" >> "$RELFILES"
+  echo -e "$size\t$rel" >> "$OUT_LIST"
 done
 
 if [ -s "$SKIPPED_FILE_LIST" ]; then
@@ -99,22 +101,51 @@ if [ -s "$SKIPPED_FILE_LIST" ]; then
   sed -n '1,200p' "$SKIPPED_FILE_LIST" || true
 fi
 
-if [ ! -s "$RELFILES" ]; then
-  echo "No files to push (all files were skipped). Exiting."
+if [ ! -s "$OUT_LIST" ]; then
+  echo "No files to consider for push (all files skipped). Exiting."
   exit 0
 fi
 
-echo "Grouping files into batches (target <= ${MAX_BYTES} bytes per batch)..."
+# Now compare OUT files to files in the cloned repo and gather only changed/new ones.
+cd "$TMPDIR/repo"
+
+echo "Computing changed/new files by comparing with cloned repo..."
+CHANGED_LIST="$TMPDIR/changed_files.txt"
+> "$CHANGED_LIST"
+
+# For each candidate file in OUT_LIST, check if it exists in repo and compare bytes
+while IFS=$'\t' read -r size rel; do
+  src="$OUT_DIR/$rel"
+  dest="$TMPDIR/repo/$rel"
+  if [ ! -f "$dest" ]; then
+    # new file
+    echo "$rel" >> "$CHANGED_LIST"
+    continue
+  fi
+  # If file exists, compare quickly using cmp. cmp returns 0 if identical.
+  if ! cmp -s "$src" "$dest"; then
+    echo "$rel" >> "$CHANGED_LIST"
+  fi
+done < <(sort -nrk1 "$OUT_LIST")
+
+if [ ! -s "$CHANGED_LIST" ]; then
+  echo "No new or modified files to push. Exiting."
+  exit 0
+fi
+
+echo "Preparing batches for changed files (respecting MAX_BYTES)..."
 BATCH_DIR="$TMPDIR/batches"
 mkdir -p "$BATCH_DIR"
 
-# Greedy pack into batches by size
+# Greedy pack into batches by size (use OUT_LIST to lookup sizes)
 BATCH_INDEX=0
 BATCH_SIZE=0
 BATCH_FILELIST="$BATCH_DIR/batch-${BATCH_INDEX}.txt"
 > "$BATCH_FILELIST"
 
-while IFS=$'\t' read -r size rel; do
+while read -r rel; do
+  # lookup size from OUT_LIST
+  size=$(grep -F "\t$rel" "$OUT_LIST" | awk '{print $1}' | head -n1 || echo 0)
   # Add a small safety margin (5%) to avoid edge-case packs
   MARGIN=$(( MAX_BYTES - MAX_BYTES / 20 ))
   if [ $((BATCH_SIZE + size)) -gt $MARGIN ]; then
@@ -125,26 +156,18 @@ while IFS=$'\t' read -r size rel; do
   fi
   echo "$rel" >> "$BATCH_FILELIST"
   BATCH_SIZE=$((BATCH_SIZE + size))
-done < <(sort -nrk1 "$RELFILES")
+done < <(sort -u "$CHANGED_LIST")
 
 TOTAL_BATCHES=$((BATCH_INDEX+1))
 echo "Created $TOTAL_BATCHES batches. Proceeding to apply them to the repo and push each batch." 
 
-# Make sure repo is empty (preserve .git)
-cd "$TMPDIR/repo"
-git rm -r --cached . >/dev/null 2>&1 || true
-git ls-files -z | xargs -0 -r rm -f || true
-rm -rf * || true
-
-# If Git LFS is available, initialize it in the temp repo and copy the repo
-# .gitattributes so tracked patterns (like out/**.mp4) are respected.
+# Initialize LFS in temp repo if available and copy .gitattributes
 if command -v git-lfs >/dev/null 2>&1 || git lfs version >/dev/null 2>&1; then
   echo "Git LFS available: initializing in temp repo"
   git lfs install --local || true
   if [ -f "$ROOT_DIR/.gitattributes" ]; then
     echo "Copying .gitattributes into temp repo"
     cp "$ROOT_DIR/.gitattributes" .
-    # Register tracked patterns locally (git lfs track reads .gitattributes)
     git add .gitattributes
     git commit -m "Add .gitattributes for LFS-tracked site assets" || true
   fi
@@ -152,22 +175,28 @@ else
   echo "git-lfs not available; large files will be skipped unless tracked on remote." 
 fi
 
-# Now iterate batches: extract files from OUT_DIR for each batch, commit, and push.
+# Iterate batches: copy changed files into repo, commit and push each batch.
 for idx in $(seq 0 $BATCH_INDEX); do
   filelist="$BATCH_DIR/batch-${idx}.txt"
   echo "Processing batch $((idx+1))/$TOTAL_BATCHES (files: $(wc -l < "$filelist"))..."
-  # create parent directories and extract files
+  # copy files into repo (create parent dirs)
   while read -r rel; do
     src="$OUT_DIR/$rel"
     destdir=$(dirname "$rel")
     mkdir -p "$destdir"
-    cp --preserve=mode,timestamps "$src" "$rel" 2>/dev/null || cp "$src" "$rel"
+    # copy into temp repo path
+    if ! cp --preserve=mode,timestamps "$src" "$rel" 2>/dev/null; then
+      cp -p "$src" "$rel"
+    fi
   done < "$filelist"
 
-  # commit and push this batch
-  git add -A
+  # stage only the added/modified files for this batch
+  while read -r rel; do
+    git add -- "$rel" || true
+  done < "$filelist"
+
   if git diff --staged --quiet; then
-    echo "No changes in batch $idx"
+    echo "No staged changes in batch $idx"
   else
     git commit -m "Site update (batch $((idx+1))/$TOTAL_BATCHES) $(date -u +"%Y-%m-%dT%H:%M:%SZ")" || true
     echo "Pushing batch $((idx+1))/$TOTAL_BATCHES to origin $BRANCH..."
@@ -178,20 +207,6 @@ for idx in $(seq 0 $BATCH_INDEX); do
   fi
 done
 
-echo "All batches pushed."
-
-# Commit changes if any
-if [ -n "$(git status --porcelain)" ]; then
-  git add -A
-  git pull --rebase origin "$BRANCH" || true
-  git commit -m "Site update: $(date -u +"%Y-%m-%dT%H:%M:%SZ") from local preview" || true
-  echo "Pushing to origin $BRANCH..."
-  git push origin "$BRANCH"
-  echo "Push complete."
-else
-  echo "No changes to commit. Nothing pushed."
-fi
-
-# Done
+echo "All changed files pushed."
 
 exit 0

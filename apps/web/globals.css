@@ -19,14 +19,14 @@ html, body {
   font-family: 'Galyon Regular';
   font-style: normal;
   font-weight: normal;
-  src: local('Galyon Regular'), url('/fonts/Galyon-Regular.woff') format('woff');
+  src: local('Galyon Regular'), var(--font-galyon) format('woff');
 }
 
 @font-face {
   font-family: 'Galyon Bold';
   font-style: normal;
   font-weight: normal;
-  src: local('Galyon Bold'), url('/fonts/Galyon-Bold.woff') format('woff');
+  src: local('Galyon Bold'), var(--font-galyon-bold) format('woff');
 }
 
 @font-face {

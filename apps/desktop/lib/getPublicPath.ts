@@ -1,14 +1,21 @@
 export default function getPublicPath(path: string): string {
-  // During GitHub Pages desktop builds we want emitted asset URLs to point
-  // at the deployed desktop subtree (e.g. /htmaa2/desktop/icons/...).
+  // During production/static builds we want emitted asset URLs to point
+  // at the deployed subtree (e.g. /htmaa2/desktop/icons/...).
   // next.config.js will expose NEXT_PUBLIC_DESKTOP_BASE for production
   // desktop builds. Fall back to NEXT_PUBLIC_BASE_PATH when a desktop
   // base isn't provided.
+
+  // In development we always want local, unprefixed paths so the dev
+  // server serves assets from the local public/ folder. This avoids
+  // manually toggling env vars when switching between dev and static
+  // preview builds.
+  const isDev = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development';
+  if (isDev) { return path; }
+
   const desktopBase = typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_DESKTOP_BASE
     ? process.env.NEXT_PUBLIC_DESKTOP_BASE
     : '';
 
-  // Use the generic base (e.g. /htmaa2) when desktop-specific base is not set.
   const base = typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_BASE_PATH
     ? process.env.NEXT_PUBLIC_BASE_PATH
     : '';

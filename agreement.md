@@ -13,4 +13,4 @@ Recognizing limits on lab and staff time
 Promoting a respectful environment free of harassment and discrimination, and encouraging community participation
 
 Signed by committing this file in my repository,
-Hayley Bloch 
+Hayley Bloch

@@ -1,0 +1,5 @@
+<ul>
+{% for wk in collections.weeks %}
+  <li><a href="{{ wk.url }}">{{ wk.data.title }}</a></li>
+{% endfor %}
+</ul>

@@ -120,7 +120,7 @@ export function ProjectWeek1(params: SubViewParams) {
             and slightly uncanny.
           </li>
         </ul>
-        {/* Inspiration gallery: images 4-8 are the visual inspirations for the project */}
+        
         <div style={{display: 'flex', gap: 12, alignItems: 'flex-start', flexWrap: 'wrap', marginTop: 12}}>
           <div style={{flex: '1 1 18%', minWidth: 120}}>
             <ProjectImage src="/images/Week-1/4w1-min.jpg" alt="Inspiration image 1" label="Inspiration 1" />
@@ -326,7 +326,7 @@ export function ProjectWeek2(params: SubViewParams) {
               To make the design scalable and reusable, I set up a full list of
               user parameters:
             </p>
-            {/* IMAGE: parametric table from fusion i used */}
+            
               <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 48%', minWidth: 160}}>
                   <ProjectImage src="/images/Week-2/parametrics.png" alt="Parametric table from Fusion" label="Parametric table" labelNumber={1} />
@@ -357,7 +357,7 @@ export function ProjectWeek2(params: SubViewParams) {
               meaning I could update the entire design simply by changing the
               diameter or thickness of material.
             </p>
-            {/* IMAGE PLACEHOLDER: Fusion 360 parametric model — Label 1: Parametric design process with user parameters */}
+            
           </li>
 
           <li>
@@ -398,7 +398,7 @@ export function ProjectWeek2(params: SubViewParams) {
             <p>
               I then plugged this value into my Fusion parameters so that every slot and joint automatically compensated for the laser cut width.
             </p>
-            {/* IMAGE PLACEHOLDER: Kerf test square with caliper measurement */}
+            
         <div style={{marginTop: 8}}>
           <div style={{maxWidth: 480}}>
             <ProjectImage src="/images/Week-2/kerf test.JPG" alt="Kerf test square with caliper measurement" label="Kerf test" />
@@ -441,7 +441,7 @@ export function ProjectWeek2(params: SubViewParams) {
             <p>
               The wood’s rigidity solved the issues I faced with cardboard. The joints came out clean and fit tightly thanks to kerf compensation. I did light sanding on a few pieces to fine-tune the fit.
             </p>
-            {/* IMAGE PLACEHOLDER: Laser setup — Label 6 */}
+            
         <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
           <div style={{flex: '1 1 48%', minWidth: 160}}>
             <ProjectImage src="/images/Week-2/preset laser settings.JPG" alt="Preset laser settings" label="Laser preset settings" />
@@ -455,9 +455,7 @@ export function ProjectWeek2(params: SubViewParams) {
           
         </div>
         
-            {/* IMAGE PLACEHOLDER: Cutting process — Label 7 */}
-            {/* IMAGE PLACEHOLDER: Material prep — Label 8 */}
-            {/* IMAGE PLACEHOLDER: Finished cut pieces — Label 9 */}
+            
           </li>
 
           <li>
@@ -500,7 +498,7 @@ export function ProjectWeek2(params: SubViewParams) {
           <li>Vinyl finishing added a clean, professional look.</li>
           <li>The Fusion 360 parametric model can be easily scaled for different sizes or materials.</li>
         </ul>
-        {/* IMAGE PLACEHOLDER: Final wooden iris box — Label 3: Assembled iris box in wood */}
+        
 
         <h3>Learnings</h3>
         <ul>
@@ -1148,4 +1146,256 @@ export function ProjectWeek6(params: SubViewParams) {
   }
 
   return ProjectPage({title: 'Week 6 - Electronics Production', content: RenderEnglishContent(), params});
+}
+
+export function ProjectWeek7(params: SubViewParams) {
+  function RenderEnglishContent() {
+    return (
+      <div>
+        <h3>Project Goal</h3>
+        <p>
+          This week I explored subtractive digital fabrication by designing
+          and machining a large-format wooden object on a CNC router. My
+          original idea was an 8' × 4' "Phoenix" die table for friends, but
+          material and bed-size constraints (two 4' × 4' sheets of 7/16" OSB)
+          forced a mid-week pivot. I switched to a layered head sculpture
+          made from stacked, CNC-cut OSB slices — a project that still let me
+          work at scale while fitting available stock and machine limits.
+        </p>
+        <p>
+          The new goal became using digital slicing and 2D toolpathing
+          techniques to transform a 3D mesh into a physically compelling,
+          full-volume sculpture.
+        </p>
+
+        <h3>Process</h3>
+        <ol>
+          <li>
+            <strong>Initial design concept — Phoenix die table</strong>
+            <p>
+              I began by modeling a full-size table in Fusion 360 with the
+              following intent:
+            </p>
+            <ul>
+              <li>Dimensions: 8 ft × 4 ft tabletop, ~40" high</li>
+              <li>Material: 7/16" OSB core with optional plywood skin</li>
+              <li>Support: Phoenix-shaped legs on the short sides, CNC-cut</li>
+              <li>Assembly: interlocking wood joinery (minimal screws/bolts)</li>
+            </ul>
+            <h4>Phoenix CAD & initial plan</h4>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 48%', minWidth: 160}}>
+                <ProjectImage src="/images/Week-7/phoenix-die-table-cad.JPG" alt="Phoenix die table CAD" label="Phoenix die table (CAD)" />
+              </div>
+            </div>
+            <p>
+              The Phoenix legs were sketched so wing and tail faces would mate
+              cleanly with the top and floor. After calculating sheet usage and
+              checking the CNC bed size, I realized constructing both legs and
+              the tabletop would exceed my available OSB and machine limits —
+              the tabletop would have required additional plywood or more
+              complex lamination.
+            </p>
+          </li>
+
+
+            <h4>Phoenix machining attempts</h4>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/pheonix-machining.JPG" alt="Phoenix machining (attempt)" label="Phoenix machining (attempt)" />
+              </div>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/phoenix-machining2.JPG" alt="Phoenix machining 2" label="Phoenix machining 2" />
+              </div>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/phoenix-machining3.JPG" alt="Phoenix machining 3" label="Phoenix machining 3" />
+              </div>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/cut-phoenix.JPG" alt="Cut phoenix piece" label="Cut phoenix piece" />
+              </div>
+            </div>
+          <li>
+            <strong>Pivot to a layered sculpture</strong>
+            <p>
+              To stay within realistic constraints, I pivoted to a large-scale
+              sculpture composed of stacked OSB slices. This approach still
+              leveraged CNC workflows (mesh → slice → 2D toolpath) but used
+              far less sheet area than an entire tabletop.
+            </p>
+          </li>
+
+          <li>
+            <strong>Slicing the 3D model</strong>
+            <p>
+              I imported a 3D head mesh into Fusion 360 and experimented with
+              multiple slicing strategies:
+            </p>
+            <ul>
+              <li>Horizontal (XY) slicing: would have required ~60 slices at
+                7/16" each — too many given my stock.
+              </li>
+              <li>Side-profile (YZ) slicing: fewer slices and a stronger,
+                more expressive silhouette.
+              </li>
+            </ul>
+            <p>
+              Manually creating planes and using the Intersect tool in Fusion
+              was slow and error-prone. Anthony recommended Autodesk Slicer
+              for Fusion 360 (discontinued but still useful): it takes an STL,
+              slices by material thickness, inserts dowel alignment holes, and
+              exports DXF cut profiles. Using Slicer with OSB thickness set to
+              0.4375" produced ~18 profiles; I deleted two tiny inner-ear
+              slices that were impractical to cut or glue.
+            </p>
+          </li>
+              <div style={{flex: '1 1 32%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/Initial-hand-slice.png" alt="Initial hand slice" label="Initial hand slice" />
+              </div>
+
+          <li>
+            <strong>CAM workflow (Fusion 360)</strong>
+            <p>
+              I re-imported the DXF profiles into Fusion and set up a simple
+              CAM workflow for 2D cutting:
+            </p>
+            <ul>
+              <li>Stock setup: each part set to 0.4375" thick stock with no
+                offset.</li>
+              <li>Tool: 1/4" flat endmill (ShopBot default).</li>
+              <li>Operation: 2D Contour with small tabs to hold parts while
+                cutting.</li>
+              <li>Output: ShopBot post-processed G-code per panel.</li>
+            </ul>
+            <p>
+              I also labeled every profile with order and orientation because
+              many slices look similar but are not interchangeable once
+              stacked.
+            </p>
+          </li>
+
+          <li>
+            <strong>Machining on the ShopBot</strong>
+            <p>
+              For each OSB sheet I zeroed Z with a metal touch plate and
+              fixtured the panel using screws and blue tape; for small parts I
+              added a bit of superglue under tabs. Cuts were quick — roughly
+              15–20 minutes per sheet — and I added light sanding and edge
+              cleanup after cutting.
+            </p>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 32%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/slicer-for-Fusion.png" alt="Slicer for Fusion" label="Slicer for Fusion" />
+              </div>
+
+              <div style={{flex: '1 1 32%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/CAM-setup-after-slicer-for-fusion.png" alt="CAM setup after Slicer" label="CAM setup after Slicer" />
+              </div>
+            </div>
+
+
+
+
+            <h4>Slicing & CAM setup</h4>
+            <p>
+              After exporting DXFs from Slicer, I re-imported them into Fusion
+              for CAM. Below: Slicer screenshot, an example initial hand-slice,
+              and the CAM setup after importing profiles.
+            </p>
+
+
+            <h4>ShopBot setup & instrumentation</h4>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/head-slices.JPG" alt="Head slices" label="Head slices" />
+              </div>
+            </div>
+
+            <h4>Head machining & slices</h4>
+            <p>
+              The actual head slices were milled from the OSB sheets; below are
+              machining photos and the raw slices ready for stacking.
+            </p>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/head-machining.JPG" alt="Head machining" label="Head machining" />
+              </div>
+              <div style={{flex: '1 1 48%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/head-slices.JPG" alt="Head slices" label="Head slices" />
+              </div>
+            </div>
+
+            <p style={{marginTop: 8}}>
+              Slicer’s dowel holes made alignment straightforward; I used a
+              1/4" hardwood dowel for alignment and construction adhesive to
+              glue layers together. To clamp the stack while the glue dried I
+              sandwiched the sculpture vertically between two boards and used
+              weights and bar clamps for even pressure. I also drove a few
+              18-gauge finish nails at problem spots to encourage tight
+              seating.
+            </p>
+          </li>
+
+          <li>
+            <strong>Assembly</strong>
+            <p>
+              With dowels in place and adhesive applied, I stacked the slices
+              in order and clamped them until the glue cured. The dowels
+              ensured repeatable alignment and kept the profile consistent as
+              layers settled.
+            </p>
+            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
+              <div style={{flex: '1 1 33%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/finished-head1.JPG" alt="Finished head 1" label="Finished head 1" />
+              </div>
+              <div style={{flex: '1 1 33%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/finished-head-2.JPG" alt="Finished head 2" label="Finished head 2" />
+              </div>
+              <div style={{flex: '1 1 33%', minWidth: 140}}>
+                <ProjectImage src="/images/Week-7/finished-head-3.JPG" alt="Finished head 3" label="Finished head 3" />
+              </div>
+              <div style={{flex: '1 1 48%', minWidth: 160}}>
+                <ProjectImage src="/images/Week-7/finished-head-comparison-size.JPG" alt="Finished head comparison" label="Finished head (size comparison)" />
+              </div>
+            </div>
+          </li>
+        </ol>
+
+        <h3>Final result</h3>
+        <p>
+          The finished object is a full-scale side-profile head sculpture
+          made from 7/16" OSB slices. The piece is visually striking and
+          structurally sound — the layered aesthetic emphasizes the
+          intersection of anatomy and architectural abstraction. The
+          project gave me practical experience in mesh→DXF workflows,
+          slicing strategies, and CAM optimization for 2D CNC machining.
+        </p>
+
+        <h3>What I learned / reflections</h3>
+        <ul>
+          <li>Material and machine constraints strongly shape feasible designs.</li>
+          <li>Digital slicing tools (Slicer) dramatically speed up converting a
+            mesh into cut-ready profiles and help with alignment features.
+          </li>
+          <li>Choosing the right slicing axis (side-profile vs horizontal)
+            is a tradeoff between silhouette fidelity and required sheet
+            area / slice count.
+          </li>
+          <li>Labeling, ordering, and including dowel holes in exported DXFs
+            saves a lot of headache during assembly.
+          </li>
+          <li>Finishing and clamping strategies (dowel alignment, glues,
+            nails) are crucial when turning cut profiles into rigid, full-
+            volume objects.
+          </li>
+          <li>Although I didn’t build the Phoenix table, the pivot resulted
+            in a satisfying, large-scale object that fit my material
+            constraints and taught valuable CNC workflows.
+          </li>
+          <li>And I now have a wooden head for my dorm.</li>
+        </ul>
+      </div>
+    );
+  }
+
+  return ProjectPage({title: 'Week 7 - Computer-Controlled Machining', content: RenderEnglishContent(), params});
 }

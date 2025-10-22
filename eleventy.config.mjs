@@ -1,5 +1,13 @@
 import { HtmlBasePlugin, IdAttributePlugin, InputPathToUrlTransformPlugin } from "@11ty/eleventy";
-import { feedPlugin } from "@11ty/eleventy-plugin-rss";
+// Make the RSS plugin optional: try to load it at runtime so dev environments
+// without the package installed can still run Eleventy.
+let feedPlugin = null;
+try {
+  const mod = await import("@11ty/eleventy-plugin-rss");
+  feedPlugin = mod?.default || mod?.feedPlugin || mod;
+} catch (e) {
+  console.warn("Optional plugin @11ty/eleventy-plugin-rss not found; continuing without RSS feed generation.");
+}
 import { createHighlighter } from "shiki";
 
 export default async function (eleventyConfig) {
@@ -17,7 +25,7 @@ export default async function (eleventyConfig) {
     metadata: {
       language: "en",
       title: "Hayley Bloch — HTMAA Portfolio",
-      base: "https://gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch/",
+  base: "https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/",
       author: {
         name: "Hayley Bloch",
       },
@@ -33,10 +41,27 @@ export default async function (eleventyConfig) {
   eleventyConfig.addFilter("humanDate", (dateObj) => new Date(dateObj).toLocaleDateString("en-US"));
   eleventyConfig.addFilter("machineDate", (dateObj) => new Date(dateObj).toISOString());
 
-  const highlighter = await createHighlighter({
-    themes: ["dark-plus"],
-    langs: ["js", "jsx", "ts", "tsx", "html", "css", "diff", "yaml", "json", "cpp", "sh"],
-  });
+  // Try to load shiki for syntax highlighting; fall back to a simple safe highlighter
+  let highlighter = null;
+  try {
+    const shiki = await import('shiki');
+    highlighter = await shiki.createHighlighter({
+      themes: ["dark-plus"],
+      langs: ["js", "jsx", "ts", "tsx", "html", "css", "diff", "yaml", "json", "cpp", "sh"],
+    });
+  } catch (e) {
+    console.warn('Optional package `shiki` not found; code blocks will not be syntax highlighted.');
+    // Provide a minimal fallback so eleventyConfig.amendLibrary can call `highlighter.codeToHtml`
+    highlighter = {
+      codeToHtml(code) {
+        const escaped = String(code)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return `<pre class="language-plain"><code>${escaped}</code></pre>`;
+      }
+    };
+  }
 
   function lazyImagesPlugin(md) {
     const defaultRender =
@@ -73,6 +98,6 @@ export default async function (eleventyConfig) {
       input: "src",
       output: "public",
     },
-    pathPrefix: "/classes/863.25/people/HayleyBloch/",
+  pathPrefix: "/classes/863.25/people/HayleyBloch/",
   };
 }

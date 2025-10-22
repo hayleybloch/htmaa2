@@ -17,7 +17,7 @@ set -eu -o pipefail
 #  GIT_EMAIL    (defaults to git config user.email or "htmaa2-bot@example.com")
 #
 # Example (HTTPS token):
-#  GITLAB_REPO="https://gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch.git" \
+#  GITLAB_REPO="https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch.git" \
 #  GITLAB_TOKEN="glpat-..." \
 #  ./scripts/push_to_gitlab.sh
 #
@@ -135,6 +135,22 @@ cd "$TMPDIR/repo"
 git rm -r --cached . >/dev/null 2>&1 || true
 git ls-files -z | xargs -0 -r rm -f || true
 rm -rf * || true
+
+# If Git LFS is available, initialize it in the temp repo and copy the repo
+# .gitattributes so tracked patterns (like out/**.mp4) are respected.
+if command -v git-lfs >/dev/null 2>&1 || git lfs version >/dev/null 2>&1; then
+  echo "Git LFS available: initializing in temp repo"
+  git lfs install --local || true
+  if [ -f "$ROOT_DIR/.gitattributes" ]; then
+    echo "Copying .gitattributes into temp repo"
+    cp "$ROOT_DIR/.gitattributes" .
+    # Register tracked patterns locally (git lfs track reads .gitattributes)
+    git add .gitattributes
+    git commit -m "Add .gitattributes for LFS-tracked site assets" || true
+  fi
+else
+  echo "git-lfs not available; large files will be skipped unless tracked on remote." 
+fi
 
 # Now iterate batches: extract files from OUT_DIR for each batch, commit, and push.
 for idx in $(seq 0 $BATCH_INDEX); do

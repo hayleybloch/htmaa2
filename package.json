@@ -18,6 +18,7 @@
   "build:eleventy": "eleventy --input=src --output=public",
   "dev:eleventy": "eleventy --serve --input=src --output=public",
   "build:static": "npm run build:eleventy && npm run build:web && npm run build:desktop && node scripts/assemble_static.js",
+  "deploy:static": "export DEPLOY_BASE_PATH='/classes/863.25/people/HayleyBloch' NEXT_PUBLIC_TARGET_URL='https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/' NEXT_PUBLIC_BASE_PATH='/classes/863.25/people/HayleyBloch' && npm run build:static && GITLAB_REPO=\"ssh://git@gitlab.cba.mit.edu:846/classes/863.25/people/HayleyBloch.git\" GIT_BRANCH=\"main\" ./scripts/push_to_gitlab.sh",
   "preview:web": "npm run preview:static --workspace=apps/web",
   "prepreview:full-static": "node scripts/tools/archived/prepreview_full_static.js",
   "preview:full-static": "node scripts/tools/archived/preview_full_static.js",
@@ -31,9 +32,7 @@
     "prettier": "latest",
     "sharp": "^0.34.4",
     "turbo": "^2.5.5",
-    "@11ty/eleventy": "^2.0.1",
-    "@11ty/eleventy-plugin-rss": "^2.1.4",
-    "shiki": "^0.15.5"
+  "@11ty/eleventy": "^2.0.1"
   },
   "engines": {
     "node": "22.x"

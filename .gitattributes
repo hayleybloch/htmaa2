@@ -1,2 +1,7 @@
+# Track large media in assembled out/ with Git LFS
+out/**.mp4 filter=lfs diff=lfs merge=lfs -text
+out/**.mov filter=lfs diff=lfs merge=lfs -text
+out/**.zip filter=lfs diff=lfs merge=lfs -text
+out/**.gz filter=lfs diff=lfs merge=lfs -text
 out/**.mp4 filter=lfs diff=lfs merge=lfs -text
 out/**.mov filter=lfs diff=lfs merge=lfs -text

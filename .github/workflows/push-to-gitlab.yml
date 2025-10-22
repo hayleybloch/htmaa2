@@ -29,20 +29,31 @@ jobs:
           npm run build:static
           test -d out
 
-      - name: Clone GitLab destination
+      - name: Clone GitLab destination (shallow)
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
         run: |
-          git clone https://oauth2:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch.git gitlab-repo
+          # If your GitLab instance requires the :846 HTTPS port, include it here (this repo's remote uses it).
+          git clone --depth=1 --branch main https://oauth2:${GITLAB_TOKEN}@gitlab.cba.mit.edu:846/classes/863.25/people/HayleyBloch.git gitlab-repo || \
+            (git clone --depth=1 https://oauth2:${GITLAB_TOKEN}@gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch.git gitlab-repo && cd gitlab-repo && git checkout -b main)
 
-      - name: Sync built files
-        run: |
-          rsync -av --delete out/ gitlab-repo/
-
-      - name: Commit and push to GitLab main
+      - name: Prepare repo, sync built site and push
+        env:
+          COMMITTER_NAME: "Hayley Bloch"
+          COMMITTER_EMAIL: "hayleybl@mit.edu"
         run: |
           cd gitlab-repo
-          git config user.name "Hayley Bloch"
-          git config user.email "hayleybl@mit.edu"
-          git add .
-          git pull --rebase origin main || true
+          git fetch origin main --depth=1 || true
+          git pull --ff-only origin main || true
+
+          # Sync build output into the checked-out repo
+          cd ..
+          rsync -av --delete out/ gitlab-repo/
+
+          cd gitlab-repo
+          git config user.name "${COMMITTER_NAME}"
+          git config user.email "${COMMITTER_EMAIL}"
+
+          git add -A
           git commit -m "${{ github.event.head_commit.message || 'Site update from GitHub Actions' }}" || echo "No changes to commit"
           git push origin main

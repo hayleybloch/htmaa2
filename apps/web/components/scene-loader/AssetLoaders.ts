@@ -105,8 +105,8 @@ function getDesktopTargetUrl(): string {
     }
   }
 
-  // Use production URL for GitHub Pages deployment - point to desktop subdirectory
-  const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'https://hayleybloch.github.io/htmaa2/'
+  // Use production URL for deployment - prefer NEXT_PUBLIC_TARGET_URL, fall back to GitLab location
+  const target = process.env.NEXT_PUBLIC_TARGET_URL ?? 'https://gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch/'
   return `${target}desktop/`;
 }
 

@@ -71,7 +71,7 @@ export default async function (eleventyConfig) {
   return {
     dir: {
       input: "src",
-      output: "out",
+      output: "public",
     },
     pathPrefix: "/classes/863.25/people/HayleyBloch/",
   };

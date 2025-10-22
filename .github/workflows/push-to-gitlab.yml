@@ -26,10 +26,10 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: "/htmaa2"
         run: |
           npm ci
-          # Build web and desktop and assemble a single static output at repo-root out/
+          # Build web and desktop and assemble a single static output at repo-root public/
           npm run build:static
           # verify output
-          test -d out
+          test -d public
 
       - name: Clone GitLab destination (shallow)
         env:
@@ -52,7 +52,7 @@ jobs:
           export GIT_TERMINAL_PROMPT=0
 
           # copy build output into the checked-out gitlab repo
-          rsync -av --delete out/ gitlab-repo/
+          rsync -av --delete public/ gitlab-repo/
 
           cd gitlab-repo
           git config user.name "${COMMITTER_NAME}"

@@ -7,7 +7,14 @@ const fs = require('fs');
 
 const PORT = Number(process.argv[2]) || Number(process.env.PORT) || 5002;
 const repoRoot = path.resolve(__dirname, '..');
-const outDir = path.join(repoRoot, 'out');
+// Prefer assembled `out/`, but fall back to Eleventy `public/` so you can preview
+// Eleventy-only builds without running the full assemble step.
+let outDir = path.join(repoRoot, 'out');
+const publicDir = path.join(repoRoot, 'public');
+if (!fs.existsSync(outDir) && fs.existsSync(publicDir)) {
+  console.warn('out/ directory not found; falling back to repo public/ for preview');
+  outDir = publicDir;
+}
 
 function findBestBase() {
   // Prefer explicit env var
@@ -58,6 +65,19 @@ if (base === '/' || base === '') {
   app.use(basePrefix, express.static(outDir, { extensions: ['html'], index: 'index.html' }));
   // Redirect root to the base path
   app.get('/', (req, res) => res.redirect(basePrefix + '/'));
+  // Fallback: if a request under the base path does not match a file, serve
+  // the site's index.html. This helps preview when Eleventy generates files
+  // at the repo root (e.g. public/index.html) but templates reference a
+  // deployment pathPrefix (so URLs request /classes/...). Express static will
+  // 404 in that case; this route returns index.html instead so client-side
+  // routing and base-pathed pages can be inspected locally.
+  // Use app.use instead of a wildcard GET route so path-to-regexp doesn't
+  // attempt to parse characters like '.' in the base path. Only handle
+  // GET requests here; let other methods fall through.
+  app.use(basePrefix, (req, res, next) => {
+    if (req.method !== 'GET') return next();
+    res.sendFile(path.join(outDir, 'index.html'));
+  });
 }
 
 app.get('/health', (req, res) => res.send('ok'));

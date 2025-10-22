@@ -56,6 +56,11 @@ jobs:
           # copy build output into the checked-out gitlab repo
           rsync -av --delete public/ gitlab-repo/
 
+          # Ensure repository-level files are also present in the GitLab repo
+          # (copy CI config and agreement if they exist at repo root)
+          if [ -f ../.gitlab-ci.yml ]; then cp ../.gitlab-ci.yml gitlab-repo/.gitlab-ci.yml; fi
+          if [ -f ../agreement.md ]; then cp ../agreement.md gitlab-repo/agreement.md; fi
+
           cd gitlab-repo
           git config user.name "${COMMITTER_NAME}"
           git config user.email "${COMMITTER_EMAIL}"

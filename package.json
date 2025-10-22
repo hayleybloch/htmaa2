@@ -15,7 +15,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
   "build:web": "npm run build --workspace=apps/web",
   "build:desktop": "npm run build --workspace=apps/desktop",
-  "build:static": "npm run build:web && npm run build:desktop && node scripts/assemble_static.js",
+  "build:eleventy": "eleventy --input=src --output=out",
+  "dev:eleventy": "eleventy --serve --input=src --output=out",
+  "build:static": "npm run build:eleventy && npm run build:web && npm run build:desktop && node scripts/assemble_static.js",
   "preview:web": "npm run preview:static --workspace=apps/web",
   "prepreview:full-static": "node scripts/tools/archived/prepreview_full_static.js",
   "preview:full-static": "node scripts/tools/archived/preview_full_static.js",
@@ -28,7 +30,10 @@
     "eslint-config-custom": "*",
     "prettier": "latest",
     "sharp": "^0.34.4",
-    "turbo": "^2.5.5"
+    "turbo": "^2.5.5",
+    "@11ty/eleventy": "^2.0.1",
+    "@11ty/eleventy-plugin-rss": "^2.1.4",
+    "shiki": "^0.15.5"
   },
   "engines": {
     "node": "22.x"

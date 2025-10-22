@@ -106,5 +106,32 @@ For questions about my work or this portfolio, feel free to reach out!
 ---
 
 *Built with ❤️ by Hayley Bloch*
+# Deploying to Fab Academy (fab.cba.mit.edu)
+
+This repo is configured to publish to the MIT HTMAA site path:
+
+- https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/
+
+To build and preview with the correct paths you can set DEPLOY_BASE_PATH and NEXT_PUBLIC_TARGET_URL. Examples:
+
+1. Local static build and preview (sets base path so exported desktop app assets are rewritten correctly):
+
+```bash
+# at repo root
+export DEPLOY_BASE_PATH='/classes/863.25/people/HayleyBloch'
+export NEXT_PUBLIC_TARGET_URL='https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/'
+npm run build:static
+node scripts/preview_static_node.js 5002
+# then open http://localhost:5002/classes/863.25/people/HayleyBloch/
+```
+
+2. GitHub Actions
+
+The included workflow (`.github/workflows/push-to-gitlab.yml`) sets `NEXT_PUBLIC_TARGET_URL` to the Fab Academy URL and will attempt to push the `public/` build output to the deployment repository. Make sure you have a secret `GITLAB_ACCESS_TOKEN` configured in your GitHub repository settings if you want the workflow to push the site for you.
+
+Notes:
+- Eleventy uses `pathPrefix` in `eleventy.config.mjs` to rewrite asset links; this is already set to `/classes/863.25/people/HayleyBloch/`.
+- Next apps read `DEPLOY_BASE_PATH` at build time to set `basePath`/`assetPrefix` so exported routes resolve correctly under the Fab Academy path.
+
 # Updated Sat Sep 27 20:25:33 EDT 2025
 # Force rebuild Sat Sep 27 20:30:44 EDT 2025

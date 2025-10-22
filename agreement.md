@@ -12,7 +12,7 @@ This is a 3D portfolio website with an embedded desktop operating system simulat
 
 ## Deployment
 - **GitHub Pages**: https://hayleybloch.github.io/htmaa2/
-- **MIT GitLab**: https://gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch.git
+- **Fab Academy web host**: https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/
 
 ## Development
 - Built with Next.js 15.5.4

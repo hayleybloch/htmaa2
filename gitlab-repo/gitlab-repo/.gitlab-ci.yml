@@ -1,7 +1,0 @@
-job:
-  script:
-    - mkdir -p /var/www/classes/863.25/people/HayleyBloch
-    - export GIT_WORK_TREE=/var/www/classes/863.25/people/HayleyBloch/
-    - git checkout -f main
-    - git pull
-

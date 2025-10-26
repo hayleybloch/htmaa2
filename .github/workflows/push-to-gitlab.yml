@@ -44,6 +44,12 @@ jobs:
           npm run build
       - name: Compress large assets
         run: |
+          # Check if out/ directory exists
+          if [ ! -d "out" ]; then
+            echo "No output directory (out/) to compress, skipping compression steps."
+            exit 0
+          fi
+          
           # Install compression tools
           sudo apt-get update
           sudo apt-get install -y ffmpeg imagemagick
@@ -99,7 +105,8 @@ jobs:
           
           # Compress large images (>2MB) using ImageMagick
           echo "Compressing large images..."
-          find out/ -name "*.jpg" -o -name "*.JPG" -o -name "*.jpeg" -o -name "*.JPEG" | while read img; do
+          if [ -d "out" ]; then
+            find out/ -name "*.jpg" -o -name "*.JPG" -o -name "*.jpeg" -o -name "*.JPEG" | while read img; do
             size=$(stat -c%s "$img")
             if [ "$size" -gt 2097152 ]; then  # 2MB
               echo "Compressing image: $img"
@@ -118,7 +125,9 @@ jobs:
           
           # Final check for files still over 25MB
           echo "Final verification - checking for files over 25MB:"
-          find out/ -type f -size +25M -exec ls -lh {} \; || echo "✅ No files over 25MB found"
+          if [ -d "out" ]; then
+            find out/ -type f -size +25M -exec ls -lh {} \; || echo "✅ No files over 25MB found"
+          fi
       - name: Check out gitlab repo
         # Customize git clone url here
         run: |

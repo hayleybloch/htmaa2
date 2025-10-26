@@ -1,4 +1,13 @@
-name: Build and push to CBA GitLab
+# Copied from https://github.com/chuanqisun/htmaa-2025/blob/master/.github/workflows/push-to-gitlab.yml
+# Setup
+# =====
+# 1. Go to GitLab, generate a developer acccess token with `write_repository` scope. In the UI, it's in settings > access tokens.
+# 2. Go to GitHub, add that token to your GitHub repo's secrets list
+# 3. In GitLab, relax branch protection policy to allow direct push permission on the `main` branch by your user's role. In my case, the role is `Developer`, not `Maintainer`.
+# 4. Edit this file, replace `SunChuanqi` with your GitLab username in two places, your commiter name and email with yours.
+# 5. Adjust build script and deployment folder to match your static site generator. Mine is `public`.
+
+name: Build and push to GitLab
 
 on:
   push:
@@ -7,69 +16,133 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Use Node 22
+      - name: Set up Node.js version
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
 
-      - name: Build static site
-        env:
-          NEXT_PUBLIC_TARGET_URL: "https://fab.cba.mit.edu/classes/863.25/people/HayleyBloch/"
-          NEXT_PUBLIC_BASE_PATH: "/classes/863.25/people/HayleyBloch"
-          DEPLOY_BASE_PATH: "/classes/863.25/people/HayleyBloch"
+      - name: npm
+        # Customize build script here
         run: |
-          npm ci
-          # Build web and desktop and assemble a single static output at repo-root public/
-          npm run build:static
-          # verify output
-          test -d public
-
-      - name: Clone GitLab destination (shallow)
-        env:
-          GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+          npm install
+          npm run build
+      - name: Compress large assets
         run: |
-          set -euo pipefail
-          if [ -z "${GITLAB_TOKEN:-}" ]; then echo "GITLAB_ACCESS_TOKEN secret is missing"; exit 1; fi
-          # If your GitLab instance requires the :846 HTTPS port, include it here (this repo's remote uses it).
-          # Use the Fab Academy web host (fab.cba.mit.edu) as the target repository host
-          GURL="https://oauth2:${GITLAB_TOKEN}@fab.cba.mit.edu:846/classes/863.25/people/HayleyBloch.git"
-          git clone --depth=1 --branch main "$GURL" gitlab-repo || (
-            git clone --depth=1 "$GURL" gitlab-repo && cd gitlab-repo && git checkout -b main || true
-          )
-
-      - name: Sync build output -> GitLab repo and push if changed
-        env:
-          COMMITTER_NAME: "Hayley Bloch"
-          COMMITTER_EMAIL: "hayleybl@mit.edu"
+          # Install compression tools
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg imagemagick
+          
+          # Compress videos using web-optimized settings to stay under 25MB limit
+          echo "Compressing large video files for web..."
+          find out/ -name "*.mp4" -size +20M -exec bash -c '
+            echo "Compressing: $1"
+            original_size=$(stat -c%s "$1")
+            
+            # Use web-optimized H.264 encoding with variable bitrate
+            # Scale down if needed and use efficient compression
+            ffmpeg -i "$1" \
+              -vcodec libx264 \
+              -crf 28 \
+              -preset medium \
+              -vf "scale=-2:720" \
+              -acodec libmp3lame \
+              -q:a 4 \
+              -ar 48000 \
+              -ac 2 \
+              -movflags +faststart \
+              -y "$1.temp" 2>/dev/null || echo "Standard compression failed, trying aggressive..."
+            
+            # If standard compression failed or file still too large, try more aggressive
+            if [ ! -f "$1.temp" ] || [ $(stat -c%s "$1.temp") -gt 26214400 ]; then
+              rm -f "$1.temp"
+              echo "  Trying aggressive compression..."
+              ffmpeg -i "$1" \
+                -vcodec libx264 \
+                -b:v 800k \
+                -vf "scale=-2:480" \
+                -acodec libmp3lame \
+                -b:a 128k \
+                -ar 44100 \
+                -ac 2 \
+                -movflags +faststart \
+                -y "$1.temp" 2>/dev/null || echo "Aggressive compression failed"
+            fi
+            
+            # Check results and replace if successful
+            if [ -f "$1.temp" ]; then
+              new_size=$(stat -c%s "$1.temp")
+              if [ "$new_size" -lt "$original_size" ] && [ "$new_size" -lt 26214400 ]; then
+                mv "$1.temp" "$1"
+                echo "  ✅ Reduced from $((original_size/1048576))MB to $((new_size/1048576))MB"
+              else
+                rm -f "$1.temp"
+                echo "  ⚠️ Compression failed to get under 25MB limit"
+              fi
+            fi
+          ' _ {} \;
+          
+          # Compress large images (>2MB) using ImageMagick
+          echo "Compressing large images..."
+          find out/ -name "*.jpg" -o -name "*.JPG" -o -name "*.jpeg" -o -name "*.JPEG" | while read img; do
+            size=$(stat -c%s "$img")
+            if [ "$size" -gt 2097152 ]; then  # 2MB
+              echo "Compressing image: $img"
+              convert "$img" -quality 80 -strip "$img.temp" 2>/dev/null || echo "Failed to compress $img"
+              if [ -f "$img.temp" ]; then
+                new_size=$(stat -c%s "$img.temp")
+                if [ "$new_size" -lt "$size" ]; then
+                  mv "$img.temp" "$img"
+                  echo "  ✅ Reduced from $((size/1048576))MB to $((new_size/1048576))MB"
+                else
+                  rm -f "$img.temp"
+                fi
+              fi
+            fi
+          done
+          
+          # Final check for files still over 25MB
+          echo "Final verification - checking for files over 25MB:"
+          find out/ -type f -size +25M -exec ls -lh {} \; || echo "✅ No files over 25MB found"
+      - name: Check out gitlab repo
+        # Customize git clone url here
         run: |
-          set -euo pipefail
-          export GIT_TERMINAL_PROMPT=0
-
-          # copy build output into the checked-out gitlab repo
-          rsync -av --delete public/ gitlab-repo/
-
-          # Ensure repository-level files are also present in the GitLab repo
-          # (copy CI config and agreement if they exist at repo root)
-          if [ -f ../.gitlab-ci.yml ]; then cp ../.gitlab-ci.yml gitlab-repo/.gitlab-ci.yml; fi
-          if [ -f ../agreement.md ]; then cp ../agreement.md gitlab-repo/agreement.md; fi
-
+          git clone https://HayleyBloch:${{ secrets.GITLAB_ACCESS_TOKEN }}@gitlab.cba.mit.edu/classes/863.25/people/HayleyBloch.git gitlab-repo
+      - name: Push
+        # Customize deployment folder here
+        run: |
+          # Copy built files to gitlab repo
+          cp -r out/* gitlab-repo/
           cd gitlab-repo
-          git config user.name "${COMMITTER_NAME}"
-          git config user.email "${COMMITTER_EMAIL}"
-
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-            exit 0
+          # Verify no files are over 25MB (should be handled by compression)
+          echo "Verifying all files are under 25MB..."
+          large_files=$(find . -type f -size +25M | wc -l)
+          if [ "$large_files" -gt 0 ]; then
+            echo "❌ Found files still over 25MB:"
+            find . -type f -size +25M -exec ls -lh {} \;
+            echo "Deployment may fail due to GitLab limits"
+          else
+            echo "✅ All files are under 25MB limit"
           fi
-
-          git commit -m "${{ github.event.head_commit.message || 'Site update from GitHub Actions' }}"
+          
+          git config --global user.name "Bloch, Hayley"
+          git config --global user.email "hayelybl@mit.edu"
+          git add .
+          git commit -m "${{ github.event.head_commit.message }}" || echo "No changes to commit"
+          git status
           git push origin main

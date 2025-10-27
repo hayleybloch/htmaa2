@@ -849,11 +849,6 @@ export function ProjectWeek5(params: SubViewParams) {
               <li>bulk and local decoupling capacitors,</li>
               <li>an I2C header to link to a second Pico for future expansion.</li>
             </ul>
-            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
-              <div style={{flex: '1 1 48%', minWidth: 140}}>
-                <ProjectImage src="/images/Week-5/block-diagram.jpg" alt="Block diagram of controller architecture" label="Early block diagram" />
-              </div>
-            </div>
           </li>
 
           <li>
@@ -907,14 +902,6 @@ export function ProjectWeek5(params: SubViewParams) {
               <li>Speaker output through DFPlayer amplifier pins to an 8 Ω speaker.</li>
               <li>5 V input rail with decoupling and optional USB power via Pico.</li>
             </ul>
-            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
-              <div style={{flex: '1 1 48%', minWidth: 140}}>
-                <ProjectImage src="/images/Week-5/drum-synth-schematic.png" alt="Drum synth schematic" label="Drum synth schematic" />
-              </div>
-              <div style={{flex: '1 1 48%', minWidth: 140}}>
-                <ProjectImage src="/images/Week-5/drum-synth-board.png" alt="Routed drum synth PCB" label="Routed PCB" />
-              </div>
-            </div>
             <p>
               The two-layer board routed cleanly, passed ERC and DRC, and
               exported Gerber files for fabrication.

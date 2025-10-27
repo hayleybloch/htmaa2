@@ -866,11 +866,6 @@ export function ProjectWeek5(params: SubViewParams) {
               headers), an I2C header with pull-ups, and programming header/test
               points. The schematic passed ERC cleanly.
             </p>
-            <div style={{display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap'}}>
-              <div style={{flex: '1 1 48%', minWidth: 140}}>
-                <ProjectImage src="/images/Week-5/kicad-schematic.png" alt="KiCad schematic overview" label="KiCad schematic" />
-              </div>
-            </div>
           </li>
 
           <li>
@@ -882,9 +877,6 @@ export function ProjectWeek5(params: SubViewParams) {
               tracking with eased timing. All motions behaved as expected,
               confirming PWM timing and pin mapping.
             </p>
-            <div style={{marginTop: 8}}>
-              <ProjectImage src="/images/Week-5/wokwi.png" alt="Wokwi simulation workspace" label="Wokwi simulation" />
-            </div>
           </li>
 
           <li>
@@ -896,9 +888,6 @@ export function ProjectWeek5(params: SubViewParams) {
               and a crowded ratsnest, I determined the current layout needed
               more time and experience to become reliably fabricatable.
             </p>
-            <div style={{marginTop: 8}}>
-              <ProjectImage src="/images/Week-5/pcb-attempt.png" alt="Crowded PCB placement attempt" label="PCB placement attempt" />
-            </div>
           </li>
 
           <li>

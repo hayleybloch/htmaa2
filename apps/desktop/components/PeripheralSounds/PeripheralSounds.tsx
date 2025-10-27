@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { SystemAPIs } from "../OperatingSystem";
 import { isSafari } from "../util";
 import { SoundService } from "@/apis/Sound/Sound";
+import getPublicPath from '@/lib/getPublicPath';
 
 type AudioFragment = {
   onDown?: string,
@@ -14,30 +15,30 @@ const PointerSecondaryKey = "pointer_secondary";
 const PrimaryMouseButton = 0x00;
 
 const SpaceBarKeyAudioFragments: AudioFragment[] = [
-  { onDown: '/sounds/space_down_1.mp3', onUp: '/sounds/space_up_1.mp3' },
-  { onDown: '/sounds/space_down_2.mp3', onUp: '/sounds/space_up_2.mp3' },
-  { onDown: '/sounds/space_down_3.mp3', onUp: '/sounds/space_up_3.mp3' },
+  { onDown: getPublicPath('/sounds/space_down_1.mp3'), onUp: getPublicPath('/sounds/space_up_1.mp3') },
+  { onDown: getPublicPath('/sounds/space_down_2.mp3'), onUp: getPublicPath('/sounds/space_up_2.mp3') },
+  { onDown: getPublicPath('/sounds/space_down_3.mp3'), onUp: getPublicPath('/sounds/space_up_3.mp3') },
 ];
 
 const ShiftKeyAudioFragments: AudioFragment[] = [
-  { onDown: '/sounds/shift_down.mp3', onUp: '/sounds/shift_up.mp3' },
+  { onDown: getPublicPath('/sounds/shift_down.mp3'), onUp: getPublicPath('/sounds/shift_up.mp3') },
 ];
 
 const RegularKeyAudioFragments: AudioFragment[] = [
-  { onDown: '/sounds/key_down_1.mp3' },
-  { onDown: '/sounds/key_down_2.mp3' },
+  { onDown: getPublicPath('/sounds/key_down_1.mp3') },
+  { onDown: getPublicPath('/sounds/key_down_2.mp3') },
 ];
 
 const LeftMouseButtonAudioFragments: AudioFragment[] = [
-  { onDown: '/sounds/left_mouse_down_1.mp3', onUp: '/sounds/left_mouse_up_1.mp3' },
-  { onDown: '/sounds/left_mouse_down_2.mp3', onUp: '/sounds/left_mouse_up_2.mp3' },
-  { onDown: '/sounds/left_mouse_down_3.mp3', onUp: '/sounds/left_mouse_up_3.mp3' },
+  { onDown: getPublicPath('/sounds/left_mouse_down_1.mp3'), onUp: getPublicPath('/sounds/left_mouse_up_1.mp3') },
+  { onDown: getPublicPath('/sounds/left_mouse_down_2.mp3'), onUp: getPublicPath('/sounds/left_mouse_up_2.mp3') },
+  { onDown: getPublicPath('/sounds/left_mouse_down_3.mp3'), onUp: getPublicPath('/sounds/left_mouse_up_3.mp3') },
 ];
 
 const RightMouseButtonAudioFragments: AudioFragment[] = [
-  { onDown: '/sounds/right_mouse_down_1.mp3', onUp: '/sounds/right_mouse_up_1.mp3' },
-  { onDown: '/sounds/right_mouse_down_2.mp3', onUp: '/sounds/right_mouse_up_2.mp3' },
-  { onDown: '/sounds/right_mouse_down_3.mp3', onUp: '/sounds/right_mouse_up_3.mp3' },
+  { onDown: getPublicPath('/sounds/right_mouse_down_1.mp3'), onUp: getPublicPath('/sounds/right_mouse_up_1.mp3') },
+  { onDown: getPublicPath('/sounds/right_mouse_down_2.mp3'), onUp: getPublicPath('/sounds/right_mouse_up_2.mp3') },
+  { onDown: getPublicPath('/sounds/right_mouse_down_3.mp3'), onUp: getPublicPath('/sounds/right_mouse_up_3.mp3') },
 ];
 
 function chooseRandomAudioFragment(fragments: AudioFragment[]): AudioFragment {

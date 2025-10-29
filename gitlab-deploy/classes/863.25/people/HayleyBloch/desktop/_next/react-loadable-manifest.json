@@ -1,0 +1,79 @@
+{
+  "applications/About/About.tsx -> ./AboutView": {
+    "id": 9287,
+    "files": [
+      "static/css/8bf384ae45bb4627.css",
+      "static/chunks/287.d794ffa146d802da.js"
+    ]
+  },
+  "applications/Contract/Contact.ts -> ./ContactView": {
+    "id": 4430,
+    "files": [
+      "static/css/95085562c9ddee26.css",
+      "static/chunks/430.421bf83c82a0b942.js"
+    ]
+  },
+  "applications/Debug/DebugApplication.tsx -> ./DebugApplicationView": {
+    "id": 9060,
+    "files": [
+      "static/chunks/60.9bf7929fabd15b6c.js"
+    ]
+  },
+  "applications/Finder/Finder.ts -> ./FinderView": {
+    "id": 3082,
+    "files": [
+      "static/css/1107dde8b656cd10.css",
+      "static/chunks/82.54fbc86ffb9c7a9a.js"
+    ]
+  },
+  "applications/ImageViewer/ImageViewer.ts -> ./ImageViewerView": {
+    "id": 7108,
+    "files": [
+      "static/css/a87c6527a25cbcc0.css",
+      "static/chunks/108.22fcb4f624baf787.js"
+    ]
+  },
+  "applications/Notes/Notes.ts -> ./NotesView": {
+    "id": 2864,
+    "files": [
+      "static/css/a00c9ce570ba8131.css",
+      "static/chunks/864.d998b24af984d864.js"
+    ]
+  },
+  "applications/Skills/Skills.ts -> ./SkillsView": {
+    "id": 5810,
+    "files": [
+      "static/css/c1c8516648e52750.css",
+      "static/chunks/810.ce95907269a70091.js"
+    ]
+  },
+  "applications/Terminal/TerminalApplication.tsx -> ./TerminalApplicationView": {
+    "id": 9382,
+    "files": [
+      "static/chunks/81992acd.58c50afe879eccff.js",
+      "static/chunks/382.5ba16746ac9fcbfb.js"
+    ]
+  },
+  "components/Desktop/Desktop.tsx -> ../Folder/FolderView": {
+    "id": 4011,
+    "files": [
+      "static/css/1107dde8b656cd10.css",
+      "static/chunks/11.3d8376f7a6cc0ac4.js"
+    ]
+  },
+  "components/Desktop/Desktop.tsx -> ../WindowManagement/WindowContainer": {
+    "id": 2356,
+    "files": [
+      "static/css/3de5f551750beca3.css",
+      "static/chunks/356.8c2bb065712e0d51.js"
+    ]
+  },
+  "components/DragAndDropView.tsx -> ./Icons/FolderIcon": {
+    "id": 3019,
+    "files": []
+  },
+  "components/Folder/FolderView.tsx -> ../Icons/FolderIcon": {
+    "id": 3019,
+    "files": []
+  }
+}
